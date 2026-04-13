@@ -98,6 +98,21 @@ python -m http.server 8080
 
 ---
 
+## 🖼️ 游戏截图
+
+### 游戏介绍面板
+![游戏介绍面板](./tests/screenshots/v1.1.0_intro_final.png)
+
+### 游戏主界面（事件决策 + 常驻股市）
+![游戏主界面](./tests/screenshots/v1.1.0_event_full.png)
+
+### 纪元主题切换
+![工业垄断纪元](./tests/screenshots/v1.1.0_epoch2_theme.png)
+
+![AI数字纪元](./tests/screenshots/v1.1.0_epoch3_theme.png)
+
+---
+
 ## 🛠️ 开发文档
 
 - [架构说明](./docs/ARCHITECTURE.md)
