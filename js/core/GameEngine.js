@@ -21,8 +21,8 @@ export class CapitalGame {
         this.audio = new AudioManager();
         this.typewriterTimer = null;
         this.pendingNext = null;
-        this.stockResult = 0;
-        this.stockTimerId = null;
+        this.stockHoldings = 0;
+        this.stockPrice = 100;
         this.stockHistory = [];
 
         // 路线倾向
@@ -113,10 +113,10 @@ export class CapitalGame {
             btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
         });
 
-        // 股市小游戏按钮
-        document.getElementById('stock-buy').addEventListener('click', () => this.resolveStockGame('buy'));
-        document.getElementById('stock-skip').addEventListener('click', () => this.resolveStockGame('skip'));
-        document.getElementById('stock-sell').addEventListener('click', () => this.resolveStockGame('sell'));
+        // 股市交易按钮
+        document.getElementById('stock-buy').addEventListener('click', () => this.tradeStock('buy'));
+        document.getElementById('stock-skip').addEventListener('click', () => this.tradeStock('skip'));
+        document.getElementById('stock-sell').addEventListener('click', () => this.tradeStock('sell'));
     }
 
     switchTab(tabName) {
@@ -267,12 +267,9 @@ export class CapitalGame {
 
         const randomEvent = baseEvents[Math.floor(Math.random() * baseEvents.length)];
 
-        // 股市小游戏（非首回合、且开启）
-        if (GAME_SETTINGS.stockGame.enabled && this.rounds > 0 && !randomEvent.type) {
-            this.showStockMinigame(() => this.displayEvent(randomEvent));
-        } else {
-            this.displayEvent(randomEvent);
-        }
+        // 设置股市面板（与当前事件关联）
+        this.setupStockMarket(randomEvent);
+        this.displayEvent(randomEvent);
     }
 
     checkRouteEvent() {
@@ -456,11 +453,13 @@ export class CapitalGame {
                     }
                 }
 
-                // 股市结果
-                if (this.stockResult) {
-                    this.wealth += this.stockResult;
-                    this.showFloatingNumber('wealth-bar', this.stockResult);
-                    this.stockResult = 0;
+                // 股价波动（与事件和选择相关）
+                const stockChange = this.calculateStockChange(event, option, diceRoll);
+                const oldPrice = this.stockPrice;
+                this.stockPrice = Math.max(10, this.stockPrice + stockChange);
+                const priceDelta = this.stockPrice - oldPrice;
+                if (this.stockHoldings > 0 && priceDelta !== 0) {
+                    this.wealth += this.stockHoldings * priceDelta;
                 }
 
                 // 路线倾向
@@ -952,146 +951,118 @@ export class CapitalGame {
         });
     }
 
-    // ========== 股市小游戏 ==========
-    showStockMinigame(callback) {
-        const modal = document.getElementById('stock-minigame-modal');
-        const ticker = document.getElementById('stock-ticker');
-        const trend = document.getElementById('stock-trend');
-        const timerText = document.getElementById('stock-timer-text');
-        const timerFill = document.getElementById('stock-timer-fill');
-        const resultEl = document.getElementById('stock-result');
-        const buttonsEl = document.getElementById('stock-buttons');
-        const timerBarEl = document.getElementById('stock-timer-bar');
-        const hintEl = document.getElementById('stock-hint');
-
-        // 随机走势
-        const change = Math.floor(Math.random() * (GAME_SETTINGS.stockGame.maxChange - GAME_SETTINGS.stockGame.minChange + 1)) + GAME_SETTINGS.stockGame.minChange;
-        this.stockResult = change;
-
-        // 重置结果展示
-        resultEl.style.display = 'none';
-        buttonsEl.style.display = 'flex';
-        timerBarEl.style.display = 'block';
-        hintEl.style.display = 'block';
-
-        // 渲染历史记录
-        this.renderStockHistory();
-
-        modal.style.display = 'flex';
-        modal.classList.remove('fade-out');
-
-        let remaining = GAME_SETTINGS.stockGame.timerSeconds;
-        timerText.textContent = remaining;
-        timerFill.style.width = '100%';
-        timerFill.style.transition = 'none';
-        requestAnimationFrame(() => {
-            timerFill.style.transition = `width ${remaining}s linear`;
-            timerFill.style.width = '0%';
-        });
-
-        const updateVisual = () => {
-            const display = 100 + change;
-            ticker.textContent = display;
-            ticker.classList.toggle('down', change < 0);
-            if (change > 10) trend.textContent = '牛市飙升 📈';
-            else if (change < -10) trend.textContent = '熊市暴跌 📉';
-            else if (change > 0) trend.textContent = '小幅上涨';
-            else if (change < 0) trend.textContent = '小幅下跌';
-            else trend.textContent = '市场平稳';
-        };
-        updateVisual();
-
-        this.stockCallback = callback;
-
-        this.stockTimerId = setInterval(() => {
-            remaining--;
-            timerText.textContent = remaining;
-            if (remaining <= 0) {
-                this.resolveStockGame('skip');
-            }
-        }, 1000);
+    // ========== 常驻股市面板 ==========
+    getCash() {
+        return this.wealth - this.stockHoldings * this.stockPrice;
     }
 
-    renderStockHistory() {
-        const listEl = document.getElementById('stock-history-list');
-        const totalEl = document.getElementById('stock-total');
+    getMarketExpectation(event) {
+        const text = (event.name || '') + (event.description || '');
+        if (text.includes('技术') || text.includes('科技') || text.includes('AI') || text.includes('数字化') || text.includes('革命')) {
+            return '技术利好，市场看涨 📈';
+        }
+        if (text.includes('罢工') || text.includes('危机') || text.includes('萧条') || text.includes('崩溃') || text.includes('泡沫') || text.includes('恐慌')) {
+            return '社会动荡，市场承压 📉';
+        }
+        if (text.includes('垄断') || text.includes('扩张') || text.includes('投资') || text.includes('增长') || text.includes('利润')) {
+            return '扩张预期，情绪积极 📈';
+        }
+        return '市场情绪中性，走势不明 ～';
+    }
+
+    setupStockMarket(event) {
+        this.stockMarketEvent = event;
+        const panel = document.getElementById('stock-panel');
+        if (panel) {
+            panel.style.display = 'block';
+            this.renderStockPanel();
+        }
+    }
+
+    renderStockPanel() {
+        const event = this.stockMarketEvent || {};
+        const priceEl = document.getElementById('stock-price');
+        const holdingsEl = document.getElementById('stock-holdings');
+        const marketValueEl = document.getElementById('stock-market-value');
+        const cashEl = document.getElementById('stock-cash');
+        const expectationEl = document.getElementById('stock-expectation');
+        const buyBtn = document.getElementById('stock-buy');
+        const sellBtn = document.getElementById('stock-sell');
+        const historyEl = document.getElementById('stock-history-compact');
+
+        priceEl.textContent = this.stockPrice;
+        holdingsEl.textContent = this.stockHoldings;
+        marketValueEl.textContent = this.stockHoldings * this.stockPrice;
+        const cash = this.getCash();
+        cashEl.textContent = cash;
+        expectationEl.textContent = this.getMarketExpectation(event);
+
+        if (buyBtn) buyBtn.disabled = cash < this.stockPrice;
+        if (sellBtn) sellBtn.disabled = this.stockHoldings <= 0;
+
         if (!this.stockHistory || this.stockHistory.length === 0) {
-            listEl.innerHTML = '<p class="stock-empty">暂无记录</p>';
-            totalEl.textContent = '累计收益：0';
-            totalEl.className = 'stock-total';
-            return;
+            historyEl.innerHTML = '<span class="stock-empty">暂无交易记录</span>';
+        } else {
+            const actionMap = { buy: '买入', sell: '卖出', skip: '观望' };
+            const tags = this.stockHistory.slice(-5).map(h => {
+                const cls = h.priceDelta > 0 ? 'positive' : (h.priceDelta < 0 ? 'negative' : 'neutral');
+                const sign = h.priceDelta > 0 ? '+' : '';
+                return `<span class="sh-tag ${cls}">${actionMap[h.action] || h.action} @${h.price} ${sign}${h.priceDelta || 0}</span>`;
+            }).join('');
+            historyEl.innerHTML = tags;
         }
-        const actionMap = { buy: '买入', sell: '卖出', skip: '观望' };
-        listEl.innerHTML = this.stockHistory.slice(-5).map(h => {
-            const cls = h.result > 0 ? 'positive' : (h.result < 0 ? 'negative' : 'neutral');
-            const sign = h.result > 0 ? '+' : '';
-            return `
-                <div class="stock-history-item">
-                    <span class="sh-action">${actionMap[h.action] || h.action}</span>
-                    <span class="sh-change ${cls}">${sign}${h.result}</span>
-                </div>
-            `;
-        }).join('');
-        const total = this.stockHistory.reduce((sum, h) => sum + h.result, 0);
-        const totalCls = total > 0 ? 'positive' : (total < 0 ? 'negative' : '');
-        totalEl.textContent = `累计收益：${total >= 0 ? '+' : ''}${total}`;
-        totalEl.className = 'stock-total ' + totalCls;
     }
 
-    resolveStockGame(action) {
-        if (this.stockTimerId) {
-            clearInterval(this.stockTimerId);
-            this.stockTimerId = null;
+    tradeStock(action) {
+        if (action === 'buy') {
+            if (this.getCash() >= this.stockPrice) {
+                this.stockHoldings += 1;
+                // wealth 作为总资产不变，仅资产配置变化
+                this.stockHistory.push({ action, price: this.stockPrice, priceDelta: 0 });
+                this.audio.playSfx('click');
+            }
+        } else if (action === 'sell') {
+            if (this.stockHoldings > 0) {
+                this.stockHoldings -= 1;
+                // wealth 作为总资产不变
+                this.stockHistory.push({ action, price: this.stockPrice, priceDelta: 0 });
+                this.audio.playSfx('click');
+            }
+        } else {
+            this.stockHistory.push({ action, price: this.stockPrice, priceDelta: 0 });
+        }
+        this.updateStatusDisplay();
+        this.renderStockPanel();
+    }
+
+    calculateStockChange(event, option, diceRoll) {
+        let change = 0;
+        const text = (event.name || '') + (event.description || '');
+
+        // 事件类型影响（基准）
+        if (text.includes('技术') || text.includes('科技') || text.includes('AI') || text.includes('数字化') || text.includes('革命')) {
+            change += 5 + Math.random() * 10;
+        } else if (text.includes('罢工') || text.includes('危机') || text.includes('萧条') || text.includes('崩溃') || text.includes('泡沫') || text.includes('恐慌')) {
+            change -= 8 + Math.random() * 12;
+        } else if (text.includes('垄断') || text.includes('扩张') || text.includes('投资') || text.includes('增长') || text.includes('利润')) {
+            change += 3 + Math.random() * 7;
+        } else {
+            change += (Math.random() - 0.5) * 8;
         }
 
-        let multiplier = 0;
-        if (action === 'buy') multiplier = GAME_SETTINGS.stockGame.buyMultiplier;
-        else if (action === 'sell') multiplier = GAME_SETTINGS.stockGame.sellMultiplier;
+        // 选择影响
+        if (option) {
+            change += (option.wealth || 0) * 0.25;
+            change -= (option.conflict || 0) * 0.35;
+            change += (option.tech || 0) * 0.15;
+        }
 
-        const rawChange = this.stockResult;
-        const finalResult = Math.round(rawChange * multiplier);
-        this.stockResult = finalResult;
+        // 骰子影响
+        if (diceRoll) {
+            change += (diceRoll - 10) * 0.6;
+        }
 
-        // 记录历史
-        this.stockHistory.push({ action, result: finalResult, rawChange });
-
-        // UI 展示结果
-        const ticker = document.getElementById('stock-ticker');
-        const trend = document.getElementById('stock-trend');
-        const resultEl = document.getElementById('stock-result');
-        const buttonsEl = document.getElementById('stock-buttons');
-        const timerBarEl = document.getElementById('stock-timer-bar');
-        const hintEl = document.getElementById('stock-hint');
-
-        buttonsEl.style.display = 'none';
-        timerBarEl.style.display = 'none';
-        hintEl.style.display = 'none';
-
-        ticker.textContent = 100 + (action === 'skip' ? 0 : Math.round(finalResult / multiplier));
-        trend.textContent = action === 'skip' ? '你选择观望' : (action === 'buy' ? '买入结算' : '卖出结算');
-
-        const cls = finalResult > 0 ? 'positive' : (finalResult < 0 ? 'negative' : 'neutral');
-        const sign = finalResult > 0 ? '+' : '';
-        resultEl.innerHTML = `<span class="${cls}">${sign}${finalResult} 财富</span>`;
-        resultEl.style.display = 'block';
-
-        // 更新历史展示
-        this.renderStockHistory();
-
-        // 延迟关闭
-        setTimeout(() => {
-            const modal = document.getElementById('stock-minigame-modal');
-            modal.classList.add('fade-out');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                modal.classList.remove('fade-out');
-                if (this.stockCallback) {
-                    const cb = this.stockCallback;
-                    this.stockCallback = null;
-                    cb();
-                }
-            }, 300);
-        }, 1400);
+        return Math.round(change);
     }
 
     restartGame() {
@@ -1114,9 +1085,9 @@ export class CapitalGame {
             this.equippedFragment = null;
             this.lastDiceRoll = null;
             this.pendingNext = null;
-            this.stockResult = 0;
+            this.stockHoldings = 0;
+            this.stockPrice = 100;
             this.stockHistory = [];
-            if (this.stockTimerId) { clearInterval(this.stockTimerId); this.stockTimerId = null; }
             if (this.typewriterTimer) { clearInterval(this.typewriterTimer); this.typewriterTimer = null; }
             this.applyEpochTheme();
 
@@ -1141,6 +1112,9 @@ export class CapitalGame {
 
             optionsContainer.innerHTML = '<button class="start-btn" id="start-btn">开始游戏</button>';
             document.getElementById('start-btn').addEventListener('click', () => this.startGame());
+
+            const stockPanel = document.getElementById('stock-panel');
+            if (stockPanel) stockPanel.style.display = 'none';
 
             this.updateStatusDisplay();
             this.updateHistoryDisplay();

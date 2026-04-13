@@ -27,7 +27,7 @@
         <header class="game-header">
             <h1>🎮 资本：轮回与破局</h1>
             <p class="subtitle">作为一名资本家，你的目标是积累财富，但要注意社会矛盾的激化！</p>
-            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.0.1</p>
+            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.0.2</p>
         </header>
 
         <!-- 主内容：双栏布局 -->
@@ -125,6 +125,41 @@
                         <p id="knowledge-text">游戏将展示资本主义发展的内在矛盾和马克思主义的科学分析</p>
                     </div>
                 </div>
+
+                <!-- 股市常驻面板 -->
+                <div class="stock-panel" id="stock-panel" style="display: none;">
+                    <div class="stock-panel-header">
+                        <span class="stock-panel-title">📈 资本市场</span>
+                        <span class="stock-expectation" id="stock-expectation">市场平稳</span>
+                    </div>
+                    <div class="stock-panel-stats">
+                        <div class="stock-stat">
+                            <span class="stock-stat-label">股价</span>
+                            <span class="stock-stat-value" id="stock-price">100</span>
+                        </div>
+                        <div class="stock-stat">
+                            <span class="stock-stat-label">持股</span>
+                            <span class="stock-stat-value" id="stock-holdings">0</span>
+                        </div>
+                        <div class="stock-stat">
+                            <span class="stock-stat-label">市值</span>
+                            <span class="stock-stat-value" id="stock-market-value">0</span>
+                        </div>
+                        <div class="stock-stat">
+                            <span class="stock-stat-label">现金</span>
+                            <span class="stock-stat-value" id="stock-cash">100</span>
+                        </div>
+                    </div>
+                    <div class="stock-panel-actions" id="stock-panel-actions">
+                        <button class="stock-btn buy" id="stock-buy">📈 买入 1 股</button>
+                        <button class="stock-btn sell" id="stock-sell">📉 卖出 1 股</button>
+                        <button class="stock-btn skip" id="stock-skip">⏸ 观望</button>
+                    </div>
+                    <div class="stock-history-compact" id="stock-history-compact">
+                        <span class="stock-empty">暂无交易记录</span>
+                    </div>
+                </div>
+
                 <!-- 游戏结束画面 -->
                 <div class="game-over-panel" id="game-over-panel" style="display: none;">
             <!-- Tab 导航 -->
@@ -207,35 +242,6 @@
             <div class="epoch-animation" id="epoch-animation"></div>
             <h2 class="epoch-transition-title" id="epoch-transition-title">🚀 纪元转换</h2>
             <p class="epoch-transition-desc" id="epoch-transition-desc"></p>
-        </div>
-    </div>
-
-    <!-- 股市小游戏弹窗 -->
-    <div class="stock-minigame-modal" id="stock-minigame-modal" style="display: none;">
-        <div class="stock-minigame-content">
-            <h3>📈 股市波动</h3>
-            <p class="stock-desc">本回合股市动荡，你可以选择操作以获取额外收益（或亏损）。</p>
-            <div class="stock-visual">
-                <div class="stock-ticker" id="stock-ticker">100</div>
-                <div class="stock-trend" id="stock-trend">市场平稳</div>
-                <div class="stock-result" id="stock-result" style="display: none;"></div>
-            </div>
-            <div class="stock-buttons" id="stock-buttons">
-                <button class="stock-btn buy" id="stock-buy">📈 买入 (+)</button>
-                <button class="stock-btn skip" id="stock-skip">⏸ 观望 (0)</button>
-                <button class="stock-btn sell" id="stock-sell">📉 卖出 (-)</button>
-            </div>
-            <div class="stock-timer-bar" id="stock-timer-bar"><div id="stock-timer-fill"></div></div>
-            <p class="stock-hint" id="stock-hint">限时 <span id="stock-timer-text">10</span> 秒</p>
-
-            <!-- 股票历史记录 -->
-            <div class="stock-history" id="stock-history">
-                <h4>📜 操作历史</h4>
-                <div class="stock-history-list" id="stock-history-list">
-                    <p class="stock-empty">暂无记录</p>
-                </div>
-                <div class="stock-total" id="stock-total">累计收益：0</div>
-            </div>
         </div>
     </div>
 

@@ -402,88 +402,86 @@
     opacity: 0.85;
 }
 
-/* ========== 股市小游戏弹窗 ========== */
-.stock-minigame-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(5, 5, 8, 0.92);
-    backdrop-filter: blur(8px);
-    z-index: 220;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    animation: fadeInModal 0.4s forwards;
+/* ========== 股市常驻面板 ========== */
+.stock-panel {
+    margin-top: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 18px 20px;
+    backdrop-filter: blur(6px);
 }
 
-.stock-minigame-content {
-    max-width: 460px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 28px;
+.stock-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.stock-panel-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #feca57;
+}
+
+.stock-expectation {
+    font-size: 0.9em;
+    opacity: 0.9;
+    color: #48dbfb;
+}
+
+.stock-panel-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.stock-stat {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 10px;
     text-align: center;
 }
 
-.stock-minigame-content h3 {
-    color: #feca57;
-    margin-bottom: 10px;
-    font-size: 1.4em;
+.stock-stat-label {
+    display: block;
+    font-size: 0.75em;
+    opacity: 0.7;
+    margin-bottom: 4px;
 }
 
-.stock-desc {
-    opacity: 0.9;
-    margin-bottom: 18px;
-    font-size: 0.95em;
-}
-
-.stock-visual {
-    background: rgba(0,0,0,0.25);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 18px;
-}
-
-.stock-ticker {
-    font-size: 2.4em;
+.stock-stat-value {
+    display: block;
+    font-size: 1.15em;
     font-weight: bold;
-    color: #1dd1a1;
-    margin-bottom: 6px;
-    transition: color 0.3s ease;
 }
 
-.stock-ticker.down {
-    color: #ff6b6b;
-}
-
-.stock-trend {
-    font-size: 0.95em;
-    opacity: 0.85;
-}
-
-.stock-buttons {
+.stock-panel-actions {
     display: flex;
     gap: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
 .stock-btn {
     flex: 1;
-    padding: 12px;
+    padding: 10px 12px;
     border: none;
     border-radius: 10px;
-    font-size: 1em;
+    font-size: 0.95em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
     color: white;
+}
+
+.stock-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+    background: #576574 !important;
 }
 
 .stock-btn.buy {
@@ -498,29 +496,44 @@
     background: linear-gradient(135deg, #ff6b6b 0%, #ff9f43 100%);
 }
 
-.stock-btn:hover {
+.stock-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.stock-timer-bar {
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 8px;
-}
-
-.stock-timer-bar > div {
-    height: 100%;
-    background: linear-gradient(90deg, #feca57, #ff9f43);
-    width: 100%;
-    transition: width 1s linear;
-}
-
-.stock-hint {
+.stock-history-compact {
     font-size: 0.85em;
     opacity: 0.8;
+    text-align: center;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.stock-history-compact .sh-tag {
+    background: rgba(255,255,255,0.08);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.85em;
+}
+
+.stock-history-compact .sh-tag.positive { color: #1dd1a1; }
+.stock-history-compact .sh-tag.negative { color: #ff6b6b; }
+.stock-history-compact .sh-tag.neutral { color: #888; }
+
+@media (max-width: 720px) {
+    .stock-panel-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .stock-panel-actions {
+        flex-wrap: wrap;
+    }
+    .stock-btn {
+        min-width: calc(50% - 5px);
+    }
 }
 
 /* ========== 纪元过渡覆盖层 ========== */

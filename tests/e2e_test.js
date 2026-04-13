@@ -42,14 +42,30 @@ async (page) => {
         for (let i = 0; i < 15; i++) {
             await page.waitForTimeout(1000);
 
-            // 股市小游戏
+            // 股市交易（常驻面板）
             if (await page.evaluate(() => {
-                const m = document.getElementById('stock-minigame-modal');
-                return m && m.style.display !== 'none';
+                const p = document.getElementById('stock-panel');
+                return p && p.style.display !== 'none';
             })) {
-                await clickBySelector('.stock-btn');
-                results.push(`step ${i + 1}: stock`);
-                await page.waitForTimeout(1800);
+                const canBuy = await page.evaluate(() => {
+                    const btn = document.getElementById('stock-buy');
+                    return btn && !btn.disabled;
+                });
+                const canSell = await page.evaluate(() => {
+                    const btn = document.getElementById('stock-sell');
+                    return btn && !btn.disabled;
+                });
+                if (canBuy && Math.random() > 0.6) {
+                    await clickBySelector('#stock-buy');
+                    results.push(`step ${i + 1}: stock-buy`);
+                } else if (canSell && Math.random() > 0.6) {
+                    await clickBySelector('#stock-sell');
+                    results.push(`step ${i + 1}: stock-sell`);
+                } else {
+                    await clickBySelector('#stock-skip');
+                    results.push(`step ${i + 1}: stock-skip`);
+                }
+                await page.waitForTimeout(400);
             }
 
             // 滑块
