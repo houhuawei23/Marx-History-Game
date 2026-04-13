@@ -27,116 +27,205 @@
         <header class="game-header">
             <h1>🎮 资本：轮回与破局</h1>
             <p class="subtitle">作为一名资本家，你的目标是积累财富，但要注意社会矛盾的激化！</p>
+            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.0.0</p>
         </header>
 
-        <!-- 游戏状态显示 -->
-        <div class="status-panel">
-            <div class="epoch-display">
-                <span id="epoch-name">原始积累纪元</span>
-                <span id="round-counter">第1回合</span>
+        <!-- 主内容：双栏布局 -->
+        <div class="game-main">
+            <!-- 左栏：状态仪表盘 -->
+            <aside class="left-sidebar">
+                <div class="status-panel">
+                    <div class="epoch-display">
+                        <span id="epoch-name">原始积累纪元</span>
+                        <span id="round-counter">第1回合</span>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <label>财富值:</label>
+                            <div class="progress-bar">
+                                <div id="wealth-bar" class="progress-fill wealth-fill"></div>
+                                <span id="wealth-value">100</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <label>社会矛盾:</label>
+                            <div class="progress-bar">
+                                <div id="conflict-bar" class="progress-fill conflict-fill"></div>
+                                <span id="conflict-value">30</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <label>技术力:</label>
+                            <div class="progress-bar">
+                                <div id="tech-bar" class="progress-fill tech-fill"></div>
+                                <span id="tech-value">50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 路线倾向条 -->
+                    <div class="route-panel">
+                        <div class="route-labels">
+                            <span class="route-label conservative">⚔️ 保守</span>
+                            <span class="route-label technologist">🤖 技术</span>
+                            <span class="route-label reformer">🕊️ 改良</span>
+                        </div>
+                        <div class="route-bar-bg">
+                            <div class="route-bar-segment conservative" id="route-conservative"></div>
+                            <div class="route-bar-segment technologist" id="route-technologist"></div>
+                            <div class="route-bar-segment reformer" id="route-reformer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 趋势图 -->
+                <div class="dashboard-card trend-card">
+                    <h4>📈 历史趋势</h4>
+                    <div id="trend-chart" class="trend-chart"></div>
+                </div>
+
+                <!-- 社会关系 -->
+                <div class="dashboard-card social-card">
+                    <h4>🌐 社会关系</h4>
+                    <div id="social-radar" class="social-radar"></div>
+                    <div class="social-stats">
+                        <div class="social-stat"><span class="ss-label">工人信任</span><span class="ss-value" id="social-worker">50</span></div>
+                        <div class="social-stat"><span class="ss-label">政府支持</span><span class="ss-value" id="social-gov">50</span></div>
+                        <div class="social-stat"><span class="ss-label">媒体舆论</span><span class="ss-value" id="social-media">50</span></div>
+                        <div class="social-stat"><span class="ss-label">竞争压力</span><span class="ss-value" id="social-rival">50</span></div>
+                    </div>
+                </div>
+
+                <!-- 迷你历史 -->
+                <div class="dashboard-card mini-history-card">
+                    <h4>📜 本局摘要</h4>
+                    <div id="mini-history-list" class="mini-history-list">
+                        <p class="mini-empty">游戏尚未开始</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 右栏：主内容区 -->
+            <main class="right-content">
+                <!-- 事件显示区域 -->
+                <div class="event-panel" id="event-panel">
+                    <div class="event-image" id="event-image"></div>
+                    <div class="event-header">
+                        <h2 id="event-title">欢迎来到资本主义世界</h2>
+                        <p id="event-description">请点击开始游戏按钮，体验资本主义的发展历程</p>
+                    </div>
+                    
+                    <div class="options-container" id="options-container">
+                        <button class="start-btn" id="start-btn">开始游戏</button>
+                    </div>
+                    
+                    <div class="knowledge-panel" id="knowledge-panel">
+                        <h3>📚 马克思主义知识点</h3>
+                        <p id="knowledge-text">游戏将展示资本主义发展的内在矛盾和马克思主义的科学分析</p>
+                    </div>
+                </div>
+                <!-- 游戏结束画面 -->
+                <div class="game-over-panel" id="game-over-panel" style="display: none;">
+            <!-- Tab 导航 -->
+            <div class="game-over-tabs">
+                <button class="tab-btn active" data-tab="ending">📜 结局诊断</button>
+                <button class="tab-btn" data-tab="report">📊 数据报告</button>
+                <button class="tab-btn" data-tab="history">📚 历史回顾</button>
+                <button class="tab-btn" data-tab="collection">🏆 成就与碎片</button>
             </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <label>财富值:</label>
-                    <div class="progress-bar">
-                        <div id="wealth-bar" class="progress-fill wealth-fill"></div>
-                        <span id="wealth-value">100</span>
+
+            <!-- Tab 内容：结局诊断 -->
+            <div class="tab-content active" id="tab-ending">
+                <div class="game-over-content">
+                    <h2 id="game-over-title">🎭 游戏结束</h2>
+                    <p id="game-over-reason"></p>
+                    <p id="ending-description"></p>
+                    <div class="unlocked-fragments" id="unlocked-fragments"></div>
+                    <div class="quotes">
+                        <h3>💡 马克思主义经典语录</h3>
+                        <p>"在必然王国的彼岸，作为目的本身的人类能力的发展，真正的自由王国，就开始了。" —— 马克思</p>
+                        <p>"社会主义社会不是从原则出发，而是从事实出发。" —— 恩格斯</p>
                     </div>
+                    <button class="restart-btn" id="restart-btn">重新开始游戏</button>
                 </div>
-                <div class="stat-item">
-                    <label>社会矛盾:</label>
-                    <div class="progress-bar">
-                        <div id="conflict-bar" class="progress-fill conflict-fill"></div>
-                        <span id="conflict-value">30</span>
+            </div>
+
+            <!-- Tab 内容：数据报告 -->
+            <div class="tab-content" id="tab-report">
+                <div class="diagnostic-report" id="diagnostic-report">
+                    <h3>📊 你的资本主义诊断书</h3>
+                    <div class="report-stats">
+                        <div class="report-stat"><span class="report-label">剥削指数</span><span class="report-value" id="report-exploitation">0</span></div>
+                        <div class="report-stat"><span class="report-label">技术乐观</span><span class="report-value" id="report-tech">0</span></div>
+                        <div class="report-stat"><span class="report-label">改良诚意</span><span class="report-value" id="report-reform">0</span></div>
                     </div>
-                </div>
-                <div class="stat-item">
-                    <label>技术力:</label>
-                    <div class="progress-bar">
-                        <div id="tech-bar" class="progress-fill tech-fill"></div>
-                        <span id="tech-value">50</span>
+                    <div class="report-radar" id="report-radar"></div>
+
+                    <div class="report-section">
+                        <h4>📜 历史对照</h4>
+                        <div id="report-parallels"></div>
+                    </div>
+
+                    <div class="report-section">
+                        <h4>📖 经典语录回顾</h4>
+                        <div id="report-quotes"></div>
+                    </div>
+
+                    <div class="report-section">
+                        <h4>📈 历史走势</h4>
+                        <div id="report-trend"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 路线倾向条 -->
-            <div class="route-panel">
-                <div class="route-labels">
-                    <span class="route-label conservative">⚔️ 保守</span>
-                    <span class="route-label technologist">🤖 技术</span>
-                    <span class="route-label reformer">🕊️ 改良</span>
-                </div>
-                <div class="route-bar-bg">
-                    <div class="route-bar-segment conservative" id="route-conservative"></div>
-                    <div class="route-bar-segment technologist" id="route-technologist"></div>
-                    <div class="route-bar-segment reformer" id="route-reformer"></div>
+            <!-- Tab 内容：历史回顾 -->
+            <div class="tab-content" id="tab-history">
+                <div class="history-panel" id="history-panel">
+                    <h3>📜 游戏历史回顾</h3>
+                    <div id="history-list"></div>
                 </div>
             </div>
+
+            <!-- Tab 内容：成就与碎片 -->
+            <div class="tab-content" id="tab-collection">
+                <div class="collection-panel">
+                    <h3>🏆 成就</h3>
+                    <div id="achievements-list"></div>
+                    <h3>📚 认知碎片</h3>
+                    <div id="collection-fragments"></div>
+                </div>
+            </div>
+                </div>
+            </main>
         </div>
+    </div>
 
-        <!-- 事件显示区域 -->
-        <div class="event-panel" id="event-panel">
-            <div class="event-image" id="event-image"></div>
-            <div class="event-header">
-                <h2 id="event-title">欢迎来到资本主义世界</h2>
-                <p id="event-description">请点击开始游戏按钮，体验资本主义的发展历程</p>
-            </div>
-            
-            <div class="options-container" id="options-container">
-                <button class="start-btn" id="start-btn">开始游戏</button>
-            </div>
-            
-            <div class="knowledge-panel" id="knowledge-panel">
-                <h3>📚 马克思主义知识点</h3>
-                <p id="knowledge-text">游戏将展示资本主义发展的内在矛盾和马克思主义的科学分析</p>
-            </div>
+    <!-- 纪元过渡全屏特效 -->
+    <div class="epoch-transition-overlay" id="epoch-transition-overlay" style="display: none;">
+        <div class="epoch-transition-content">
+            <div class="epoch-animation" id="epoch-animation"></div>
+            <h2 class="epoch-transition-title" id="epoch-transition-title">🚀 纪元转换</h2>
+            <p class="epoch-transition-desc" id="epoch-transition-desc"></p>
         </div>
+    </div>
 
-        <!-- 游戏结束画面 -->
-        <div class="game-over-panel" id="game-over-panel" style="display: none;">
-            <div class="game-over-content">
-                <h2 id="game-over-title">🎭 游戏结束</h2>
-                <p id="game-over-reason"></p>
-                <p id="ending-description"></p>
-
-                <!-- 解锁的认知碎片 -->
-                <div class="unlocked-fragments" id="unlocked-fragments"></div>
-
-                <div class="quotes">
-                    <h3>💡 马克思主义经典语录</h3>
-                    <p>"在必然王国的彼岸，作为目的本身的人类能力的发展，真正的自由王国，就开始了。" —— 马克思</p>
-                    <p>"社会主义社会不是从原则出发，而是从事实出发。" —— 恩格斯</p>
-                </div>
-                <button class="restart-btn" id="restart-btn">重新开始游戏</button>
+    <!-- 股市小游戏弹窗 -->
+    <div class="stock-minigame-modal" id="stock-minigame-modal" style="display: none;">
+        <div class="stock-minigame-content">
+            <h3>📈 股市波动</h3>
+            <p class="stock-desc">本回合股市动荡，你可以选择操作以获取额外收益（或亏损）。</p>
+            <div class="stock-visual">
+                <div class="stock-ticker" id="stock-ticker">100</div>
+                <div class="stock-trend" id="stock-trend">市场平稳</div>
             </div>
-
-            <!-- 课后理论诊断报告 -->
-            <div class="diagnostic-report" id="diagnostic-report">
-                <h3>📊 你的资本主义诊断书</h3>
-                <div class="report-stats">
-                    <div class="report-stat"><span class="report-label">剥削指数</span><span class="report-value" id="report-exploitation">0</span></div>
-                    <div class="report-stat"><span class="report-label">技术乐观</span><span class="report-value" id="report-tech">0</span></div>
-                    <div class="report-stat"><span class="report-label">改良诚意</span><span class="report-value" id="report-reform">0</span></div>
-                </div>
-                <div class="report-radar" id="report-radar"></div>
-
-                <div class="report-section">
-                    <h4>📜 历史对照</h4>
-                    <div id="report-parallels"></div>
-                </div>
-
-                <div class="report-section">
-                    <h4>📖 经典语录回顾</h4>
-                    <div id="report-quotes"></div>
-                </div>
+            <div class="stock-buttons">
+                <button class="stock-btn buy" id="stock-buy">📈 买入 (+)</button>
+                <button class="stock-btn skip" id="stock-skip">⏸ 观望 (0)</button>
+                <button class="stock-btn sell" id="stock-sell">📉 卖出 (-)</button>
             </div>
-            
-            <!-- 游戏历史（在游戏结束面板内显示） -->
-            <div class="history-panel" id="history-panel">
-                <h3>📜 游戏历史回顾</h3>
-                <div id="history-list"></div>
-            </div>
+            <div class="stock-timer-bar"><div id="stock-timer-fill"></div></div>
+            <p class="stock-hint">限时 <span id="stock-timer-text">10</span> 秒</p>
         </div>
     </div>
 

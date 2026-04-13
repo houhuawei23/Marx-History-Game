@@ -2,6 +2,8 @@
  * 全局配置与常量
  */
 
+export const GAME_VERSION = '1.0.0';
+
 export const EPOCH_NAMES = {
     1: "原始积累纪元",
     2: "工业垄断纪元",
@@ -30,5 +32,24 @@ export const GAME_SETTINGS = {
     conflictBarMax: 100,
     techBarMax: 150,
     routeEventThreshold: 2,
-    routeEventChance: 0.5
+    routeEventChance: 0.5,
+    // 社会关系默认值
+    social: {
+        worker: 50,
+        gov: 50,
+        media: 50,
+        rival: 50,
+        min: 0,
+        max: 100
+    },
+    // 股市小游戏参数
+    stockGame: {
+        enabled: true,
+        timerSeconds: 10,
+        minChange: -25,
+        maxChange: 25,
+        buyMultiplier: 1.0,
+        sellMultiplier: -1.0,
+        skipMultiplier: 0
+    }
 };

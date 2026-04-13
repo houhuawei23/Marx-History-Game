@@ -1,22 +1,137 @@
 /* ========== 基础容器 ========== */
 .game-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     min-height: 100vh;
+}
+
+/* ========== 双栏主布局 ========== */
+.game-main {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.left-sidebar {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.right-content {
+    min-width: 0;
+}
+
+/* 仪表盘卡片 */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 15px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
+.dashboard-card h4 {
+    color: #feca57;
+    margin-bottom: 12px;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 趋势图 */
+.trend-chart {
+    width: 100%;
+    height: 140px;
+}
+
+.trend-chart svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* 社会关系 */
+.social-radar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.social-radar svg {
+    width: 140px;
+    height: 140px;
+}
+
+.social-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    font-size: 0.85em;
+}
+
+.social-stat {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.04);
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.ss-label {
+    opacity: 0.85;
+}
+
+.ss-value {
+    font-weight: bold;
+}
+
+/* 迷你历史 */
+.mini-history-list {
+    max-height: 160px;
+    overflow-y: auto;
+    font-size: 0.85em;
+}
+
+.mini-history-item {
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.mini-history-item .mhi-title {
+    color: #feca57;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.mini-history-item .mhi-choice {
+    opacity: 0.9;
+}
+
+.mini-empty {
+    opacity: 0.6;
+    text-align: center;
+    padding: 10px;
 }
 
 /* ========== 游戏结束面板 ========== */
 .game-over-panel {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    padding: 40px;
+    padding: 24px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     margin-top: 20px;
-    display: flex;
+    display: none;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     opacity: 0;
     animation: fadeInPanel 0.5s forwards;
 }
@@ -31,6 +146,51 @@
 
 @keyframes fadeOutPanel {
     to { opacity: 0; }
+}
+
+/* Tab 导航 */
+.game-over-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 12px;
+}
+
+.tab-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    color: #e6e6e6;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 0.95em;
+}
+
+.tab-btn:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%);
+    color: #1a1a2a;
+    font-weight: bold;
+}
+
+/* Tab 内容 */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeInTab 0.3s ease;
+}
+
+@keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .game-over-content {
@@ -190,13 +350,223 @@
     font-size: 0.9em;
 }
 
+/* ========== 成就与碎片面板 ========== */
+.collection-panel h3 {
+    color: #feca57;
+    margin: 20px 0 12px;
+    font-size: 1.2em;
+}
+
+.collection-panel h3:first-child {
+    margin-top: 0;
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.achievement-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.achievement-card.unlocked {
+    border-color: rgba(254, 202, 87, 0.4);
+    background: rgba(254, 202, 87, 0.08);
+}
+
+.achievement-card.locked {
+    opacity: 0.5;
+    filter: grayscale(0.6);
+}
+
+.achievement-icon {
+    font-size: 1.6em;
+    margin-bottom: 6px;
+}
+
+.achievement-name {
+    font-weight: bold;
+    font-size: 0.95em;
+    margin-bottom: 4px;
+}
+
+.achievement-info {
+    font-size: 0.8em;
+    opacity: 0.85;
+}
+
+/* ========== 股市小游戏弹窗 ========== */
+.stock-minigame-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 5, 8, 0.92);
+    backdrop-filter: blur(8px);
+    z-index: 220;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeInModal 0.4s forwards;
+}
+
+.stock-minigame-content {
+    max-width: 420px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+}
+
+.stock-minigame-content h3 {
+    color: #feca57;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+}
+
+.stock-desc {
+    opacity: 0.9;
+    margin-bottom: 18px;
+    font-size: 0.95em;
+}
+
+.stock-visual {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.stock-ticker {
+    font-size: 2.4em;
+    font-weight: bold;
+    color: #1dd1a1;
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+}
+
+.stock-ticker.down {
+    color: #ff6b6b;
+}
+
+.stock-trend {
+    font-size: 0.95em;
+    opacity: 0.85;
+}
+
+.stock-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.stock-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+}
+
+.stock-btn.buy {
+    background: linear-gradient(135deg, #10ac84 0%, #1dd1a1 100%);
+}
+
+.stock-btn.skip {
+    background: linear-gradient(135deg, #576574 0%, #8395a7 100%);
+}
+
+.stock-btn.sell {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff9f43 100%);
+}
+
+.stock-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.stock-timer-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.stock-timer-bar > div {
+    height: 100%;
+    background: linear-gradient(90deg, #feca57, #ff9f43);
+    width: 100%;
+    transition: width 1s linear;
+}
+
+.stock-hint {
+    font-size: 0.85em;
+    opacity: 0.8;
+}
+
+/* ========== 纪元过渡覆盖层 ========== */
+.epoch-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 5, 8, 0.95);
+    z-index: 230;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+}
+
+.epoch-transition-content {
+    max-width: 600px;
+}
+
+.epoch-animation {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 24px;
+}
+
+.epoch-transition-title {
+    font-size: 2.8em;
+    color: #feca57;
+    margin-bottom: 16px;
+    text-shadow: 0 0 20px rgba(254, 202, 87, 0.4);
+}
+
+.epoch-transition-desc {
+    font-size: 1.3em;
+    opacity: 0.9;
+}
+
 /* ========== 历史面板 ========== */
 .history-panel {
     background: rgba(255, 255, 255, 0.08);
     border-radius: 15px;
     padding: 25px;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    max-height: 400px;
+    max-height: 520px;
     overflow-y: auto;
     transition: all 0.5s ease;
 }
@@ -257,25 +627,55 @@
 }
 
 /* ========== 响应式设计 ========== */
+@media (max-width: 992px) {
+    .game-main {
+        grid-template-columns: 1fr;
+    }
+
+    .left-sidebar {
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .left-sidebar > .status-panel {
+        grid-column: 1 / -1;
+    }
+
+    .trend-chart {
+        height: 120px;
+    }
+
+    .social-radar svg {
+        width: 120px;
+        height: 120px;
+    }
+}
+
 @media (max-width: 768px) {
     .game-container {
         padding: 10px;
     }
-    
+
     .game-header h1 {
         font-size: 2em;
     }
-    
+
+    .left-sidebar {
+        grid-template-columns: 1fr;
+    }
+
     .stat-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
     }
-    
+
     .progress-bar {
         width: 100%;
     }
-    
+
     .option-btn {
         font-size: 1em;
         padding: 12px 15px;
@@ -309,5 +709,18 @@
     .report-radar svg {
         width: 180px;
         height: 180px;
+    }
+
+    .game-over-tabs {
+        justify-content: center;
+    }
+
+    .tab-btn {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+
+    .stock-buttons {
+        flex-direction: column;
     }
 }

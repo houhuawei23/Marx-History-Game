@@ -2,11 +2,11 @@ import { buildEventLibrary } from '../data/events.js';
 import { CognitiveFragments } from '../data/fragments.js';
 import { Achievements } from '../data/achievements.js';
 import { AudioManager } from './AudioManager.js';
-import { getDiceSVG, generateRadarSVG } from '../utils/helpers.js';
+import { getDiceSVG, generateRadarSVG, generateTrendChartSVG, generateSocialRadarSVG, getEpochTransitionAnimation, createParticleBurst } from '../utils/helpers.js';
 import { EPOCH_NAMES, ROUTE_LABELS, STORAGE_KEYS, GAME_SETTINGS } from '../config.js';
 
 /**
- * 资本：轮回与破局 - 核心游戏引擎
+ * 资本：轮回与破局 - 核心游戏引擎（增强版）
  */
 export class CapitalGame {
     constructor() {
@@ -16,13 +16,18 @@ export class CapitalGame {
         this.epoch = 1;
         this.rounds = 0;
         this.history = [];
+        this.trendHistory = [];
         this.isGameOver = false;
         this.audio = new AudioManager();
         this.typewriterTimer = null;
         this.pendingNext = null;
+        this.stockResult = 0;
+        this.stockTimerId = null;
 
         // 路线倾向
         this.route = { conservative: 0, technologist: 0, reformer: 0 };
+        // 社会关系
+        this.social = { ...GAME_SETTINGS.social };
         // 认知碎片（从 localStorage 读取持久化）
         this.fragments = this.loadFragments();
         // 成就
@@ -34,10 +39,7 @@ export class CapitalGame {
         // 骰子结果
         this.lastDiceRoll = null;
 
-        this.events = buildEventLibrary(buildEventLibrary.assets || {});
-        // 重新构建事件库，需要正确的 EventImages 引用
-        // 实际上需要传入真正的 EventImages。由于 GameEngine 不知道 assets，
-        // 我们在这里改用动态注入或在 main.js 中初始化。
+        this.events = buildEventLibrary({});
         this.initializeGame();
     }
 
@@ -104,6 +106,21 @@ export class CapitalGame {
         document.getElementById('music-toggle').addEventListener('click', () => this.toggleMusic());
         document.getElementById('fragment-gallery-btn').addEventListener('click', () => this.openFragmentGallery());
         document.getElementById('close-gallery-btn').addEventListener('click', () => this.closeFragmentGallery());
+
+        // Tab 切换
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+        });
+
+        // 股市小游戏按钮
+        document.getElementById('stock-buy').addEventListener('click', () => this.resolveStockGame('buy'));
+        document.getElementById('stock-skip').addEventListener('click', () => this.resolveStockGame('skip'));
+        document.getElementById('stock-sell').addEventListener('click', () => this.resolveStockGame('sell'));
+    }
+
+    switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tabName}`));
     }
 
     toggleMusic() {
@@ -219,6 +236,13 @@ export class CapitalGame {
         // 检查隐藏连锁事件
         if (this.checkHiddenEvent()) return;
 
+        // 检查社会关系特殊事件
+        const specialEvent = this.checkSocialEvent();
+        if (specialEvent) {
+            this.displayEvent(specialEvent);
+            return;
+        }
+
         // 检查路线专属事件
         const routeEvent = this.checkRouteEvent();
         if (routeEvent) {
@@ -227,7 +251,7 @@ export class CapitalGame {
         }
 
         const baseEvents = this.events[this.epoch];
-        const epochHistory = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent);
+        const epochHistory = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent && !h.isSpecialEvent);
         if (epochHistory.length >= 2) {
             this.epoch++;
             if (this.epoch > GAME_SETTINGS.maxEpoch) {
@@ -241,7 +265,13 @@ export class CapitalGame {
         }
 
         const randomEvent = baseEvents[Math.floor(Math.random() * baseEvents.length)];
-        this.displayEvent(randomEvent);
+
+        // 股市小游戏（非首回合、且开启）
+        if (GAME_SETTINGS.stockGame.enabled && this.rounds > 0 && !randomEvent.type) {
+            this.showStockMinigame(() => this.displayEvent(randomEvent));
+        } else {
+            this.displayEvent(randomEvent);
+        }
     }
 
     checkRouteEvent() {
@@ -264,6 +294,18 @@ export class CapitalGame {
         return false;
     }
 
+    checkSocialEvent() {
+        const workerTrust = this.social.worker;
+        const govSupport = this.social.gov;
+        if (workerTrust <= 10 && !this.history.some(h => h.event === '总罢工' && h.isSpecialEvent)) {
+            return { ...this.events.special.workerStrikeEmergency, isSpecialEvent: true };
+        }
+        if (govSupport >= 90 && !this.history.some(h => h.event === '政策红利' && h.isSpecialEvent)) {
+            return { ...this.events.special.policyDividend, isSpecialEvent: true };
+        }
+        return null;
+    }
+
     displayEvent(event) {
         const eventTitle = document.getElementById('event-title');
         const eventDescription = document.getElementById('event-description');
@@ -276,28 +318,117 @@ export class CapitalGame {
         knowledgeText.textContent = event.knowledge;
         eventImage.innerHTML = event.imageSvg || '';
 
-        const fragment = document.createDocumentFragment();
-        event.options.forEach((option) => {
-            const button = document.createElement('button');
-            button.className = 'option-btn';
-            const tagBadge = option.routeTag ? `<span class="route-badge ${option.routeTag}">${ROUTE_LABELS[option.routeTag] || option.routeTag}</span>` : '';
-            button.innerHTML = `
-                <div style="display:flex;align-items:center;gap:10px;">${tagBadge}<div>${option.text}<br>
-                <small>财富${option.wealth >= 0 ? '+' : ''}${option.wealth} | 
-                矛盾${option.conflict >= 0 ? '+' : ''}${option.conflict} | 
-                技术${option.tech >= 0 ? '+' : ''}${option.tech}</small></div></div>
-            `;
-            button.addEventListener('click', () => this.handleChoice(option, event));
-            fragment.appendChild(button);
-        });
-
         optionsContainer.innerHTML = '';
-        optionsContainer.appendChild(fragment);
+
+        if (event.type === 'slider') {
+            this.renderSliderDecision(event, optionsContainer);
+        } else {
+            const fragment = document.createDocumentFragment();
+            event.options.forEach((option) => {
+                const card = this.createOptionCard(option, event);
+                fragment.appendChild(card);
+            });
+            optionsContainer.appendChild(fragment);
+        }
+
         this.enableAllButtons();
         this.updateStatusDisplay();
     }
 
-    handleChoice(option, event) {
+    createOptionCard(option, event) {
+        const card = document.createElement('div');
+        card.className = `option-card route-${option.routeTag || 'default'}`;
+        const tagBadge = option.routeTag ? `<span class="route-badge ${option.routeTag}">${ROUTE_LABELS[option.routeTag] || option.routeTag}</span>` : '';
+
+        const preview = [];
+        if (option.wealth) preview.push(`财富 ${option.wealth > 0 ? '+' : ''}${option.wealth}`);
+        if (option.conflict) preview.push(`矛盾 ${option.conflict > 0 ? '+' : ''}${option.conflict}`);
+        if (option.tech) preview.push(`技术 ${option.tech > 0 ? '+' : ''}${option.tech}`);
+
+        card.innerHTML = `
+            <div class="option-card-header">
+                ${tagBadge}
+                <div class="option-card-title">${option.text}</div>
+            </div>
+            <div class="option-card-hint">点击查看详细后果与历史隐喻</div>
+            <div class="option-card-preview">
+                ${preview.length ? preview.map(p => `<span>${p}</span>`).join('') : '<span>维持现状</span>'}
+            </div>
+            <div class="option-card-details">
+                <div class="option-detail-stats">
+                    <span class="stat-w">财富${option.wealth >= 0 ? '+' : ''}${option.wealth}</span>
+                    <span class="stat-c">矛盾${option.conflict >= 0 ? '+' : ''}${option.conflict}</span>
+                    <span class="stat-t">技术${option.tech >= 0 ? '+' : ''}${option.tech}</span>
+                </div>
+                <div class="option-detail-meta">此选项将强化你的${option.routeTag ? ROUTE_LABELS[option.routeTag] : '中立'}路线倾向。</div>
+            </div>
+        `;
+
+        card.addEventListener('click', () => this.handleChoice(option, event, card));
+        return card;
+    }
+
+    renderSliderDecision(event, container) {
+        const slider = event.slider;
+        const base = event.sliderBase || {};
+        const div = document.createElement('div');
+        div.className = 'slider-decision';
+        div.innerHTML = `
+            <div class="slider-decision-header">
+                <h4>${slider.label}</h4>
+                <p>${slider.preview}</p>
+            </div>
+            <div class="slider-row">
+                <span>保守</span>
+                <input type="range" id="event-slider" min="${slider.min}" max="${slider.max}" value="${slider.default}">
+                <span>激进</span>
+                <div class="slider-value" id="slider-value">${slider.default}%</div>
+            </div>
+            <div class="slider-preview" id="slider-preview"></div>
+            <button class="slider-confirm" id="slider-confirm">确认决策</button>
+        `;
+        container.appendChild(div);
+
+        const sliderInput = div.querySelector('#event-slider');
+        const valueDisplay = div.querySelector('#slider-value');
+        const previewDisplay = div.querySelector('#slider-preview');
+
+        const updatePreview = () => {
+            const pct = parseInt(sliderInput.value, 10) / 100;
+            const w = Math.round((base.wealth || 0) * pct);
+            const c = Math.round((base.conflict || 0) * pct);
+            const t = Math.round((base.tech || 0) * pct);
+            valueDisplay.textContent = `${sliderInput.value}%`;
+            previewDisplay.innerHTML = `
+                <span class="stat-w">预估财富 ${w >= 0 ? '+' : ''}${w}</span>
+                <span class="stat-c">预估矛盾 ${c >= 0 ? '+' : ''}${c}</span>
+                <span class="stat-t">预估技术 ${t >= 0 ? '+' : ''}${t}</span>
+            `;
+        };
+
+        sliderInput.addEventListener('input', updatePreview);
+        updatePreview();
+
+        div.querySelector('#slider-confirm').addEventListener('click', () => {
+            const pct = parseInt(sliderInput.value, 10) / 100;
+            const option = {
+                text: `${slider.label} ${sliderInput.value}%`,
+                wealth: Math.round((base.wealth || 0) * pct),
+                conflict: Math.round((base.conflict || 0) * pct),
+                tech: Math.round((base.tech || 0) * pct),
+                routeTag: base.routeTag,
+                social: base.social ? {
+                    worker: Math.round(base.social.worker * pct),
+                    gov: Math.round(base.social.gov * pct),
+                    media: Math.round(base.social.media * pct),
+                    rival: Math.round(base.social.rival * pct)
+                } : undefined
+            };
+            this.handleChoice(option, event, div);
+        });
+    }
+
+    handleChoice(option, event, cardEl) {
         this.disableAllButtons();
 
         // D20 骰子
@@ -306,7 +437,7 @@ export class CapitalGame {
         this.showDiceRoll(diceRoll, () => {
             try {
                 // 应用基础数值
-                let w = option.wealth, c = option.conflict, t = option.tech;
+                let w = option.wealth || 0, c = option.conflict || 0, t = option.tech || 0;
                 // 骰子修正
                 if (diceRoll <= 5) { w -= 5; c += 3; }
                 else if (diceRoll >= 16) { w += 3; c -= 3; }
@@ -316,6 +447,20 @@ export class CapitalGame {
                 this.wealth += w;
                 this.socialConflict += c;
                 this.techPower += t;
+
+                // 社会关系
+                if (option.social) {
+                    for (const key in option.social) {
+                        this.social[key] = Math.max(GAME_SETTINGS.social.min, Math.min(GAME_SETTINGS.social.max, this.social[key] + (option.social[key] || 0)));
+                    }
+                }
+
+                // 股市结果
+                if (this.stockResult) {
+                    this.wealth += this.stockResult;
+                    this.showFloatingNumber('wealth-bar', this.stockResult);
+                    this.stockResult = 0;
+                }
 
                 // 路线倾向
                 if (option.routeTag) {
@@ -327,6 +472,9 @@ export class CapitalGame {
                 this.showFloatingNumber('conflict-bar', this.socialConflict - oldConflict);
                 this.showFloatingNumber('tech-bar', this.techPower - oldTech);
 
+                // 记录趋势
+                this.trendHistory.push({ wealth: this.wealth, conflict: this.socialConflict, tech: this.techPower });
+
                 this.history.push({
                     epoch: this.epoch,
                     event: event.name,
@@ -337,13 +485,27 @@ export class CapitalGame {
                     diceRoll,
                     isRouteEvent: event.isRouteEvent,
                     isHiddenEvent: event.isHiddenEvent,
+                    isSpecialEvent: event.isSpecialEvent,
                     historicalParallel: event.historicalParallel,
-                    quote: event.quote
+                    quote: event.quote,
+                    social: option.social ? { ...option.social } : undefined
                 });
 
                 this.updateHistoryDisplay();
                 this.checkAchievements();
                 this.checkGameStatus();
+
+                // 卡牌动画
+                if (cardEl) {
+                    const glowClass = option.routeTag ? `card-glow-${option.routeTag}` : 'card-glow-reformer';
+                    cardEl.classList.add(glowClass);
+                    const colorMap = { conservative: '#ff6b6b', technologist: '#48dbfb', reformer: '#1dd1a1' };
+                    createParticleBurst(cardEl, colorMap[option.routeTag] || '#feca57', 14);
+                    if (this.socialConflict >= 80 || this.wealth <= 20) {
+                        document.body.classList.add('shake-screen');
+                        setTimeout(() => document.body.classList.remove('shake-screen'), 400);
+                    }
+                }
 
                 if (!this.isGameOver) {
                     this.rounds++;
@@ -453,17 +615,26 @@ export class CapitalGame {
     }
 
     showEpochTransition() {
-        const eventTitle = document.getElementById('event-title');
-        const eventDescription = document.getElementById('event-description');
-        const optionsContainer = document.getElementById('options-container');
-        const eventImage = document.getElementById('event-image');
+        const overlay = document.getElementById('epoch-transition-overlay');
+        const title = document.getElementById('epoch-transition-title');
+        const desc = document.getElementById('epoch-transition-desc');
+        const animation = document.getElementById('epoch-animation');
 
-        eventTitle.textContent = "🚀 纪元转换";
-        eventDescription.textContent = `进入${EPOCH_NAMES[this.epoch]}！资本主义发展进入新阶段。`;
-        optionsContainer.innerHTML = '';
-        eventImage.innerHTML = '';
+        title.textContent = `🚀 进入${EPOCH_NAMES[this.epoch]}`;
+        desc.textContent = '资本主义发展进入新阶段，历史的车轮滚滚向前……';
+        animation.innerHTML = getEpochTransitionAnimation(this.epoch - 1, this.epoch);
 
-        setTimeout(() => this.nextEvent(), 1400);
+        overlay.style.display = 'flex';
+        overlay.classList.add('show');
+
+        setTimeout(() => {
+            overlay.classList.add('hide');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.classList.remove('show', 'hide');
+                this.nextEvent();
+            }, 400);
+        }, 2400);
     }
 
     checkGameStatus() {
@@ -512,12 +683,16 @@ export class CapitalGame {
         this.renderDiagnosticReport(ending);
         // 成就最终检查
         this.checkAchievements(true);
+        // 渲染成就列表
+        this.renderAchievementsList();
+        // 渲染收集碎片
+        this.renderCollectionFragments();
 
         this.updateHistoryDisplay();
+        this.switchTab('ending');
     }
 
     determineEnding() {
-        // 路线权重影响
         const maxRoute = Object.entries(this.route).sort((a, b) => b[1] - a[1])[0];
         if (this.socialConflict >= 80 && this.wealth >= 200) {
             return { name: "技术封建主义", description: "💀 坏结局: 你成为了掌握AI算力资源的数字领主。但99%的人口因失业而沦为无用阶级，社会消费能力崩溃。资本逻辑走向终点：资本无法自行增殖，陷入死寂。" };
@@ -551,6 +726,24 @@ export class CapitalGame {
         `).join('');
     }
 
+    renderCollectionFragments() {
+        const container = document.getElementById('collection-fragments');
+        const all = Object.values(this.fragments);
+        let html = '<div class="gallery-list">';
+        all.forEach(f => {
+            const locked = !f.unlocked;
+            html += `
+                <div class="gallery-item ${locked ? 'locked' : ''}">
+                    <h4>${locked ? '🔒 未解锁' : f.name}</h4>
+                    <p>${locked ? '???' : f.desc}</p>
+                    ${locked ? '' : `<p class="gallery-quote">${f.quote}</p>`}
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
     checkAchievements(finalCheck = false) {
         let newly = [];
         for (const key in this.achievements) {
@@ -571,6 +764,23 @@ export class CapitalGame {
         document.body.appendChild(toast);
         requestAnimationFrame(() => toast.classList.add('show'));
         setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3000);
+    }
+
+    renderAchievementsList() {
+        const container = document.getElementById('achievements-list');
+        const all = Object.values(this.achievements);
+        let html = '<div class="achievement-grid">';
+        all.forEach(a => {
+            html += `
+                <div class="achievement-card ${a.unlocked ? 'unlocked' : 'locked'}">
+                    <div class="achievement-icon">${a.name.split(' ')[0]}</div>
+                    <div class="achievement-name">${a.name.split(' ').slice(1).join(' ')}</div>
+                    <div class="achievement-info">${a.desc}</div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
     }
 
     renderDiagnosticReport(ending) {
@@ -597,6 +807,9 @@ export class CapitalGame {
         // 动态语录
         const quotes = this.history.filter(h => h.quote).map(h => `<p class="report-quote">${h.quote.text} <span class="report-author">—— ${h.quote.author}</span></p>`).join('');
         document.getElementById('report-quotes').innerHTML = quotes || '<p style="opacity:0.7">本轮未收集到经典语录。</p>';
+
+        // 历史走势
+        document.getElementById('report-trend').innerHTML = generateTrendChartSVG(this.trendHistory);
     }
 
     updateStatusDisplay() {
@@ -615,6 +828,18 @@ export class CapitalGame {
         document.getElementById('route-conservative').style.width = ((this.route.conservative / totalRoute) * 100) + '%';
         document.getElementById('route-technologist').style.width = ((this.route.technologist / totalRoute) * 100) + '%';
         document.getElementById('route-reformer').style.width = ((this.route.reformer / totalRoute) * 100) + '%';
+
+        // 社会关系
+        document.getElementById('social-worker').textContent = this.social.worker;
+        document.getElementById('social-gov').textContent = this.social.gov;
+        document.getElementById('social-media').textContent = this.social.media;
+        document.getElementById('social-rival').textContent = this.social.rival;
+
+        const socialValues = [this.social.worker, this.social.gov, this.social.media, this.social.rival];
+        document.getElementById('social-radar').innerHTML = generateSocialRadarSVG(socialValues, ['工人', '政府', '媒体', '竞争']);
+
+        // 趋势图
+        document.getElementById('trend-chart').innerHTML = generateTrendChartSVG(this.trendHistory);
 
         this.addWarningStyles();
     }
@@ -649,22 +874,113 @@ export class CapitalGame {
             `;
             historyList.appendChild(historyItem);
         });
+
+        // 迷你历史
+        const miniList = document.getElementById('mini-history-list');
+        if (this.history.length === 0) {
+            miniList.innerHTML = '<p class="mini-empty">游戏尚未开始</p>';
+        } else {
+            miniList.innerHTML = this.history.slice(-4).map(h => `
+                <div class="mini-history-item">
+                    <div class="mhi-title">${h.event}</div>
+                    <div class="mhi-choice">${h.choice}</div>
+                </div>
+            `).join('');
+        }
     }
 
     disableAllButtons() {
-        document.querySelectorAll('.option-btn').forEach(button => {
-            button.disabled = true;
-            button.style.opacity = '0.6';
-            button.style.cursor = 'not-allowed';
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.style.pointerEvents = 'none';
+            card.style.opacity = '0.6';
+        });
+        document.querySelectorAll('.slider-confirm').forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
         });
     }
 
     enableAllButtons() {
-        document.querySelectorAll('.option-btn').forEach(button => {
-            button.disabled = false;
-            button.style.opacity = '1';
-            button.style.cursor = 'pointer';
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.style.pointerEvents = 'auto';
+            card.style.opacity = '1';
         });
+        document.querySelectorAll('.slider-confirm').forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        });
+    }
+
+    // ========== 股市小游戏 ==========
+    showStockMinigame(callback) {
+        const modal = document.getElementById('stock-minigame-modal');
+        const ticker = document.getElementById('stock-ticker');
+        const trend = document.getElementById('stock-trend');
+        const timerText = document.getElementById('stock-timer-text');
+        const timerFill = document.getElementById('stock-timer-fill');
+
+        // 随机走势
+        const change = Math.floor(Math.random() * (GAME_SETTINGS.stockGame.maxChange - GAME_SETTINGS.stockGame.minChange + 1)) + GAME_SETTINGS.stockGame.minChange;
+        this.stockResult = change;
+
+        modal.style.display = 'flex';
+        modal.classList.remove('fade-out');
+
+        let remaining = GAME_SETTINGS.stockGame.timerSeconds;
+        timerText.textContent = remaining;
+        timerFill.style.width = '100%';
+        timerFill.style.transition = 'none';
+        requestAnimationFrame(() => {
+            timerFill.style.transition = `width ${remaining}s linear`;
+            timerFill.style.width = '0%';
+        });
+
+        const updateVisual = () => {
+            const display = 100 + change;
+            ticker.textContent = display;
+            ticker.classList.toggle('down', change < 0);
+            if (change > 10) trend.textContent = '牛市飙升 📈';
+            else if (change < -10) trend.textContent = '熊市暴跌 📉';
+            else if (change > 0) trend.textContent = '小幅上涨';
+            else if (change < 0) trend.textContent = '小幅下跌';
+            else trend.textContent = '市场平稳';
+        };
+        updateVisual();
+
+        this.stockCallback = callback;
+
+        this.stockTimerId = setInterval(() => {
+            remaining--;
+            timerText.textContent = remaining;
+            if (remaining <= 0) {
+                this.resolveStockGame('skip');
+            }
+        }, 1000);
+    }
+
+    resolveStockGame(action) {
+        if (this.stockTimerId) {
+            clearInterval(this.stockTimerId);
+            this.stockTimerId = null;
+        }
+        const modal = document.getElementById('stock-minigame-modal');
+        modal.classList.add('fade-out');
+
+        let multiplier = 0;
+        if (action === 'buy') multiplier = GAME_SETTINGS.stockGame.buyMultiplier;
+        else if (action === 'sell') multiplier = GAME_SETTINGS.stockGame.sellMultiplier;
+
+        this.stockResult = Math.round(this.stockResult * multiplier);
+
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.classList.remove('fade-out');
+            if (this.stockCallback) {
+                const cb = this.stockCallback;
+                this.stockCallback = null;
+                cb();
+            }
+        }, 300);
     }
 
     restartGame() {
@@ -680,11 +996,15 @@ export class CapitalGame {
             this.epoch = 1;
             this.rounds = 0;
             this.history = [];
+            this.trendHistory = [];
             this.isGameOver = false;
             this.route = { conservative: 0, technologist: 0, reformer: 0 };
+            this.social = { ...GAME_SETTINGS.social };
             this.equippedFragment = null;
             this.lastDiceRoll = null;
             this.pendingNext = null;
+            this.stockResult = 0;
+            if (this.stockTimerId) { clearInterval(this.stockTimerId); this.stockTimerId = null; }
             if (this.typewriterTimer) { clearInterval(this.typewriterTimer); this.typewriterTimer = null; }
             this.applyEpochTheme();
 
