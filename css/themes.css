@@ -1,0 +1,70 @@
+/* ========== 纪元主题 ========== */
+
+body.epoch-1 {
+    background: linear-gradient(135deg, #2d0a0a 0%, #1a0f0f 50%, #0f0505 100%);
+}
+
+body.epoch-1 .status-panel,
+body.epoch-1 .event-panel,
+body.epoch-1 .game-over-panel,
+body.epoch-1 .history-panel,
+body.epoch-1 .diagnostic-report {
+    border-color: rgba(212, 119, 50, 0.4);
+    box-shadow: 0 0 20px rgba(212, 119, 50, 0.1);
+}
+
+body.epoch-1 #epoch-name {
+    color: #ff8c5a;
+    text-shadow: 0 0 10px rgba(255, 140, 90, 0.4);
+}
+
+body.epoch-2 {
+    background: linear-gradient(135deg, #0a1a2d 0%, #0f1621 50%, #050a0f 100%);
+}
+
+body.epoch-2 .status-panel,
+body.epoch-2 .event-panel,
+body.epoch-2 .game-over-panel,
+body.epoch-2 .history-panel,
+body.epoch-2 .diagnostic-report {
+    border-color: rgba(72, 219, 251, 0.4);
+    box-shadow: 0 0 20px rgba(72, 219, 251, 0.1);
+}
+
+body.epoch-2 #epoch-name {
+    color: #48dbfb;
+    text-shadow: 0 0 10px rgba(72, 219, 251, 0.4);
+}
+
+body.epoch-3 {
+    background: linear-gradient(135deg, #1a0a2d 0%, #0f0a1a 50%, #0a0515 100%);
+}
+
+body.epoch-3 .status-panel,
+body.epoch-3 .event-panel,
+body.epoch-3 .game-over-panel,
+body.epoch-3 .history-panel,
+body.epoch-3 .diagnostic-report {
+    border-color: rgba(192, 90, 255, 0.4);
+    box-shadow: 0 0 20px rgba(192, 90, 255, 0.15);
+}
+
+body.epoch-3 #epoch-name {
+    color: #c05aff;
+    text-shadow: 0 0 12px rgba(192, 90, 255, 0.5);
+}
+
+body.epoch-3 .wealth-fill {
+    background: linear-gradient(90deg, #ffd700, #ffaa00);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+body.epoch-3 .conflict-fill {
+    background: linear-gradient(90deg, #ff4d94, #ff6b6b);
+    box-shadow: 0 0 8px rgba(255, 77, 148, 0.4);
+}
+
+body.epoch-3 .tech-fill {
+    background: linear-gradient(90deg, #00f5ff, #54a0ff);
+    box-shadow: 0 0 8px rgba(0, 245, 255, 0.4);
+}

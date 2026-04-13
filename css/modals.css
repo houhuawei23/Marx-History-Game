@@ -1,0 +1,302 @@
+/* ========== 全屏知识点弹窗 ========== */
+.knowledge-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 10, 15, 0.96);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    opacity: 0;
+    animation: fadeInModal 0.4s forwards;
+}
+
+@keyframes fadeInModal {
+    to { opacity: 1; }
+}
+
+.knowledge-modal.fade-out {
+    animation: fadeOutModal 0.3s forwards;
+}
+
+@keyframes fadeOutModal {
+    to { opacity: 0; }
+}
+
+.knowledge-modal-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 30px;
+    max-width: 900px;
+    width: 100%;
+}
+
+.knowledge-dialogue {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 20px;
+    padding: 30px;
+    min-height: 200px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.knowledge-dialogue::after {
+    content: '';
+    position: absolute;
+    bottom: 40px;
+    right: -20px;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 20px solid rgba(212, 175, 55, 0.4);
+}
+
+.knowledge-dialogue h3 {
+    color: #feca57;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.knowledge-dialogue p {
+    font-size: 1.15em;
+    line-height: 2;
+    color: #f0f0f0;
+    display: inline;
+}
+
+.modal-quote {
+    display: block !important;
+    margin-top: 18px;
+    font-size: 0.95em !important;
+    font-style: italic;
+    color: #d4af37;
+    border-left: 3px solid rgba(212, 175, 55, 0.5);
+    padding-left: 12px;
+    opacity: 0.95;
+}
+
+.typewriter-cursor {
+    display: inline;
+    color: #feca57;
+    font-weight: bold;
+    animation: blink 1s infinite;
+    margin-left: 4px;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.knowledge-portrait {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.knowledge-portrait svg {
+    width: 180px;
+    height: 270px;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+}
+
+.portrait-caption {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #d4af37;
+    opacity: 0.8;
+}
+
+/* ========== 碎片选择弹窗 ========== */
+.fragment-selection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 210;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeInModal 0.4s forwards;
+}
+
+.fragment-selection-modal.fade-out {
+    animation: fadeOutModal 0.3s forwards;
+}
+
+.fragment-selection-content {
+    max-width: 800px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.fragment-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.fragment-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(254, 202, 87, 0.4);
+    transform: translateX(6px);
+}
+
+.fragment-card h4 {
+    color: #feca57;
+    margin-bottom: 6px;
+}
+
+.fragment-card p {
+    opacity: 0.9;
+    font-size: 0.95em;
+}
+
+.fragment-effect {
+    margin-top: 6px;
+    color: #1dd1a1;
+    font-size: 0.85em !important;
+}
+
+/* ========== 理论档案室弹窗 ========== */
+.fragment-gallery-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 210;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeInModal 0.4s forwards;
+}
+
+.fragment-gallery-modal.fade-out {
+    animation: fadeOutModal 0.3s forwards;
+}
+
+.fragment-gallery-content {
+    max-width: 800px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.fragment-gallery-content h3 {
+    text-align: center;
+    color: #feca57;
+    margin-bottom: 20px;
+}
+
+.gallery-list {
+    display: grid;
+    gap: 15px;
+}
+
+.gallery-item {
+    background: rgba(255, 255, 255, 0.06);
+    border-left: 4px solid #feca57;
+    border-radius: 10px;
+    padding: 15px 18px;
+    transition: all 0.3s ease;
+}
+
+.gallery-item.locked {
+    opacity: 0.5;
+    border-left-color: #666;
+}
+
+.gallery-item h4 {
+    color: #feca57;
+    margin-bottom: 6px;
+}
+
+.gallery-quote {
+    margin-top: 10px;
+    font-style: italic;
+    color: #d4af37;
+    font-size: 0.9em;
+    border-left: 2px solid rgba(212, 175, 55, 0.3);
+    padding-left: 10px;
+}
+
+/* ========== D20 骰子覆盖层 ========== */
+.dice-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 5, 8, 0.9);
+    backdrop-filter: blur(6px);
+    z-index: 205;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.dice-box {
+    text-align: center;
+}
+
+.dice-container {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 20px;
+}
+
+.dice-svg {
+    width: 100%;
+    height: 100%;
+    animation: diceShake 0.15s ease-in-out;
+}
+
+@keyframes diceShake {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(12deg) scale(1.05); }
+    100% { transform: rotate(0deg) scale(1); }
+}
+
+.dice-result-text {
+    font-size: 1.2em;
+    color: #feca57;
+    font-weight: bold;
+    text-shadow: 0 2px 10px rgba(254, 202, 87, 0.3);
+}

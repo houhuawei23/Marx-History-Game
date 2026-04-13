@@ -1,0 +1,313 @@
+/* ========== 基础容器 ========== */
+.game-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* ========== 游戏结束面板 ========== */
+.game-over-panel {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    opacity: 0;
+    animation: fadeInPanel 0.5s forwards;
+}
+
+.game-over-panel.fade-out {
+    animation: fadeOutPanel 0.4s forwards;
+}
+
+@keyframes fadeInPanel {
+    to { opacity: 1; }
+}
+
+@keyframes fadeOutPanel {
+    to { opacity: 0; }
+}
+
+.game-over-content {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-over-panel h2 {
+    color: #ff6b6b;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+}
+
+.game-over-panel p {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+.unlocked-fragments {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.unlocked-fragments h4 {
+    color: #feca57;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.fragment-unlock-card {
+    background: rgba(255, 215, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+}
+
+.fragment-unlock-card .quote {
+    margin-top: 8px;
+    font-style: italic;
+    color: #d4af37;
+    font-size: 0.9em;
+}
+
+.quotes {
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    border-left: 4px solid #feca57;
+}
+
+.quotes h3 {
+    color: #feca57;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.quotes p {
+    font-style: italic;
+    margin-bottom: 10px;
+    opacity: 0.9;
+    font-size: 1.1em;
+}
+
+/* ========== 课后诊断报告 ========== */
+.diagnostic-report {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.5s ease;
+}
+
+.diagnostic-report h3 {
+    color: #feca57;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+
+.report-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.report-stat {
+    text-align: center;
+}
+
+.report-label {
+    display: block;
+    font-size: 0.85em;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.report-value {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #feca57;
+}
+
+.report-radar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.report-radar svg {
+    width: 220px;
+    height: 220px;
+}
+
+.report-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.report-section h4 {
+    color: #48dbfb;
+    margin-bottom: 12px;
+    font-size: 1.15em;
+}
+
+.parallel-list {
+    list-style: none;
+}
+
+.parallel-list li {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    line-height: 1.7;
+}
+
+.report-quote {
+    font-style: italic;
+    color: #d4af37;
+    margin-bottom: 10px;
+    border-left: 3px solid rgba(212, 175, 55, 0.4);
+    padding-left: 12px;
+}
+
+.report-author {
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+
+/* ========== 历史面板 ========== */
+.history-panel {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    transition: all 0.5s ease;
+}
+
+.history-panel h3 {
+    color: #48dbfb;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    text-align: center;
+    border-bottom: 2px solid rgba(72, 219, 251, 0.3);
+    padding-bottom: 10px;
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #667eea;
+    transition: transform 0.2s ease;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.history-item h4 {
+    color: #feca57;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dice-mini {
+    font-size: 0.75em;
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 8px;
+    color: #d4af37;
+}
+
+.history-item p {
+    margin-bottom: 8px;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.history-item .knowledge {
+    font-style: italic;
+    color: #ff9f43;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 10px;
+    margin-top: 10px;
+    font-size: 0.95em;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .game-header h1 {
+        font-size: 2em;
+    }
+    
+    .stat-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .progress-bar {
+        width: 100%;
+    }
+    
+    .option-btn {
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+
+    .knowledge-modal-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .knowledge-dialogue::after {
+        display: none;
+    }
+
+    .knowledge-portrait svg {
+        width: 120px;
+        height: 180px;
+    }
+
+    .continue-btn {
+        bottom: 30px;
+        font-size: 1em;
+        padding: 12px 24px;
+    }
+
+    .report-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .report-radar svg {
+        width: 180px;
+        height: 180px;
+    }
+}

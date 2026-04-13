@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资本：轮回与破局</title>
+    <!-- 样式表：按依赖顺序加载 -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/effects.css">
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body class="epoch-1">
+    <!-- 浮动数字容器 -->
+    <div id="floating-numbers-container"></div>
+
+    <div class="game-container">
+        <!-- 音乐开关 -->
+        <button class="music-toggle" id="music-toggle" title="开关背景音乐">🔇</button>
+
+        <!-- 理论档案室按钮 -->
+        <button class="gallery-btn" id="fragment-gallery-btn" title="理论档案室">📚</button>
+
+        <!-- 游戏标题 -->
+        <header class="game-header">
+            <h1>🎮 资本：轮回与破局</h1>
+            <p class="subtitle">作为一名资本家，你的目标是积累财富，但要注意社会矛盾的激化！</p>
+        </header>
+
+        <!-- 游戏状态显示 -->
+        <div class="status-panel">
+            <div class="epoch-display">
+                <span id="epoch-name">原始积累纪元</span>
+                <span id="round-counter">第1回合</span>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <label>财富值:</label>
+                    <div class="progress-bar">
+                        <div id="wealth-bar" class="progress-fill wealth-fill"></div>
+                        <span id="wealth-value">100</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <label>社会矛盾:</label>
+                    <div class="progress-bar">
+                        <div id="conflict-bar" class="progress-fill conflict-fill"></div>
+                        <span id="conflict-value">30</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <label>技术力:</label>
+                    <div class="progress-bar">
+                        <div id="tech-bar" class="progress-fill tech-fill"></div>
+                        <span id="tech-value">50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 路线倾向条 -->
+            <div class="route-panel">
+                <div class="route-labels">
+                    <span class="route-label conservative">⚔️ 保守</span>
+                    <span class="route-label technologist">🤖 技术</span>
+                    <span class="route-label reformer">🕊️ 改良</span>
+                </div>
+                <div class="route-bar-bg">
+                    <div class="route-bar-segment conservative" id="route-conservative"></div>
+                    <div class="route-bar-segment technologist" id="route-technologist"></div>
+                    <div class="route-bar-segment reformer" id="route-reformer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 事件显示区域 -->
+        <div class="event-panel" id="event-panel">
+            <div class="event-image" id="event-image"></div>
+            <div class="event-header">
+                <h2 id="event-title">欢迎来到资本主义世界</h2>
+                <p id="event-description">请点击开始游戏按钮，体验资本主义的发展历程</p>
+            </div>
+            
+            <div class="options-container" id="options-container">
+                <button class="start-btn" id="start-btn">开始游戏</button>
+            </div>
+            
+            <div class="knowledge-panel" id="knowledge-panel">
+                <h3>📚 马克思主义知识点</h3>
+                <p id="knowledge-text">游戏将展示资本主义发展的内在矛盾和马克思主义的科学分析</p>
+            </div>
+        </div>
+
+        <!-- 游戏结束画面 -->
+        <div class="game-over-panel" id="game-over-panel" style="display: none;">
+            <div class="game-over-content">
+                <h2 id="game-over-title">🎭 游戏结束</h2>
+                <p id="game-over-reason"></p>
+                <p id="ending-description"></p>
+
+                <!-- 解锁的认知碎片 -->
+                <div class="unlocked-fragments" id="unlocked-fragments"></div>
+
+                <div class="quotes">
+                    <h3>💡 马克思主义经典语录</h3>
+                    <p>"在必然王国的彼岸，作为目的本身的人类能力的发展，真正的自由王国，就开始了。" —— 马克思</p>
+                    <p>"社会主义社会不是从原则出发，而是从事实出发。" —— 恩格斯</p>
+                </div>
+                <button class="restart-btn" id="restart-btn">重新开始游戏</button>
+            </div>
+
+            <!-- 课后理论诊断报告 -->
+            <div class="diagnostic-report" id="diagnostic-report">
+                <h3>📊 你的资本主义诊断书</h3>
+                <div class="report-stats">
+                    <div class="report-stat"><span class="report-label">剥削指数</span><span class="report-value" id="report-exploitation">0</span></div>
+                    <div class="report-stat"><span class="report-label">技术乐观</span><span class="report-value" id="report-tech">0</span></div>
+                    <div class="report-stat"><span class="report-label">改良诚意</span><span class="report-value" id="report-reform">0</span></div>
+                </div>
+                <div class="report-radar" id="report-radar"></div>
+
+                <div class="report-section">
+                    <h4>📜 历史对照</h4>
+                    <div id="report-parallels"></div>
+                </div>
+
+                <div class="report-section">
+                    <h4>📖 经典语录回顾</h4>
+                    <div id="report-quotes"></div>
+                </div>
+            </div>
+            
+            <!-- 游戏历史（在游戏结束面板内显示） -->
+            <div class="history-panel" id="history-panel">
+                <h3>📜 游戏历史回顾</h3>
+                <div id="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏知识点弹窗 -->
+    <div class="knowledge-modal" id="knowledge-modal" style="display: none;">
+        <div class="knowledge-modal-content">
+            <div class="knowledge-dialogue">
+                <h3>📚 马克思主义知识点</h3>
+                <p id="modal-knowledge-text"></p>
+                <span class="typewriter-cursor" id="typewriter-cursor">|</span>
+                <p id="modal-quote-text" class="modal-quote"></p>
+            </div>
+            <div class="knowledge-portrait">
+                <!-- 马克思/恩格斯 SVG 肖像 -->
+                <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" aria-label="思想家肖像">
+                    <circle cx="100" cy="110" r="80" fill="rgba(255,215,0,0.15)" stroke="rgba(255,215,0,0.4)" stroke-width="2"/>
+                    <path d="M40 280 Q30 200 60 170 L140 170 Q170 200 160 280 Z" fill="rgba(200,180,160,0.3)" stroke="#d4af37" stroke-width="2"/>
+                    <path d="M60 170 L100 200 L140 170" fill="none" stroke="#d4af37" stroke-width="2"/>
+                    <ellipse cx="100" cy="110" rx="45" ry="55" fill="rgba(255,220,180,0.2)" stroke="#d4af37" stroke-width="2"/>
+                    <path d="M55 90 Q60 40 100 40 Q140 40 145 90 Q150 130 135 150 Q100 170 65 150 Q50 130 55 90" fill="rgba(255,215,0,0.2)" stroke="#d4af37" stroke-width="2"/>
+                    <circle cx="85" cy="105" r="4" fill="#d4af37"/>
+                    <circle cx="115" cy="105" r="4" fill="#d4af37"/>
+                    <path d="M100 105 L95 125 L105 125 Z" fill="#d4af37"/>
+                    <path d="M90 140 Q100 145 110 140" fill="none" stroke="#d4af37" stroke-width="2" stroke-linecap="round"/>
+                    <rect x="70" y="210" width="60" height="45" rx="3" fill="rgba(255,255,255,0.1)" stroke="#d4af37" stroke-width="1.5"/>
+                    <line x1="80" y1="225" x2="120" y2="225" stroke="#d4af37" stroke-width="1"/>
+                    <line x1="80" y1="235" x2="120" y2="235" stroke="#d4af37" stroke-width="1"/>
+                    <line x1="80" y1="245" x2="110" y2="245" stroke="#d4af37" stroke-width="1"/>
+                </svg>
+                <p class="portrait-caption">马克思 & 恩格斯</p>
+            </div>
+        </div>
+        <button class="continue-btn" id="continue-btn" style="opacity: 0; pointer-events: none;">继续游戏</button>
+    </div>
+
+    <!-- 碎片选择弹窗 -->
+    <div class="fragment-selection-modal" id="fragment-selection-modal" style="display: none;">
+        <div class="fragment-selection-content" id="fragment-selection-content"></div>
+    </div>
+
+    <!-- 理论档案室弹窗 -->
+    <div class="fragment-gallery-modal" id="fragment-gallery-modal" style="display: none;">
+        <div class="fragment-gallery-content">
+            <h3>📚 理论档案室 · 认知碎片</h3>
+            <div class="gallery-list" id="gallery-list"></div>
+            <button class="close-gallery-btn" id="close-gallery-btn">关闭</button>
+        </div>
+    </div>
+
+    <!-- D20 骰子覆盖层 -->
+    <div class="dice-overlay" id="dice-overlay" style="display: none;">
+        <div class="dice-box">
+            <div class="dice-container" id="dice-container"></div>
+            <p class="dice-result-text" id="dice-result-text"></p>
+        </div>
+    </div>
+
+    <!-- 重新开始提示 Toast -->
+    <div class="restart-toast" id="restart-toast">历史周期再次开启，上一轮的认知将伴随你……</div>
+
+    <!-- ES Module 入口 -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

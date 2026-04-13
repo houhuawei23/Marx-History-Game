@@ -1,0 +1,347 @@
+/* ========== 顶部按钮 ========== */
+.music-toggle, .gallery-btn {
+    position: fixed;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 1.4em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.music-toggle {
+    top: 20px;
+    right: 20px;
+}
+
+.gallery-btn {
+    top: 20px;
+    right: 76px;
+    font-size: 1.2em;
+}
+
+.music-toggle:hover, .gallery-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.music-toggle.active {
+    background: rgba(254, 202, 87, 0.25);
+    box-shadow: 0 0 15px rgba(254, 202, 87, 0.3);
+}
+
+/* ========== 游戏标题 ========== */
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
+.game-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+/* ========== 状态面板组件 ========== */
+.status-panel {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
+.epoch-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#epoch-name {
+    color: #feca57;
+    transition: color 0.5s ease;
+}
+
+#round-counter {
+    color: #48dbfb;
+}
+
+.stats {
+    display: grid;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-item label {
+    min-width: 100px;
+    font-weight: bold;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.3s ease;
+    position: relative;
+    will-change: width;
+}
+
+.wealth-fill {
+    background: linear-gradient(90deg, #10ac84, #1dd1a1);
+}
+
+.conflict-fill {
+    background: linear-gradient(90deg, #ff6b6b, #ff9f43);
+}
+
+.tech-fill {
+    background: linear-gradient(90deg, #48dbfb, #54a0ff);
+}
+
+.progress-bar span {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 路线倾向 */
+.route-panel {
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.route-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    margin-bottom: 6px;
+    opacity: 0.9;
+}
+
+.route-label.conservative { color: #ff6b6b; }
+.route-label.technologist { color: #48dbfb; }
+.route-label.reformer { color: #1dd1a1; }
+
+.route-bar-bg {
+    display: flex;
+    height: 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.route-bar-segment {
+    height: 100%;
+    transition: width 0.4s ease;
+}
+
+.route-bar-segment.conservative { background: linear-gradient(90deg, #ff6b6b, #ff9f43); }
+.route-bar-segment.technologist { background: linear-gradient(90deg, #48dbfb, #54a0ff); }
+.route-bar-segment.reformer { background: linear-gradient(90deg, #1dd1a1, #10ac84); }
+
+/* ========== 事件面板组件 ========== */
+.event-panel {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
+.event-image {
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
+.event-image svg {
+    width: 120px;
+    height: 120px;
+    opacity: 0.9;
+}
+
+.event-header {
+    margin-bottom: 25px;
+}
+
+.event-header h2 {
+    color: #feca57;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.event-header p {
+    font-size: 1.1em;
+    line-height: 1.8;
+}
+
+/* ========== 按钮组件 ========== */
+.options-container {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.option-btn {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+}
+
+.option-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.option-btn:active {
+    transform: translateY(0);
+}
+
+.option-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.3s;
+}
+
+.option-btn:hover::before {
+    left: 100%;
+}
+
+.option-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.route-badge {
+    font-size: 0.7em;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.3);
+    white-space: nowrap;
+}
+
+.route-badge.conservative { border-color: #ff6b6b; color: #ffccc7; }
+.route-badge.technologist { border-color: #48dbfb; color: #d0f7ff; }
+.route-badge.reformer { border-color: #1dd1a1; color: #d1fae5; }
+
+.start-btn, .restart-btn, .continue-btn, .close-gallery-btn {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+    display: block;
+}
+
+.continue-btn {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    z-index: 201;
+    background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%);
+    box-shadow: 0 5px 20px rgba(254, 202, 87, 0.4);
+    min-width: 160px;
+}
+
+.close-gallery-btn {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.start-btn:hover, .restart-btn:hover, .continue-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+}
+
+/* 知识点面板 */
+.knowledge-panel {
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.knowledge-panel h3 {
+    color: #feca57;
+    margin-bottom: 10px;
+}
+
+.knowledge-panel p {
+    font-style: italic;
+    line-height: 1.8;
+}
