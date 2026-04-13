@@ -100,7 +100,7 @@
 }
 
 .stat-item label {
-    min-width: 80px;
+    min-width: 84px;
     font-weight: bold;
     font-size: 0.9em;
 }
@@ -122,8 +122,12 @@
     will-change: width;
 }
 
-.wealth-fill {
+.cash-fill {
     background: linear-gradient(90deg, #10ac84, #1dd1a1);
+}
+
+.stock-fill {
+    background: linear-gradient(90deg, #feca57, #ff9f43);
 }
 
 .conflict-fill {

@@ -1,112 +1,135 @@
 /**
- * 音频管理器
- * 使用 Web Audio API 合成氛围音乐与音效
- * 无需外部音频文件
+ * 音频管理器（文件版）
+ * 使用 HTMLAudioElement 播放纪元背景 MP3，Web Audio API 保留给音效
  */
+
+const AUDIO_BASE_PATH = 'assets/audio/';
 
 export class AudioManager {
     constructor() {
-        this.ctx = null;
+        this.ctx = null;          // Web Audio 上下文（仅用于音效）
         this.isPlaying = false;
-        this.gainNode = null;
-        this.oscillators = [];
-        this.nextNoteTime = 0;
-        this.timerID = null;
         this.epoch = 1;
+        this.tracks = {};
+        this.currentTrack = null;
+        this.fadeInterval = null;
+        this.targetVolume = 0.45;
+        this.fadeDuration = 600; // ms
+        this._initTracks();
+    }
+
+    _initTracks() {
+        [1, 2, 3].forEach((e) => {
+            const audio = new Audio(`${AUDIO_BASE_PATH}epoch${e}.mp3`);
+            audio.loop = true;
+            audio.volume = 0;
+            audio.preload = 'auto';
+            this.tracks[e] = audio;
+        });
     }
 
     init() {
+        // 恢复 Web Audio 上下文（用于音效）
         if (!this.ctx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.ctx = new AudioContext();
+            const AC = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AC();
         }
-        if (this.ctx.state === 'suspended') {
+        if (this.ctx && this.ctx.state === 'suspended') {
             this.ctx.resume();
         }
     }
 
     setEpoch(epoch) {
-        this.epoch = epoch;
+        if (this.epoch !== epoch) {
+            this.epoch = epoch;
+            if (this.isPlaying) {
+                this._crossfade(epoch);
+            }
+        }
     }
 
     playAmbient() {
         this.init();
         if (this.isPlaying) return;
         this.isPlaying = true;
-        this.gainNode = this.ctx.createGain();
-        this.gainNode.connect(this.ctx.destination);
-        this.gainNode.gain.value = 0.06;
-
-        // 基础低频氛围
-        const baseFreqs = this.epoch === 3 ? [55, 82.41] : [55, 65.41];
-        baseFreqs.forEach(f => {
-            const osc = this.ctx.createOscillator();
-            osc.type = this.epoch === 3 ? 'sawtooth' : 'sine';
-            osc.frequency.value = f;
-            const oscGain = this.ctx.createGain();
-            oscGain.gain.value = this.epoch === 3 ? 0.15 : 0.5;
-            osc.connect(oscGain);
-            oscGain.connect(this.gainNode);
-            osc.start();
-            this.oscillators.push({ osc, oscGain });
-        });
-
-        this.nextNoteTime = this.ctx.currentTime;
-        this.scheduleNotes();
-    }
-
-    scheduleNotes() {
-        if (!this.isPlaying) return;
-        const lookahead = 0.5;
-        while (this.nextNoteTime < this.ctx.currentTime + lookahead) {
-            this.playNote(this.nextNoteTime);
-            this.nextNoteTime += this.epoch === 3 ? 1.2 + Math.random() : (this.epoch === 2 ? 1.8 + Math.random() * 1.2 : 2.5 + Math.random() * 2);
+        const track = this.tracks[this.epoch];
+        this.currentTrack = track;
+        track.currentTime = 0;
+        const playPromise = track.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch((err) => {
+                // 自动播放被阻止，常见，待用户交互后再次调用即可
+                console.warn('Audio play prevented (autoplay policy):', err.name);
+                this.isPlaying = false;
+            });
         }
-        this.timerID = setTimeout(() => this.scheduleNotes(), 200);
-    }
-
-    playNote(when) {
-        if (!this.ctx) return;
-        let scale;
-        if (this.epoch === 1) {
-            scale = [110, 130.81, 146.83, 164.81, 196.00, 220.00];
-        } else if (this.epoch === 2) {
-            scale = [130.81, 164.81, 196.00, 261.63, 329.63];
-        } else {
-            scale = [164.81, 196.00, 261.63, 329.63, 392.00, 523.25];
-        }
-        const freq = scale[Math.floor(Math.random() * scale.length)];
-        const osc = this.ctx.createOscillator();
-        osc.type = this.epoch === 3 ? 'square' : (this.epoch === 2 ? 'triangle' : 'sine');
-        osc.frequency.value = freq;
-        const noteGain = this.ctx.createGain();
-        noteGain.gain.setValueAtTime(0, when);
-        noteGain.gain.linearRampToValueAtTime(this.epoch === 3 ? 0.06 : 0.1, when + 0.4);
-        noteGain.gain.exponentialRampToValueAtTime(0.001, when + (this.epoch === 3 ? 1.2 : 2));
-        osc.connect(noteGain);
-        noteGain.connect(this.gainNode);
-        osc.start(when);
-        osc.stop(when + (this.epoch === 3 ? 1.4 : 2.2));
+        this._fadeVolume(track, this.targetVolume, this.fadeDuration);
     }
 
     stopAmbient() {
         if (!this.isPlaying) return;
         this.isPlaying = false;
-        if (this.timerID) {
-            clearTimeout(this.timerID);
-            this.timerID = null;
+        if (this.currentTrack) {
+            this._fadeVolume(this.currentTrack, 0, this.fadeDuration, () => {
+                this.currentTrack.pause();
+                this.currentTrack.currentTime = 0;
+            });
         }
-        if (this.gainNode) {
-            const now = this.ctx.currentTime;
-            this.gainNode.gain.cancelScheduledValues(now);
-            this.gainNode.gain.linearRampToValueAtTime(0, now + 0.5);
-        }
-        setTimeout(() => {
-            this.oscillators.forEach(({ osc }) => { try { osc.stop(); } catch (e) { } });
-            this.oscillators = [];
-        }, 600);
     }
 
+    toggle() {
+        this.init();
+        if (this.isPlaying) {
+            this.stopAmbient();
+            return false;
+        } else {
+            this.playAmbient();
+            return true;
+        }
+    }
+
+    _crossfade(newEpoch) {
+        const oldTrack = this.currentTrack;
+        const newTrack = this.tracks[newEpoch];
+        this.currentTrack = newTrack;
+        if (oldTrack && oldTrack !== newTrack) {
+            this._fadeVolume(oldTrack, 0, this.fadeDuration, () => {
+                oldTrack.pause();
+                oldTrack.currentTime = 0;
+            });
+        }
+        newTrack.currentTime = 0;
+        const playPromise = newTrack.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch((err) => {
+                console.warn('Audio crossfade play prevented:', err.name);
+            });
+        }
+        this._fadeVolume(newTrack, this.targetVolume, this.fadeDuration);
+    }
+
+    _fadeVolume(audio, target, durationMs, onDone) {
+        const startVol = audio.volume;
+        const delta = target - startVol;
+        const steps = Math.max(1, Math.floor(durationMs / 30));
+        let step = 0;
+        if (this.fadeInterval) {
+            clearInterval(this.fadeInterval);
+        }
+        this.fadeInterval = setInterval(() => {
+            step++;
+            const ratio = step / steps;
+            audio.volume = Math.max(0, Math.min(1, startVol + delta * ratio));
+            if (step >= steps) {
+                clearInterval(this.fadeInterval);
+                this.fadeInterval = null;
+                audio.volume = target;
+                if (onDone) onDone();
+            }
+        }, 30);
+    }
+
+    // ========== 音效（仍用 Web Audio API） ==========
     playSfx(type) {
         this.init();
         if (!this.ctx) return;
@@ -162,16 +185,14 @@ export class AudioManager {
                 osc.start(now);
                 osc.stop(now + 0.15);
                 break;
-        }
-    }
-
-    toggle() {
-        if (this.isPlaying) {
-            this.stopAmbient();
-            return false;
-        } else {
-            this.playAmbient();
-            return true;
+            case 'click':
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                gain.gain.setValueAtTime(0.06, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+                break;
         }
     }
 }

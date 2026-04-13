@@ -10,6 +10,7 @@ import { EPOCH_NAMES, ROUTE_LABELS, STORAGE_KEYS, GAME_SETTINGS } from '../confi
  */
 export class CapitalGame {
     constructor() {
+        this.cash = GAME_SETTINGS.startWealth;
         this.wealth = GAME_SETTINGS.startWealth;
         this.socialConflict = GAME_SETTINGS.startConflict;
         this.techPower = GAME_SETTINGS.startTech;
@@ -131,23 +132,23 @@ export class CapitalGame {
     }
 
     bindEvents() {
-        document.getElementById('start-btn').addEventListener('click', () => this.startGame());
-        document.getElementById('restart-btn').addEventListener('click', () => this.restartGame());
-        document.getElementById('continue-btn').addEventListener('click', () => this.closeKnowledgeModal());
-        document.getElementById('music-toggle').addEventListener('click', () => this.toggleMusic());
-        document.getElementById('fragment-gallery-btn').addEventListener('click', () => this.openFragmentGallery());
-        document.getElementById('close-gallery-btn').addEventListener('click', () => this.closeFragmentGallery());
+        document.getElementById('start-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.startGame(); });
+        document.getElementById('restart-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.restartGame(); });
+        document.getElementById('continue-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.closeKnowledgeModal(); });
+        document.getElementById('music-toggle').addEventListener('click', () => { this.audio.playSfx('click'); this.toggleMusic(); });
+        document.getElementById('fragment-gallery-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.openFragmentGallery(); });
+        document.getElementById('close-gallery-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.closeFragmentGallery(); });
 
         // Tab 切换
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+            btn.addEventListener('click', (e) => { this.audio.playSfx('click'); this.switchTab(e.target.dataset.tab); });
         });
 
         // 股市交易按钮
         document.getElementById('stock-buy').addEventListener('click', () => this.tradeStock('buy'));
-        document.getElementById('stock-skip').addEventListener('click', () => this.tradeStock('skip'));
+        document.getElementById('stock-skip').addEventListener('click', () => { this.audio.playSfx('click'); this.tradeStock('skip'); });
         document.getElementById('stock-sell').addEventListener('click', () => this.tradeStock('sell'));
-        document.getElementById('intro-start-btn').addEventListener('click', () => this.hideIntro());
+        document.getElementById('intro-start-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.hideIntro(); });
     }
 
     switchTab(tabName) {
@@ -216,6 +217,7 @@ export class CapitalGame {
 
         container.querySelectorAll('.fragment-card').forEach(card => {
             card.addEventListener('click', () => {
+                this.audio.playSfx('click');
                 const id = card.dataset.id;
                 this.equippedFragment = id ? this.fragments[id] : null;
                 if (this.equippedFragment) {
@@ -241,9 +243,10 @@ export class CapitalGame {
     }
 
     applyFragmentEffect(effect) {
-        if (effect.wealthStart) this.wealth += effect.wealthStart;
+        if (effect.wealthStart) this.cash += effect.wealthStart;
         if (effect.conflictStart) this.socialConflict += effect.conflictStart;
         if (effect.techStart) this.techPower += effect.techStart;
+        this.updateWealth();
     }
 
     renderFragmentGallery() {
@@ -281,8 +284,9 @@ export class CapitalGame {
 
         // 应用每回合碎片效果
         if (this.equippedFragment && this.equippedFragment.effect && this.equippedFragment.effect.wealthPerRound) {
-            this.wealth += this.equippedFragment.effect.wealthPerRound;
-            this.showFloatingNumber('wealth-bar', this.equippedFragment.effect.wealthPerRound);
+            this.cash += this.equippedFragment.effect.wealthPerRound;
+            this.updateWealth();
+            this.showFloatingNumber('cash-bar', this.equippedFragment.effect.wealthPerRound);
             this.updateStatusDisplay();
         }
 
@@ -450,7 +454,7 @@ export class CapitalGame {
             </div>
         `;
 
-        card.addEventListener('click', () => this.handleChoice(option, event, card));
+        card.addEventListener('click', () => { this.audio.playSfx('click'); this.handleChoice(option, event, card); });
         return card;
     }
 
@@ -496,6 +500,7 @@ export class CapitalGame {
         updatePreview();
 
         div.querySelector('#slider-confirm').addEventListener('click', () => {
+            this.audio.playSfx('click');
             const pct = parseInt(sliderInput.value, 10) / 100;
             const option = {
                 text: `${slider.label} ${sliderInput.value}%`,
@@ -530,7 +535,7 @@ export class CapitalGame {
 
                 const oldWealth = this.wealth, oldConflict = this.socialConflict, oldTech = this.techPower;
 
-                this.wealth += w;
+                this.cash += w;
                 this.socialConflict += c;
                 this.techPower += t;
 
@@ -543,12 +548,8 @@ export class CapitalGame {
 
                 // 股价波动（与事件和选择相关）
                 const stockChange = this.calculateStockChange(event, option, diceRoll);
-                const oldPrice = this.stockPrice;
                 this.stockPrice = Math.max(10, this.stockPrice + stockChange);
-                const priceDelta = this.stockPrice - oldPrice;
-                if (this.stockHoldings > 0 && priceDelta !== 0) {
-                    this.wealth += this.stockHoldings * priceDelta;
-                }
+                this.updateWealth();
 
                 // 路线倾向
                 if (option.routeTag) {
@@ -556,7 +557,9 @@ export class CapitalGame {
                 }
 
                 this.updateStatusDisplay();
-                this.showFloatingNumber('wealth-bar', this.wealth - oldWealth);
+                const oldStockValue = oldWealth - (this.cash - w);
+                this.showFloatingNumber('cash-bar', w);
+                this.showFloatingNumber('stock-bar', this.getStockValue() - oldStockValue);
                 this.showFloatingNumber('conflict-bar', this.socialConflict - oldConflict);
                 this.showFloatingNumber('tech-bar', this.techPower - oldTech);
 
@@ -946,11 +949,13 @@ export class CapitalGame {
         const epochRegularCount = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent && !h.isSpecialEvent && !h.isEpochSpecial).length;
         const currentEpochRound = Math.min(epochRegularCount + 1, 4);
         document.getElementById('round-counter').textContent = `本阶段 ${currentEpochRound}/4 回合 | 总 ${Math.min(this.rounds + 1, GAME_SETTINGS.maxRounds)}/${GAME_SETTINGS.maxRounds} 回合`;
-        document.getElementById('wealth-value').textContent = this.wealth;
+        document.getElementById('cash-value').textContent = this.cash;
+        document.getElementById('stock-value').textContent = this.getStockValue();
         document.getElementById('conflict-value').textContent = this.socialConflict;
         document.getElementById('tech-value').textContent = this.techPower;
 
-        this.updateProgressBar('wealth-bar', this.wealth, GAME_SETTINGS.wealthBarMax);
+        this.updateProgressBar('cash-bar', this.cash, GAME_SETTINGS.wealthBarMax);
+        this.updateProgressBar('stock-bar', this.getStockValue(), GAME_SETTINGS.wealthBarMax);
         this.updateProgressBar('conflict-bar', this.socialConflict, GAME_SETTINGS.conflictBarMax);
         this.updateProgressBar('tech-bar', this.techPower, GAME_SETTINGS.techBarMax);
 
@@ -982,11 +987,14 @@ export class CapitalGame {
 
     addWarningStyles() {
         const conflictValue = document.getElementById('conflict-value');
-        const wealthValue = document.getElementById('wealth-value');
+        const cashValue = document.getElementById('cash-value');
+        const stockValue = document.getElementById('stock-value');
         if (this.socialConflict >= 70) conflictValue.classList.add('warning');
         else conflictValue.classList.remove('warning');
-        if (this.wealth <= 30) wealthValue.classList.add('warning');
-        else wealthValue.classList.remove('warning');
+        if (this.cash <= 20) cashValue.classList.add('warning');
+        else cashValue.classList.remove('warning');
+        if (this.wealth <= 30) stockValue.classList.add('warning');
+        else stockValue.classList.remove('warning');
     }
 
     updateHistoryDisplay() {
@@ -1044,7 +1052,15 @@ export class CapitalGame {
 
     // ========== 常驻股市面板 ==========
     getCash() {
-        return this.wealth - this.stockHoldings * this.stockPrice;
+        return this.cash;
+    }
+
+    getStockValue() {
+        return this.stockHoldings * this.stockPrice;
+    }
+
+    updateWealth() {
+        this.wealth = this.cash + this.getStockValue();
     }
 
     getMarketExpectation(event) {
@@ -1107,15 +1123,17 @@ export class CapitalGame {
     tradeStock(action) {
         if (action === 'buy') {
             if (this.getCash() >= this.stockPrice) {
+                this.cash -= this.stockPrice;
                 this.stockHoldings += 1;
-                // wealth 作为总资产不变，仅资产配置变化
+                this.updateWealth();
                 this.stockHistory.push({ action, price: this.stockPrice, priceDelta: 0 });
                 this.audio.playSfx('click');
             }
         } else if (action === 'sell') {
             if (this.stockHoldings > 0) {
+                this.cash += this.stockPrice;
                 this.stockHoldings -= 1;
-                // wealth 作为总资产不变
+                this.updateWealth();
                 this.stockHistory.push({ action, price: this.stockPrice, priceDelta: 0 });
                 this.audio.playSfx('click');
             }
@@ -1163,6 +1181,7 @@ export class CapitalGame {
 
         gameOverPanel.classList.add('fade-out');
         setTimeout(() => {
+            this.cash = GAME_SETTINGS.startWealth;
             this.wealth = GAME_SETTINGS.startWealth;
             this.socialConflict = GAME_SETTINGS.startConflict;
             this.techPower = GAME_SETTINGS.startTech;
@@ -1203,7 +1222,7 @@ export class CapitalGame {
             eventImage.innerHTML = '';
 
             optionsContainer.innerHTML = '<button class="start-btn" id="start-btn">开始游戏</button>';
-            document.getElementById('start-btn').addEventListener('click', () => this.startGame());
+            document.getElementById('start-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.startGame(); });
 
             const stockPanel = document.getElementById('stock-panel');
             if (stockPanel) stockPanel.style.display = 'none';
