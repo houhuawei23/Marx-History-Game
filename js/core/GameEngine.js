@@ -100,6 +100,34 @@ export class CapitalGame {
         this.updateStatusDisplay();
         this.applyEpochTheme();
         this.renderFragmentGallery();
+        this.maybeShowIntro();
+    }
+
+    maybeShowIntro() {
+        const skipIntro = localStorage.getItem('cg_skipIntro') === '1';
+        const introPanel = document.getElementById('intro-panel');
+        if (!introPanel) return;
+        if (skipIntro) {
+            introPanel.style.display = 'none';
+        } else {
+            introPanel.style.display = 'flex';
+        }
+    }
+
+    hideIntro() {
+        const introPanel = document.getElementById('intro-panel');
+        const skipCheckbox = document.getElementById('intro-skip-checkbox');
+        if (skipCheckbox && skipCheckbox.checked) {
+            localStorage.setItem('cg_skipIntro', '1');
+        }
+        if (introPanel) {
+            introPanel.classList.add('fade-out');
+            setTimeout(() => {
+                introPanel.style.display = 'none';
+                introPanel.classList.remove('fade-out');
+                this.startGame();
+            }, 350);
+        }
     }
 
     bindEvents() {
@@ -119,6 +147,7 @@ export class CapitalGame {
         document.getElementById('stock-buy').addEventListener('click', () => this.tradeStock('buy'));
         document.getElementById('stock-skip').addEventListener('click', () => this.tradeStock('skip'));
         document.getElementById('stock-sell').addEventListener('click', () => this.tradeStock('sell'));
+        document.getElementById('intro-start-btn').addEventListener('click', () => this.hideIntro());
     }
 
     switchTab(tabName) {

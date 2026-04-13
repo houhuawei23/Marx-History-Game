@@ -27,7 +27,7 @@
         <header class="game-header">
             <h1>🎮 资本：轮回与破局</h1>
             <p class="subtitle">作为一名资本家，你的目标是积累财富，但要注意社会矛盾的激化！</p>
-            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.1.0</p>
+            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.1.1</p>
         </header>
 
         <!-- 主内容：双栏布局 -->
@@ -111,7 +111,7 @@
                 <!-- 事件显示区域 -->
                 <div class="event-panel" id="event-panel">
                     <div class="event-image" id="event-image"></div>
-                    <div class="event-header">
+                    <div class="event-header" id="event-header-main">
                         <div class="epoch-card-badge" id="epoch-card-badge">血色积累</div>
                         <div class="event-theme-line" id="event-theme-line">掠夺、圈地、原始暴力</div>
                         <h2 id="event-title">欢迎来到资本主义世界</h2>
@@ -308,6 +308,75 @@
 
     <!-- 重新开始提示 Toast -->
     <div class="restart-toast" id="restart-toast">历史周期再次开启，上一轮的认知将伴随你……</div>
+
+    <!-- 游戏介绍全屏面板 -->
+    <div class="intro-panel" id="intro-panel" style="display: none;">
+        <div class="intro-card">
+            <div class="intro-header">
+                <h2>🎮 资本：轮回与破局</h2>
+                <p class="intro-subtitle">一款基于马克思主义理论的 Roguelike 教育游戏</p>
+            </div>
+
+            <div class="intro-content">
+                <div class="intro-section">
+                    <h4>📖 游戏背景</h4>
+                    <p>你扮演一名资本家，在资本主义发展的三个历史纪元中做出关键决策。你的目标是积累财富，但每一次选择都会改变社会矛盾、技术力，以及你与四大社会群体之间的关系。</p>
+                </div>
+
+                <div class="intro-section">
+                    <h4>🎯 核心玩法</h4>
+                    <ul>
+                        <li><strong>财富 / 社会矛盾 / 技术力：</strong>三大核心指标，决定你的命运</li>
+                        <li><strong>社会关系：</strong>工人信任、政府支持、媒体舆论、竞争压力，会触发特殊紧急事件</li>
+                        <li><strong>卡牌式选项：</strong>每个事件提供 3 种路线选择（保守 / 技术 / 改良），hover 可查看详细后果</li>
+                        <li><strong>滑块决策：</strong>关键事件支持自由调节投资/替代/环保比例</li>
+                        <li><strong>D20 骰子：</strong>每次选择后掷骰，运气会修正最终结果</li>
+                        <li><strong>股市小游戏：</strong>每回合可在常驻股市面板买卖股票，股价与事件联动</li>
+                        <li><strong>认知碎片：</strong>达成特定条件解锁马克思主义理论碎片，多周目可携带入场</li>
+                    </ul>
+                </div>
+
+                <div class="intro-section">
+                    <h4>🏛️ 三大纪元</h4>
+                    <div class="intro-epochs">
+                        <div class="intro-epoch e1">
+                            <span class="epoch-tag">纪元一</span>
+                            <strong>原始积累</strong>
+                            <span>圈地运动、黑奴贸易、工厂法案</span>
+                        </div>
+                        <div class="intro-epoch e2">
+                            <span class="epoch-tag">纪元二</span>
+                            <strong>工业垄断</strong>
+                            <span>经济危机、世界大战、反垄断法</span>
+                        </div>
+                        <div class="intro-epoch e3">
+                            <span class="epoch-tag">纪元三</span>
+                            <strong>AI 数字</strong>
+                            <span>通用人工智能、气候危机、数字垄断</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="intro-section">
+                    <h4>🎭 可能结局</h4>
+                    <div class="intro-endings">
+                        <div class="intro-ending bad">💀 技术封建主义<br><small>资本集中到极致，社会消费能力崩溃</small></div>
+                        <div class="intro-ending normal">⚖️ 福利国家的乌托邦<br><small>高福利缓和矛盾，但私有制依然存在</small></div>
+                        <div class="intro-ending true">🌟 自由人联合体<br><small>生产力极度发达，生产资料社会化，真结局</small></div>
+                        <div class="intro-ending normal">📉 资本主义的终结<br><small>内在矛盾无法解决，历史等待新答案</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-footer">
+                <label class="intro-skip-label">
+                    <input type="checkbox" id="intro-skip-checkbox">
+                    <span>下次不再显示此介绍</span>
+                </label>
+                <button class="start-btn" id="intro-start-btn">了解了，开始游戏</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ES Module 入口 -->
     <script type="module" src="js/main.js"></script>

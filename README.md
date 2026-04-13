@@ -1,6 +1,6 @@
 # 资本：轮回与破局
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue)](./CHANGELOG.md)
 
 一款基于马克思主义理论的 Roguelike 教育游戏，通过模拟资本主义发展历程，展示唯物史观、剩余价值理论等核心原理。
 
