@@ -49,20 +49,20 @@ async (page) => {
             })) {
                 await clickBySelector('.stock-btn');
                 results.push(`step ${i + 1}: stock`);
-                await page.waitForTimeout(1200);
+                await page.waitForTimeout(1800);
             }
 
             // 滑块
             if (await page.evaluate(() => {
-                const s = document.getElementById('decision-slider');
+                const s = document.getElementById('event-slider');
                 return s && s.offsetParent !== null;
             })) {
                 await page.evaluate(() => {
-                    const s = document.getElementById('decision-slider');
+                    const s = document.getElementById('event-slider');
                     if (s) { s.value = 60; s.dispatchEvent(new Event('input', { bubbles: true })); }
                 });
                 await page.waitForTimeout(300);
-                await clickBySelector('#slider-confirm-btn');
+                await clickBySelector('#slider-confirm');
                 results.push(`step ${i + 1}: slider`);
                 await page.waitForTimeout(1500);
                 await closeKnowledge();
@@ -115,7 +115,7 @@ async (page) => {
         await screenshot('test_03_gameover');
 
         // Tab 切换测试
-        const tabs = await page.$$('.game-over-tab');
+        const tabs = await page.$$('.tab-btn');
         for (let t = 1; t < Math.min(tabs.length, 4); t++) {
             await tabs[t].evaluate(el => el.click());
             await page.waitForTimeout(500);

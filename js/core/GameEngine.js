@@ -23,6 +23,7 @@ export class CapitalGame {
         this.pendingNext = null;
         this.stockResult = 0;
         this.stockTimerId = null;
+        this.stockHistory = [];
 
         // 路线倾向
         this.route = { conservative: 0, technologist: 0, reformer: 0 };
@@ -510,7 +511,16 @@ export class CapitalGame {
                 if (!this.isGameOver) {
                     this.rounds++;
                     this.pendingNext = () => this.nextEvent();
-                    this.showKnowledgeModal(event.knowledge, event.quote);
+
+                    // 显示回合数值变化摘要
+                    const totalWealthChange = this.wealth - oldWealth;
+                    this.showRoundSummaryToast(totalWealthChange, this.socialConflict - oldConflict, this.techPower - oldTech);
+
+                    // 延迟显示知识弹窗，让玩家看清数值变化
+                    setTimeout(() => {
+                        this.hideRoundSummaryToast();
+                        this.showKnowledgeModal(event.knowledge, event.quote);
+                    }, 1400);
                 }
             } catch (err) {
                 console.error('Choice handling error:', err);
@@ -526,8 +536,12 @@ export class CapitalGame {
         const resultText = document.getElementById('dice-result-text');
 
         overlay.style.display = 'flex';
+        overlay.classList.remove('show');
         diceContainer.innerHTML = getDiceSVG(1);
         resultText.textContent = '市场波动中……';
+
+        // 下一帧添加 show 类以触发淡入
+        requestAnimationFrame(() => overlay.classList.add('show'));
 
         let frames = 0;
         const interval = setInterval(() => {
@@ -543,11 +557,38 @@ export class CapitalGame {
                 else desc = `平稳（${value}）：市场如常波动`;
                 resultText.textContent = desc;
                 setTimeout(() => {
-                    overlay.style.display = 'none';
-                    callback();
+                    overlay.classList.remove('show');
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        callback();
+                    }, 300);
                 }, 900);
             }
         }, 80);
+    }
+
+    showRoundSummaryToast(wealthChange, conflictChange, techChange) {
+        const toast = document.getElementById('round-summary-toast');
+        const content = document.getElementById('round-summary-content');
+        const fmt = (val, label) => {
+            const cls = val > 0 ? 'positive' : (val < 0 ? 'negative' : 'neutral');
+            const sign = val > 0 ? '+' : '';
+            return `<span class="rs-item ${cls}">${label}${sign}${val}</span>`;
+        };
+        content.innerHTML = `
+            <span>本回合变化：</span>
+            ${fmt(wealthChange, '财富')}
+            ${fmt(conflictChange, '矛盾')}
+            ${fmt(techChange, '技术')}
+        `;
+        toast.style.display = 'block';
+        requestAnimationFrame(() => toast.classList.add('show'));
+    }
+
+    hideRoundSummaryToast() {
+        const toast = document.getElementById('round-summary-toast');
+        toast.classList.remove('show');
+        setTimeout(() => { toast.style.display = 'none'; }, 300);
     }
 
     showFloatingNumber(barId, value) {
@@ -918,10 +959,23 @@ export class CapitalGame {
         const trend = document.getElementById('stock-trend');
         const timerText = document.getElementById('stock-timer-text');
         const timerFill = document.getElementById('stock-timer-fill');
+        const resultEl = document.getElementById('stock-result');
+        const buttonsEl = document.getElementById('stock-buttons');
+        const timerBarEl = document.getElementById('stock-timer-bar');
+        const hintEl = document.getElementById('stock-hint');
 
         // 随机走势
         const change = Math.floor(Math.random() * (GAME_SETTINGS.stockGame.maxChange - GAME_SETTINGS.stockGame.minChange + 1)) + GAME_SETTINGS.stockGame.minChange;
         this.stockResult = change;
+
+        // 重置结果展示
+        resultEl.style.display = 'none';
+        buttonsEl.style.display = 'flex';
+        timerBarEl.style.display = 'block';
+        hintEl.style.display = 'block';
+
+        // 渲染历史记录
+        this.renderStockHistory();
 
         modal.style.display = 'flex';
         modal.classList.remove('fade-out');
@@ -958,29 +1012,86 @@ export class CapitalGame {
         }, 1000);
     }
 
+    renderStockHistory() {
+        const listEl = document.getElementById('stock-history-list');
+        const totalEl = document.getElementById('stock-total');
+        if (!this.stockHistory || this.stockHistory.length === 0) {
+            listEl.innerHTML = '<p class="stock-empty">暂无记录</p>';
+            totalEl.textContent = '累计收益：0';
+            totalEl.className = 'stock-total';
+            return;
+        }
+        const actionMap = { buy: '买入', sell: '卖出', skip: '观望' };
+        listEl.innerHTML = this.stockHistory.slice(-5).map(h => {
+            const cls = h.result > 0 ? 'positive' : (h.result < 0 ? 'negative' : 'neutral');
+            const sign = h.result > 0 ? '+' : '';
+            return `
+                <div class="stock-history-item">
+                    <span class="sh-action">${actionMap[h.action] || h.action}</span>
+                    <span class="sh-change ${cls}">${sign}${h.result}</span>
+                </div>
+            `;
+        }).join('');
+        const total = this.stockHistory.reduce((sum, h) => sum + h.result, 0);
+        const totalCls = total > 0 ? 'positive' : (total < 0 ? 'negative' : '');
+        totalEl.textContent = `累计收益：${total >= 0 ? '+' : ''}${total}`;
+        totalEl.className = 'stock-total ' + totalCls;
+    }
+
     resolveStockGame(action) {
         if (this.stockTimerId) {
             clearInterval(this.stockTimerId);
             this.stockTimerId = null;
         }
-        const modal = document.getElementById('stock-minigame-modal');
-        modal.classList.add('fade-out');
 
         let multiplier = 0;
         if (action === 'buy') multiplier = GAME_SETTINGS.stockGame.buyMultiplier;
         else if (action === 'sell') multiplier = GAME_SETTINGS.stockGame.sellMultiplier;
 
-        this.stockResult = Math.round(this.stockResult * multiplier);
+        const rawChange = this.stockResult;
+        const finalResult = Math.round(rawChange * multiplier);
+        this.stockResult = finalResult;
 
+        // 记录历史
+        this.stockHistory.push({ action, result: finalResult, rawChange });
+
+        // UI 展示结果
+        const ticker = document.getElementById('stock-ticker');
+        const trend = document.getElementById('stock-trend');
+        const resultEl = document.getElementById('stock-result');
+        const buttonsEl = document.getElementById('stock-buttons');
+        const timerBarEl = document.getElementById('stock-timer-bar');
+        const hintEl = document.getElementById('stock-hint');
+
+        buttonsEl.style.display = 'none';
+        timerBarEl.style.display = 'none';
+        hintEl.style.display = 'none';
+
+        ticker.textContent = 100 + (action === 'skip' ? 0 : Math.round(finalResult / multiplier));
+        trend.textContent = action === 'skip' ? '你选择观望' : (action === 'buy' ? '买入结算' : '卖出结算');
+
+        const cls = finalResult > 0 ? 'positive' : (finalResult < 0 ? 'negative' : 'neutral');
+        const sign = finalResult > 0 ? '+' : '';
+        resultEl.innerHTML = `<span class="${cls}">${sign}${finalResult} 财富</span>`;
+        resultEl.style.display = 'block';
+
+        // 更新历史展示
+        this.renderStockHistory();
+
+        // 延迟关闭
         setTimeout(() => {
-            modal.style.display = 'none';
-            modal.classList.remove('fade-out');
-            if (this.stockCallback) {
-                const cb = this.stockCallback;
-                this.stockCallback = null;
-                cb();
-            }
-        }, 300);
+            const modal = document.getElementById('stock-minigame-modal');
+            modal.classList.add('fade-out');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.classList.remove('fade-out');
+                if (this.stockCallback) {
+                    const cb = this.stockCallback;
+                    this.stockCallback = null;
+                    cb();
+                }
+            }, 300);
+        }, 1400);
     }
 
     restartGame() {
@@ -1004,6 +1115,7 @@ export class CapitalGame {
             this.lastDiceRoll = null;
             this.pendingNext = null;
             this.stockResult = 0;
+            this.stockHistory = [];
             if (this.stockTimerId) { clearInterval(this.stockTimerId); this.stockTimerId = null; }
             if (this.typewriterTimer) { clearInterval(this.typewriterTimer); this.typewriterTimer = null; }
             this.applyEpochTheme();

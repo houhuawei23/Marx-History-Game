@@ -27,7 +27,7 @@
         <header class="game-header">
             <h1>🎮 资本：轮回与破局</h1>
             <p class="subtitle">作为一名资本家，你的目标是积累财富，但要注意社会矛盾的激化！</p>
-            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.0.0</p>
+            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.0.1</p>
         </header>
 
         <!-- 主内容：双栏布局 -->
@@ -218,14 +218,24 @@
             <div class="stock-visual">
                 <div class="stock-ticker" id="stock-ticker">100</div>
                 <div class="stock-trend" id="stock-trend">市场平稳</div>
+                <div class="stock-result" id="stock-result" style="display: none;"></div>
             </div>
-            <div class="stock-buttons">
+            <div class="stock-buttons" id="stock-buttons">
                 <button class="stock-btn buy" id="stock-buy">📈 买入 (+)</button>
                 <button class="stock-btn skip" id="stock-skip">⏸ 观望 (0)</button>
                 <button class="stock-btn sell" id="stock-sell">📉 卖出 (-)</button>
             </div>
-            <div class="stock-timer-bar"><div id="stock-timer-fill"></div></div>
-            <p class="stock-hint">限时 <span id="stock-timer-text">10</span> 秒</p>
+            <div class="stock-timer-bar" id="stock-timer-bar"><div id="stock-timer-fill"></div></div>
+            <p class="stock-hint" id="stock-hint">限时 <span id="stock-timer-text">10</span> 秒</p>
+
+            <!-- 股票历史记录 -->
+            <div class="stock-history" id="stock-history">
+                <h4>📜 操作历史</h4>
+                <div class="stock-history-list" id="stock-history-list">
+                    <p class="stock-empty">暂无记录</p>
+                </div>
+                <div class="stock-total" id="stock-total">累计收益：0</div>
+            </div>
         </div>
     </div>
 
@@ -275,12 +285,17 @@
         </div>
     </div>
 
-    <!-- D20 骰子覆盖层 -->
+    <!-- D20 骰子覆盖层（改为局部浮动提示） -->
     <div class="dice-overlay" id="dice-overlay" style="display: none;">
         <div class="dice-box">
             <div class="dice-container" id="dice-container"></div>
             <p class="dice-result-text" id="dice-result-text"></p>
         </div>
+    </div>
+
+    <!-- 回合结果摘要浮层 -->
+    <div class="round-summary-toast" id="round-summary-toast" style="display: none;">
+        <div class="round-summary-content" id="round-summary-content"></div>
     </div>
 
     <!-- 重新开始提示 Toast -->
