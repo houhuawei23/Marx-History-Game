@@ -1,5 +1,82 @@
-/* ========== 纪元主题 ========== */
+/* ========== 纪元主题（game-lzk 配色增强版） ========== */
 
+:root {
+    --page-bg: linear-gradient(135deg, #3b0d0d 0%, #681313 45%, #120506 100%);
+    --panel-bg: rgba(80, 12, 12, 0.42);
+    --panel-border: rgba(255, 120, 120, 0.22);
+    --panel-strong-border: rgba(255, 120, 120, 0.32);
+    --title-gradient: linear-gradient(45deg, #ff8a80, #ff5252, #ffd166);
+    --accent-color: #ff8a80;
+    --accent-soft: rgba(255, 138, 128, 0.18);
+    --secondary-color: #ffd166;
+    --secondary-soft: rgba(255, 209, 102, 0.16);
+    --button-gradient: linear-gradient(135deg, #8f1d1d 0%, #d64545 100%);
+    --button-shadow: rgba(214, 69, 69, 0.35);
+    --knowledge-bg: rgba(255, 209, 102, 0.1);
+    --knowledge-border: rgba(255, 209, 102, 0.28);
+    --reflection-bg: rgba(255, 138, 128, 0.1);
+    --reflection-border: rgba(255, 138, 128, 0.28);
+    --history-accent: #ff8a80;
+}
+
+body.theme-epoch-1 {
+    --page-bg: linear-gradient(135deg, #3b0d0d 0%, #681313 45%, #120506 100%);
+    --panel-bg: rgba(80, 12, 12, 0.42);
+    --panel-border: rgba(255, 120, 120, 0.22);
+    --panel-strong-border: rgba(255, 120, 120, 0.32);
+    --title-gradient: linear-gradient(45deg, #ff8a80, #ff5252, #ffd166);
+    --accent-color: #ff8a80;
+    --accent-soft: rgba(255, 138, 128, 0.18);
+    --secondary-color: #ffd166;
+    --secondary-soft: rgba(255, 209, 102, 0.16);
+    --button-gradient: linear-gradient(135deg, #8f1d1d 0%, #d64545 100%);
+    --button-shadow: rgba(214, 69, 69, 0.35);
+    --knowledge-bg: rgba(255, 209, 102, 0.1);
+    --knowledge-border: rgba(255, 209, 102, 0.28);
+    --reflection-bg: rgba(255, 138, 128, 0.1);
+    --reflection-border: rgba(255, 138, 128, 0.28);
+    --history-accent: #ff8a80;
+}
+
+body.theme-epoch-2 {
+    --page-bg: linear-gradient(135deg, #2c3137 0%, #4f565d 45%, #1b1d20 100%);
+    --panel-bg: rgba(52, 56, 61, 0.52);
+    --panel-border: rgba(180, 186, 193, 0.22);
+    --panel-strong-border: rgba(180, 186, 193, 0.34);
+    --title-gradient: linear-gradient(45deg, #d7dde5, #8d959e, #c9a66b);
+    --accent-color: #d7dde5;
+    --accent-soft: rgba(215, 221, 229, 0.14);
+    --secondary-color: #c9a66b;
+    --secondary-soft: rgba(201, 166, 107, 0.14);
+    --button-gradient: linear-gradient(135deg, #5b6168 0%, #878f98 100%);
+    --button-shadow: rgba(140, 146, 153, 0.35);
+    --knowledge-bg: rgba(201, 166, 107, 0.1);
+    --knowledge-border: rgba(201, 166, 107, 0.26);
+    --reflection-bg: rgba(215, 221, 229, 0.08);
+    --reflection-border: rgba(215, 221, 229, 0.24);
+    --history-accent: #aeb5bd;
+}
+
+body.theme-epoch-3 {
+    --page-bg: linear-gradient(135deg, #061a40 0%, #0b4f6c 45%, #03111f 100%);
+    --panel-bg: rgba(8, 42, 72, 0.42);
+    --panel-border: rgba(88, 196, 255, 0.22);
+    --panel-strong-border: rgba(88, 196, 255, 0.34);
+    --title-gradient: linear-gradient(45deg, #7ee8fa, #53cbf1, #72efdd);
+    --accent-color: #7ee8fa;
+    --accent-soft: rgba(126, 232, 250, 0.16);
+    --secondary-color: #72efdd;
+    --secondary-soft: rgba(114, 239, 221, 0.16);
+    --button-gradient: linear-gradient(135deg, #0a6da8 0%, #18a4e0 100%);
+    --button-shadow: rgba(24, 164, 224, 0.35);
+    --knowledge-bg: rgba(114, 239, 221, 0.1);
+    --knowledge-border: rgba(114, 239, 221, 0.26);
+    --reflection-bg: rgba(126, 232, 250, 0.08);
+    --reflection-border: rgba(126, 232, 250, 0.26);
+    --history-accent: #53cbf1;
+}
+
+/* 兼容旧版直接类选择器 */
 body.epoch-1 {
     background: linear-gradient(135deg, #2d0a0a 0%, #1a0f0f 50%, #0f0505 100%);
 }
@@ -67,4 +144,127 @@ body.epoch-3 .conflict-fill {
 body.epoch-3 .tech-fill {
     background: linear-gradient(90deg, #00f5ff, #54a0ff);
     box-shadow: 0 0 8px rgba(0, 245, 255, 0.4);
+}
+
+/* 使用 CSS 变量增强的通用主题元素 */
+body.theme-epoch-1,
+body.theme-epoch-2,
+body.theme-epoch-3 {
+    transition: background 0.5s ease, color 0.3s ease;
+}
+
+/* 纪元徽章与主题行 */
+.epoch-card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    margin-bottom: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--panel-strong-border, rgba(255,255,255,0.25));
+    background: rgba(0, 0, 0, 0.18);
+    color: var(--accent-color, #feca57);
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.event-theme-line {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--secondary-color, #feca57);
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+/* 事件面板按 data-epoch 的背景纹理 */
+.event-panel {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.event-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    opacity: 0.95;
+    transition: opacity 0.4s ease, background 0.4s ease;
+}
+
+.event-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.42;
+    mix-blend-mode: screen;
+}
+
+.event-panel[data-epoch="1"]::before {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(255, 125, 125, 0.28), transparent 30%),
+        radial-gradient(circle at 84% 22%, rgba(255, 206, 134, 0.12), transparent 22%),
+        linear-gradient(145deg, rgba(88, 8, 8, 0.82), rgba(33, 5, 5, 0.96));
+}
+
+.event-panel[data-epoch="1"]::after {
+    background:
+        radial-gradient(circle at 18% 30%, rgba(255, 162, 162, 0.22), transparent 16%),
+        radial-gradient(circle at 75% 70%, rgba(255, 91, 91, 0.2), transparent 18%),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 14px);
+}
+
+.event-panel[data-epoch="2"]::before {
+    background:
+        linear-gradient(180deg, rgba(118, 124, 130, 0.15), transparent 30%),
+        radial-gradient(circle at 15% 15%, rgba(223, 226, 230, 0.12), transparent 18%),
+        linear-gradient(145deg, rgba(59, 63, 68, 0.86), rgba(28, 30, 33, 0.96));
+}
+
+.event-panel[data-epoch="2"]::after {
+    background:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 18px),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 26px),
+        radial-gradient(circle at 78% 18%, rgba(222, 187, 131, 0.14), transparent 16%);
+    opacity: 0.5;
+}
+
+.event-panel[data-epoch="3"]::before {
+    background:
+        radial-gradient(circle at 80% 18%, rgba(111, 240, 255, 0.22), transparent 18%),
+        radial-gradient(circle at 18% 78%, rgba(83, 203, 241, 0.18), transparent 20%),
+        linear-gradient(145deg, rgba(9, 40, 72, 0.86), rgba(3, 17, 31, 0.96));
+}
+
+.event-panel[data-epoch="3"]::after {
+    background:
+        linear-gradient(rgba(125, 236, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(125, 236, 255, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 24% 24%, rgba(126, 232, 250, 0.2), transparent 14%);
+    background-size: 30px 30px, 30px 30px, auto;
+    opacity: 0.44;
+}
+
+/* data-epoch 驱动的阴影 */
+.game-header[data-epoch="1"],
+.status-panel[data-epoch="1"],
+.event-panel[data-epoch="1"] {
+    box-shadow: 0 18px 42px rgba(96, 10, 10, 0.24);
+}
+
+.game-header[data-epoch="2"],
+.status-panel[data-epoch="2"],
+.event-panel[data-epoch="2"] {
+    box-shadow: 0 18px 42px rgba(40, 43, 47, 0.28);
+}
+
+.game-header[data-epoch="3"],
+.status-panel[data-epoch="3"],
+.event-panel[data-epoch="3"] {
+    box-shadow: 0 18px 42px rgba(8, 68, 116, 0.26);
 }

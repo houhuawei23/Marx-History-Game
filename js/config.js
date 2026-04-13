@@ -2,7 +2,7 @@
  * 全局配置与常量
  */
 
-export const GAME_VERSION = '1.0.2';
+export const GAME_VERSION = '1.1.0';
 
 export const EPOCH_NAMES = {
     1: "原始积累纪元",
@@ -23,7 +23,7 @@ export const STORAGE_KEYS = {
 };
 
 export const GAME_SETTINGS = {
-    maxRounds: 6,
+    maxRounds: 12,
     maxEpoch: 3,
     startWealth: 100,
     startConflict: 30,

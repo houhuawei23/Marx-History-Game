@@ -35,6 +35,8 @@ export class CapitalGame {
         this.achievements = this.loadAchievements();
         // 结局记录（用于成就检测）
         this.endingsRecord = JSON.parse(localStorage.getItem(STORAGE_KEYS.endings) || '[]');
+        // 纪元特殊事件触发记录
+        this.epochSpecialTriggered = new Set();
         // 本轮携带的碎片
         this.equippedFragment = null;
         // 骰子结果
@@ -138,7 +140,28 @@ export class CapitalGame {
 
     applyEpochTheme() {
         document.body.className = `epoch-${this.epoch}`;
+        document.body.classList.add(`theme-epoch-${this.epoch}`);
+        document.body.dataset.epoch = String(this.epoch);
         this.audio.setEpoch(this.epoch);
+
+        const themeMeta = {
+            1: { badge: "血色积累", tone: "掠夺、圈地、原始暴力" },
+            2: { badge: "煤灰垄断", tone: "烟尘、流水线、工业规训" },
+            3: { badge: "蓝焰智能", tone: "算力、数据、算法统治" }
+        };
+        const currentTheme = themeMeta[this.epoch];
+
+        const eventPanel = document.getElementById('event-panel');
+        const statusPanel = document.querySelector('.status-panel');
+        const gameHeader = document.querySelector('.game-header');
+        const epochBadge = document.getElementById('epoch-card-badge');
+        const themeLine = document.getElementById('event-theme-line');
+
+        if (eventPanel) eventPanel.dataset.epoch = String(this.epoch);
+        if (statusPanel) statusPanel.dataset.epoch = String(this.epoch);
+        if (gameHeader) gameHeader.dataset.epoch = String(this.epoch);
+        if (epochBadge) epochBadge.textContent = currentTheme.badge;
+        if (themeLine) themeLine.textContent = currentTheme.tone;
     }
 
     showFragmentSelection() {
@@ -238,9 +261,16 @@ export class CapitalGame {
         if (this.checkHiddenEvent()) return;
 
         // 检查社会关系特殊事件
-        const specialEvent = this.checkSocialEvent();
-        if (specialEvent) {
-            this.displayEvent(specialEvent);
+        const socialEvent = this.checkSocialEvent();
+        if (socialEvent) {
+            this.displayEvent(socialEvent);
+            return;
+        }
+
+        // 检查纪元特殊事件（game-lzk 扩展）
+        const epochSpecialEvent = this.checkEpochSpecialEvent();
+        if (epochSpecialEvent) {
+            this.displayEvent(epochSpecialEvent);
             return;
         }
 
@@ -252,8 +282,8 @@ export class CapitalGame {
         }
 
         const baseEvents = this.events[this.epoch];
-        const epochHistory = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent && !h.isSpecialEvent);
-        if (epochHistory.length >= 2) {
+        const epochHistory = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent && !h.isSpecialEvent && !h.isEpochSpecial);
+        if (epochHistory.length >= 4) {
             this.epoch++;
             if (this.epoch > GAME_SETTINGS.maxEpoch) {
                 this.endGame("历史周期结束");
@@ -301,6 +331,35 @@ export class CapitalGame {
         if (govSupport >= 90 && !this.history.some(h => h.event === '政策红利' && h.isSpecialEvent)) {
             return { ...this.events.special.policyDividend, isSpecialEvent: true };
         }
+        return null;
+    }
+
+    checkEpochSpecialEvent() {
+        const specials = this.events.special && this.events.special.epochSpecial;
+        if (!specials) return null;
+
+        const epochRegularCount = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent && !h.isSpecialEvent && !h.isEpochSpecial).length;
+
+        if (this.epoch === 2 && this.techPower >= 65 && epochRegularCount >= 1 && !this.epochSpecialTriggered.has('assemblyLineAlgorithm')) {
+            this.epochSpecialTriggered.add('assemblyLineAlgorithm');
+            return { ...specials.assemblyLineAlgorithm, isEpochSpecial: true };
+        }
+
+        if (this.epoch === 3) {
+            if (this.wealth >= 150 && this.techPower >= 85 && this.socialConflict >= 50 && !this.epochSpecialTriggered.has('computeFence')) {
+                this.epochSpecialTriggered.add('computeFence');
+                return { ...specials.computeFence, isEpochSpecial: true };
+            }
+            if (this.techPower >= 85 && this.socialConflict <= 45 && this.wealth >= 80 && !this.epochSpecialTriggered.has('publicComputeTrial')) {
+                this.epochSpecialTriggered.add('publicComputeTrial');
+                return { ...specials.publicComputeTrial, isEpochSpecial: true };
+            }
+            if (this.techPower >= 80 && this.socialConflict >= 65 && !this.epochSpecialTriggered.has('uselessClassNight')) {
+                this.epochSpecialTriggered.add('uselessClassNight');
+                return { ...specials.uselessClassNight, isEpochSpecial: true };
+            }
+        }
+
         return null;
     }
 
@@ -486,6 +545,7 @@ export class CapitalGame {
                     isRouteEvent: event.isRouteEvent,
                     isHiddenEvent: event.isHiddenEvent,
                     isSpecialEvent: event.isSpecialEvent,
+                    isEpochSpecial: event.isEpochSpecial,
                     historicalParallel: event.historicalParallel,
                     quote: event.quote,
                     social: option.social ? { ...option.social } : undefined
@@ -854,7 +914,9 @@ export class CapitalGame {
 
     updateStatusDisplay() {
         document.getElementById('epoch-name').textContent = EPOCH_NAMES[this.epoch];
-        document.getElementById('round-counter').textContent = `第${this.rounds + 1}回合`;
+        const epochRegularCount = this.history.filter(h => h.epoch === this.epoch && !h.isRouteEvent && !h.isHiddenEvent && !h.isSpecialEvent && !h.isEpochSpecial).length;
+        const currentEpochRound = Math.min(epochRegularCount + 1, 4);
+        document.getElementById('round-counter').textContent = `本阶段 ${currentEpochRound}/4 回合 | 总 ${Math.min(this.rounds + 1, GAME_SETTINGS.maxRounds)}/${GAME_SETTINGS.maxRounds} 回合`;
         document.getElementById('wealth-value').textContent = this.wealth;
         document.getElementById('conflict-value').textContent = this.socialConflict;
         document.getElementById('tech-value').textContent = this.techPower;
@@ -1082,6 +1144,7 @@ export class CapitalGame {
             this.isGameOver = false;
             this.route = { conservative: 0, technologist: 0, reformer: 0 };
             this.social = { ...GAME_SETTINGS.social };
+            this.epochSpecialTriggered = new Set();
             this.equippedFragment = null;
             this.lastDiceRoll = null;
             this.pendingNext = null;

@@ -1,5 +1,32 @@
 # 更新日志
 
+## [1.1.0] - 2026-04-13
+
+### 新增
+- **扩展事件库（game-lzk 版本特性迁移）**
+  - 纪元1新增「工厂钟表与童工账簿」「纺机专利之争」
+  - 纪元2新增「流水线与管理算法」「跨洋电报与价格同盟」
+  - 纪元3新增「模型训练数据围猎」「AI 平台零工化」
+  - 新增4个纪元条件特殊事件：「流水线算法实验」「算力围栏」「公共算力试验」「无用阶级夜行」
+- **纪元配色系统增强（game-lzk 版本特性迁移）**
+  - 引入 CSS 变量主题：`theme-epoch-1`（血色积累/红）、`theme-epoch-2`（煤灰垄断/灰金）、`theme-epoch-3`（蓝焰智能/蓝紫）
+  - 事件面板新增 `data-epoch` 驱动的背景纹理（渐变光斑、工业条纹、科技网格）
+  - 事件标题区新增纪元 badge 与主题语（如「掠夺、圈地、原始暴力」）
+- **延长回合数（game-lzk 版本特性迁移）**
+  - 总回合数从 6 延长至 12
+  - 每纪元事件数从 2 延长至 4
+
+### 变更
+- `js/data/events.js`：扩展事件池，新增 `special.epochSpecial` 条件事件组
+- `js/core/GameEngine.js`：
+  - `nextEvent` 中纪元切换阈值从 `>=2` 调整为 `>=4`
+  - 新增 `checkEpochSpecialEvent` 方法，按技术力/财富/社会矛盾条件触发纪元特殊事件
+  - `applyEpochTheme` 同步更新 badge、theme line 与 `data-epoch` 属性
+  - 状态栏回合计数显示为「本阶段 X/4 回合 | 总 Y/12 回合」
+- `js/config.js`：`maxRounds` 6 → 12，`GAME_VERSION` 1.0.2 → 1.1.0
+- `css/themes.css`：全面重构为 CSS 变量驱动，保留旧版 `.epoch-x` 兼容性
+- `index.html`：事件头部新增 `.epoch-card-badge` 与 `.event-theme-line`
+
 ## [1.0.2] - 2026-04-13
 
 ### 新增

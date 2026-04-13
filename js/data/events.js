@@ -71,6 +71,32 @@ export function buildEventLibrary(EventImages) {
                     {text: "引入复式记账与信用保险", wealth: -20, conflict: 0, tech: 10, routeTag: 'technologist', social: {worker: 0, gov: 5, media: 5, rival: -5}}
                 ],
                 knowledge: "信用制度加速了资本集中，但也放大了经济危机的传染性。生产过剩与支付手段不足之间的矛盾是危机的直接导火索。"
+            },
+            {
+                name: "工厂钟表与童工账簿",
+                description: "你的管事建议把工人的每一分钟都记进账簿：谁慢了半拍，谁多耗了煤，谁在深夜还可以继续加班。你发现，真正值钱的不只是蒸汽机，还有把人变成可计算对象的管理术。",
+                historicalParallel: "18-19世纪英国工厂制度：通过精细的劳动分工和计件工资，将工人的每一分钟都纳入资本增殖的轨道。",
+                quote: { text: '"资本是死劳动，它像吸血鬼一样，只有吮吸活劳动才有生命。"', author: '马克思' },
+                options: [
+                    {text: "把每分钟都换算成成本", wealth: 25, conflict: 15, tech: 5, routeTag: 'conservative', social: {worker: -15, gov: 0, media: -5, rival: 5}},
+                    {text: "缩短童工工时，保留熟练工训练", wealth: 5, conflict: -5, tech: 0, routeTag: 'reformer', social: {worker: 10, gov: 5, media: 5, rival: 0}},
+                    {text: "让工人共同商议工序安排", wealth: 0, conflict: -10, tech: 10, routeTag: 'technologist', social: {worker: 15, gov: 0, media: 5, rival: -5}}
+                ],
+                knowledge: "资本最早的算法并不在硅片上，而在钟表、账簿和工厂纪律里。AI 不是资本计算的起点，而是这种计算冲动的极端延伸。",
+                question: "当劳动被切成可计量的碎片，技术是在解放人，还是在把人变成流程的附件?"
+            },
+            {
+                name: "纺机专利之争",
+                description: "一位工程师带着改良纺机来找你。他声称这台机器能让女工和学徒更快上手，但也要求你支付专利费，并在工坊里重新分配熟练工的地位。",
+                historicalParallel: "18世纪英国珍妮纺纱机与走锭精纺机的发明与专利争夺：技术进步加剧了资本集中和工人阶层的分化。",
+                quote: { text: '"机器是生产剩余价值的手段。"', author: '马克思' },
+                options: [
+                    {text: "买断专利，迅速扩厂", wealth: 30, conflict: 10, tech: 15, routeTag: 'conservative', social: {worker: -5, gov: 0, media: 0, rival: 10}},
+                    {text: "与工程师分成，逐步推广", wealth: 15, conflict: 0, tech: 10, routeTag: 'reformer', social: {worker: 5, gov: 5, media: 5, rival: 0}},
+                    {text: "让工匠合作社共同持有技术", wealth: 0, conflict: -10, tech: 15, routeTag: 'technologist', social: {worker: 10, gov: 0, media: 5, rival: -5}}
+                ],
+                knowledge: "技术一旦进入资本主义生产，就会被纳入竞争、垄断与控制劳动的逻辑。问题不只是机器更先进，而是谁占有机器及其收益。",
+                question: "当机器让熟练劳动被重新定价，技术是在扩大生产的可能，还是在压低劳动者讨价还价的能力?"
             }
         ],
         2: [
@@ -147,6 +173,32 @@ export function buildEventLibrary(EventImages) {
                     {text: "以技术专利优势形成新壁垒", wealth: 10, conflict: 5, tech: 15, routeTag: 'technologist', social: {worker: 0, gov: -5, media: 0, rival: -10}}
                 ],
                 knowledge: "垄断是资本主义发展到一定阶段的必然产物。国家干预表面上限制垄断，实则是为了维护资本主义制度的长期稳定。"
+            },
+            {
+                name: "流水线与管理算法",
+                description: "工程师向你展示一套新的管理体系：把工人的经验拆成标准动作，再交给统计表、监督员和奖惩系统执行。流水线开始像一台会思考的机器，而工人更像机器的一部分。",
+                historicalParallel: "20世纪初福特制与泰罗制的兴起：将复杂的劳动过程分解为简单、可量化的标准动作，极大地提高了生产效率，也加深了工人的异化。",
+                quote: { text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"', author: '《共产党宣言》' },
+                options: [
+                    {text: "把经验写成规训手册，全面推广", wealth: 20, conflict: 15, tech: 10, routeTag: 'conservative', social: {worker: -10, gov: 0, media: -5, rival: 5}},
+                    {text: "让工人参与改造流程", wealth: 5, conflict: -10, tech: 10, routeTag: 'reformer', social: {worker: 10, gov: 5, media: 5, rival: 0}},
+                    {text: "保留车间自治，放缓标准化", wealth: -10, conflict: -5, tech: 5, routeTag: 'technologist', social: {worker: 5, gov: 0, media: 5, rival: -5}}
+                ],
+                knowledge: "从泰罗制到平台算法，资本不断把活劳动中的知识抽离出来，沉淀为对劳动者的外部控制系统。AI 管理并非凭空出现，而是这一过程的高级形态。",
+                question: "如果管理本身也被机器化，工人的经验是在消失，还是被夺走?"
+            },
+            {
+                name: "跨洋电报与价格同盟",
+                description: "跨洋电报让你第一次可以在一天之内得知远方市场的报价。同行们提议建立价格同盟，一边共享情报，一边联合压低原料与工资成本。",
+                historicalParallel: "19世纪中后期跨大西洋电报的铺设：信息传递速度的革命性提升，首先被用于金融投机和垄断资本的国际协调。",
+                quote: { text: '"竞争转变为垄断，而现代社会的全部经济制度都建立在垄断的基础上。"', author: '列宁' },
+                options: [
+                    {text: "加入同盟，扩大市场控制", wealth: 30, conflict: 10, tech: 10, routeTag: 'conservative', social: {worker: -10, gov: -5, media: -5, rival: 15}},
+                    {text: "只共享物流和库存信息", wealth: 15, conflict: 0, tech: 10, routeTag: 'reformer', social: {worker: 0, gov: 5, media: 5, rival: 0}},
+                    {text: "公开价格信息，防止垄断", wealth: -10, conflict: -10, tech: 5, routeTag: 'technologist', social: {worker: 5, gov: 10, media: 10, rival: -10}}
+                ],
+                knowledge: "通信技术并不会自动带来更公平的市场。它同样可能成为资本协调垄断、转嫁危机和压缩劳动成本的工具。",
+                question: "当信息传递越来越快，受益最大的会是社会协作，还是更有能力操纵市场的资本集团?"
             }
         ],
         3: [
@@ -230,6 +282,32 @@ export function buildEventLibrary(EventImages) {
                     {text: "将技术用于疾病治疗以转移焦点", wealth: 10, conflict: -5, tech: 20, routeTag: 'technologist', social: {worker: 5, gov: 5, media: 10, rival: -5}}
                 ],
                 knowledge: "生物技术在资本逻辑下可能导致对人的生命本身进行商品化。当劳动力可以被'设计'时，人的主体性将面临前所未有的危机。"
+            },
+            {
+                name: "模型训练数据围猎",
+                description: "平台企业开始扫荡图书、影像、论坛与公共数据集。每一段文字、每一次点击、每一张图像都被重新命名为训练燃料。你忽然意识到，新的原始积累正在网络上重演。",
+                historicalParallel: "21世纪互联网平台对用户数据的广泛采集：从社交媒体到搜索引擎，个人行为数据被大规模商品化，成为数字资本的核心生产资料。",
+                quote: { text: '"在资产阶级社会里，资本具有独立性和个性，而活动着的个人却没有独立性和个性。"', author: '马克思、恩格斯' },
+                options: [
+                    {text: "尽可能吞并数据源，建立壁垒", wealth: 35, conflict: 20, tech: 15, routeTag: 'conservative', social: {worker: -5, gov: -10, media: -10, rival: 15}},
+                    {text: "签署授权协议，按比例分成", wealth: 10, conflict: -5, tech: 10, routeTag: 'reformer', social: {worker: 5, gov: 5, media: 5, rival: 0}},
+                    {text: "推动开放数据合作社", wealth: -15, conflict: -15, tech: 20, routeTag: 'technologist', social: {worker: 10, gov: 5, media: 10, rival: -10}}
+                ],
+                knowledge: "数据积累不是中性的'素材收集'，而是新的圈地运动。资本借助 AI 再次把共同生产的社会知识改写为私人资产。",
+                question: "如果知识来自无数人的共同创造，训练 AI 的基础资料为什么要被少数平台据为己有?"
+            },
+            {
+                name: "AI 平台零工化",
+                description: "你的平台决定把越来越多的工作拆成瞬时任务，由算法派单、评分、淘汰。名义上人人都更自由了，实际上每个人都在为一套看不见的模型证明自己仍有被使用的价值。",
+                historicalParallel: "21世纪平台经济中的零工劳动：外卖骑手、网约车司机等在算法调度下工作，劳动关系趋于碎片化，劳动者权益保障面临巨大挑战。",
+                quote: { text: '"工人阶级的儿女从一出生就注定要成为资本的牺牲品。"', author: '恩格斯' },
+                options: [
+                    {text: "全面推进平台化用工", wealth: 25, conflict: 20, tech: 10, routeTag: 'conservative', social: {worker: -15, gov: -5, media: -10, rival: 10}},
+                    {text: "设置最低保障和透明评分", wealth: 10, conflict: -5, tech: 10, routeTag: 'reformer', social: {worker: 10, gov: 10, media: 5, rival: 0}},
+                    {text: "把平台转为劳动者合作社", wealth: -10, conflict: -15, tech: 15, routeTag: 'technologist', social: {worker: 15, gov: 5, media: 10, rival: -10}}
+                ],
+                knowledge: "AI 不只替代岗位，也会重写劳动关系。所谓灵活用工，往往意味着风险社会化、收益平台化，以及算法对劳动过程的持续统治。",
+                question: "如果平台宣称每个人都可以自由接单，但定价、分配和淘汰都由算法决定，这种自由究竟属于谁?"
             }
         ],
         // 路线专属事件池（由系统按条件注入）
@@ -314,6 +392,61 @@ export function buildEventLibrary(EventImages) {
                     {text: "与政府合作建设公共工程", wealth: 20, conflict: -10, tech: 15, routeTag: 'reformer', social: {worker: 10, gov: 15, media: 10, rival: -5}}
                 ],
                 knowledge: "国家是阶级统治的工具。资产阶级国家通过政策手段维护资本利益，这在帝国主义阶段表现得尤为明显。"
+            },
+            // 纪元触发的特殊事件（game-lzk 扩展）
+            epochSpecial: {
+                assemblyLineAlgorithm: {
+                    name: "流水线算法实验",
+                    description: "你的顾问提议把工头的经验写进一套自动排班和绩效系统。它还不能称作 AI，却已经能预测谁会迟到、谁能被替换、谁最该被扣薪。工厂第一次开始像一个冷冰冰的判断装置。",
+                    historicalParallel: "20世纪初科学管理运动的兴起：将管理者的经验转化为可量化的规则和指标，为后来的算法管理奠定了基础。",
+                    quote: { text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"', author: '《共产党宣言》' },
+                    options: [
+                        {text: "把系统推广到每个车间", wealth: 20, conflict: 15, tech: 10, routeTag: 'conservative', social: {worker: -10, gov: 0, media: -5, rival: 5}},
+                        {text: "允许工人委员会参与监督算法", wealth: 5, conflict: -10, tech: 10, routeTag: 'reformer', social: {worker: 10, gov: 5, media: 5, rival: 0}},
+                        {text: "终止实验，保留人工协商", wealth: -10, conflict: -5, tech: 5, routeTag: 'technologist', social: {worker: 5, gov: 0, media: 5, rival: -5}}
+                    ],
+                    knowledge: "算法管理并不始于大模型，而是始于资本把劳动过程拆解、量化、预测和替换的长期冲动。AI 只是让这种冲动获得了前所未有的速度和规模。",
+                    question: "当工头被系统替代，工人的处境会更自由，还是更难与权力对话?"
+                },
+                computeFence: {
+                    name: "算力围栏",
+                    description: "你手中拥有最多的芯片、最快的模型和最厚的数据护城河。投资人催促你把基础模型封闭成收费关卡，让所有后来者都为接近智能而缴纳租金。",
+                    historicalParallel: "21世纪科技巨头的平台垄断：通过控制基础设施和数据入口，形成数字时代的'圈地运动'。",
+                    quote: { text: '"垄断是从自由竞争中成长起来的。"', author: '列宁' },
+                    options: [
+                        {text: "封闭模型，按层收费", wealth: 35, conflict: 20, tech: 10, routeTag: 'conservative', social: {worker: -5, gov: -10, media: -10, rival: 20}},
+                        {text: "保留商用接口，但公开基础能力", wealth: 10, conflict: -5, tech: 10, routeTag: 'reformer', social: {worker: 5, gov: 5, media: 5, rival: 0}},
+                        {text: "把算力纳入公共基础设施试点", wealth: -15, conflict: -15, tech: 15, routeTag: 'technologist', social: {worker: 10, gov: 10, media: 10, rival: -10}}
+                    ],
+                    knowledge: "当 AI 的关键条件被垄断，资本逻辑不会失效，只会转化为对算力、模型和数据入口的租佃控制。所谓'智能普惠'，可能退化为数字地租。",
+                    question: "如果每个人都离不开 AI，但 AI 的入口掌握在少数企业手里，这和旧时代的土地围栏有什么本质区别?"
+                },
+                publicComputeTrial: {
+                    name: "公共算力试验",
+                    description: "城市议会邀请你参与一项激进实验：把基础模型、算力中心与关键数据平台改造成公共设施，优先服务医疗、教育、交通与社区生产。利润不再是唯一评价标准。",
+                    historicalParallel: "20世纪中后期部分国家的公共事业国有化运动：试图将关键生产资料从私人垄断中解放出来，服务于社会整体利益。",
+                    quote: { text: '"在必然王国的彼岸，作为目的本身的人类能力的发展，真正的自由王国，就开始了。"', author: '马克思' },
+                    options: [
+                        {text: "接受试验，推动社会化调度", wealth: -10, conflict: -15, tech: 20, routeTag: 'technologist', social: {worker: 10, gov: 15, media: 10, rival: -10}},
+                        {text: "保留混合模式，公共与商业并存", wealth: 10, conflict: -5, tech: 10, routeTag: 'reformer', social: {worker: 5, gov: 5, media: 5, rival: 0}},
+                        {text: "拒绝试验，坚持私有化运营", wealth: 20, conflict: 15, tech: 5, routeTag: 'conservative', social: {worker: -10, gov: -10, media: -5, rival: 15}}
+                    ],
+                    knowledge: "AI 能否加速通向自由王国，不取决于它是否先进，而取决于它是否被纳入社会化占有和民主调度。只有在这种条件下，技术才可能真正缩短必要劳动时间。",
+                    question: "如果 AI 能让社会少工作而多满足需求，谁应该决定它优先服务什么、节省下来的时间归谁?"
+                },
+                uselessClassNight: {
+                    name: "无用阶级夜行",
+                    description: "大批被替代者在城市边缘聚集。外卖骑手、客服、文员、程序员都发现自己正在被模型和自动流程挤出原来的位置。街头流传一句话：不是我们不会工作，而是资本不再需要我们。",
+                    historicalParallel: "工业革命时期卢德运动与手工业者的衰落：技术进步在创造新财富的同时，也将大量劳动者抛入结构性失业的深渊。",
+                    quote: { text: '"工人阶级的儿女从一出生就注定要成为资本的牺牲品。"', author: '恩格斯' },
+                    options: [
+                        {text: "加大监控和治安投入", wealth: 10, conflict: 25, tech: 5, routeTag: 'conservative', social: {worker: -20, gov: -5, media: -15, rival: 5}},
+                        {text: "建立全民保障与再分配机制", wealth: -20, conflict: -20, tech: 10, routeTag: 'reformer', social: {worker: 20, gov: 15, media: 10, rival: -5}},
+                        {text: "开放社区工坊与公共训练资源", wealth: -10, conflict: -15, tech: 15, routeTag: 'technologist', social: {worker: 15, gov: 10, media: 10, rival: -5}}
+                    ],
+                    knowledge: "AI 可能制造一种新的剩余人口形态。当资本对活劳动的需求下降，并不意味着人自动获得自由，反而可能意味着大规模排斥、失业与失去社会位置。",
+                    question: "如果社会财富越来越依靠自动系统生产，那些被市场宣布'无用'的人，究竟是历史的负担，还是被错误制度排除在外的多数?"
+                }
             }
         }
     };
