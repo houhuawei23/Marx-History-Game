@@ -131,9 +131,14 @@ body.epoch-3 #epoch-name {
     text-shadow: 0 0 12px rgba(192, 90, 255, 0.5);
 }
 
-body.epoch-3 .wealth-fill {
+body.epoch-3 .cash-fill {
     background: linear-gradient(90deg, #ffd700, #ffaa00);
     box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+body.epoch-3 .stock-fill {
+    background: linear-gradient(90deg, #ffb347, #ff8c00);
+    box-shadow: 0 0 8px rgba(255, 140, 0, 0.4);
 }
 
 body.epoch-3 .conflict-fill {

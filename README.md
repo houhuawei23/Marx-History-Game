@@ -1,6 +1,6 @@
 # 资本：轮回与破局
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](./CHANGELOG.md)
 
 一款基于马克思主义理论的 Roguelike 教育游戏，通过模拟资本主义发展历程，展示唯物史观、剩余价值理论等核心原理。
 
@@ -64,10 +64,13 @@ python -m http.server 8080
 │   │   ├── fragments.js    # 认知碎片
 │   │   └── achievements.js # 成就
 │   ├── core/               # 核心引擎
-│   │   ├── AudioManager.js # Web Audio API
+│   │   ├── AudioManager.js # 背景音乐与音效管理
 │   │   └── GameEngine.js   # 主游戏类
 │   └── utils/
 │       └── helpers.js      # SVG 生成器、工具函数
+├── assets/
+│   ├── screenshots/        # 游戏截图
+│   └── audio/              # 纪元背景音乐 MP3
 ├── docs/                   # 开发文档
 │   ├── ARCHITECTURE.md
 │   ├── ADD_EVENT.md
@@ -90,7 +93,8 @@ python -m http.server 8080
 - **双栏仪表盘布局**：左侧实时显示趋势折线图与社会关系雷达图，右侧进行事件决策
 - **卡牌式选项**：每个事件选项以卡片形式呈现，hover 展开显示历史隐喻与数值影响
 - **滑块决策**：关键事件（技术革命、AI 取代人力、气候危机）支持滑块输入，实时预览影响
-- **股市小游戏**：回合间可选的限时迷你游戏，根据市场走势买卖股票获取额外财富
+- **股市小游戏**：常驻股市面板，根据市场走势买卖股票，财富细分为现金与股票市值
+- **纪元背景音乐**：三个纪元配有差异化 MP3 背景音乐（原始积累低沉/工业垄断机械/AI 数字电子），支持淡入淡出切换
 - **纪元过渡特效**：蒸汽朋克齿轮（1→2）与数字雨电路板（2→3）SVG 动画
 - **Tab 式结局面板**：结局诊断 / 数据报告 / 历史回顾 / 成就与碎片，四个标签分类展示
 - **D20 骰子修正**：每次选择后掷骰，为决策结果增添 Roguelike 随机性
