@@ -1,5 +1,27 @@
 # 更新日志
 
+## [1.4.0] - 2026-04-15
+
+### 新增
+- **YAML 配置化重构**：游戏数据（事件、成就、认知碎片）提取为 YAML 配置文件
+  - 新增 `yaml/` 目录，包含 `events/`、`achievements.yaml`、`fragments.yaml`、`images.yaml`
+  - 新增 `js/data/loader.js` - 统一 YAML 加载器
+  - 新增 `js/data/achievementChecks.js` - 成就检查函数库（15个函数）
+  - 新增 `js/data/conditionFns.js` - 碎片条件函数库（8个函数）
+  - 使用 js-yaml 通过 CDN 加载，支持纯前端 ES Modules
+
+### 变更
+- `js/data/events.js` 改为从 YAML 加载，保留 `buildEventLibrary` 接口
+- `js/data/achievements.js` 改为从 YAML + JS 函数加载
+- `js/data/fragments.js` 改为从 YAML + JS 函数加载
+- `js/core/GameEngine.js` 适配异步加载模式
+- `js/main.js` 使用 async/await 初始化游戏
+
+### 优势
+- **维护性**：新增事件/成就/碎片只需编辑 YAML 文件，无需修改 JavaScript 代码
+- **扩展性**：非开发者可独立创建和修改游戏内容
+- **可分离**：数据与逻辑完全解耦，可独立验证和修改游戏内容
+
 ## [1.3.0] - 2026-04-15
 
 ### 新增

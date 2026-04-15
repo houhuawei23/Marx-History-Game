@@ -1,6 +1,6 @@
-import { buildEventLibrary } from '../data/events.js';
-import { CognitiveFragments } from '../data/fragments.js';
-import { Achievements } from '../data/achievements.js';
+import { buildEventLibrary, buildEventLibrarySync } from '../data/events.js';
+import { loadFragmentsConfig, getConditionFns } from '../data/fragments.js';
+import { loadAchievementsConfig, getAchievementChecks } from '../data/achievements.js';
 import { AudioManager } from './AudioManager.js';
 import { getDiceSVG, generateRadarSVG, generateTrendChartSVG, generateSocialRadarSVG, getEpochTransitionAnimation, createParticleBurst, generateStockChartSVG } from '../utils/helpers.js';
 import { EPOCH_NAMES, ROUTE_LABELS, STORAGE_KEYS, GAME_SETTINGS } from '../config.js';
@@ -31,10 +31,10 @@ export class CapitalGame {
         this.route = { conservative: 0, technologist: 0, reformer: 0 };
         // 社会关系
         this.social = { ...GAME_SETTINGS.social };
-        // 认知碎片（从 localStorage 读取持久化）
-        this.fragments = this.loadFragments();
-        // 成就
-        this.achievements = this.loadAchievements();
+        // 认知碎片 - 初始化为同步默认值，异步加载在后
+        this.fragments = this._createDefaultFragments();
+        // 成就 - 初始化为同步默认值，异步加载在后
+        this.achievements = this._createDefaultAchievements();
         // 结局记录（用于成就检测）
         this.endingsRecord = JSON.parse(localStorage.getItem(STORAGE_KEYS.endings) || '[]');
         // 纪元特殊事件触发记录
@@ -44,53 +44,150 @@ export class CapitalGame {
         // 骰子结果
         this.lastDiceRoll = null;
 
-        this.events = buildEventLibrary({});
+        this.events = buildEventLibrarySync({});
+        this.eventsLoaded = false;
+        this.dataLoaded = false;
         this.initializeGame();
     }
 
-    // 允许外部注入事件图库后重新构建
-    setEventImages(eventImages) {
-        this.events = buildEventLibrary(eventImages);
+    // 创建默认碎片对象（同步）
+    _createDefaultFragments() {
+        const conditionFns = getConditionFns();
+        // 返回带函数的默认碎片，用于首次初始化
+        const defaults = {
+            surplusValue: { id: 'surplusValue', name: '剩余价值觉醒', condition: conditionFns.conditionSurplusValue, unlocked: false },
+            historicalMaterialism: { id: 'historicalMaterialism', name: '唯物史观萌芽', condition: conditionFns.conditionHistoricalMaterialism, unlocked: false },
+            keynesCritique: { id: 'keynesCritique', name: '凯恩斯主义批判', condition: conditionFns.conditionKeynesCritique, unlocked: false },
+            techAlienation: { id: 'techAlienation', name: '技术异化洞察', condition: conditionFns.conditionTechAlienation, unlocked: false },
+            freeKingdom: { id: 'freeKingdom', name: '自由王国钥匙', condition: conditionFns.conditionFreeKingdom, unlocked: false },
+            climateJustice: { id: 'climateJustice', name: '生态马克思主义', condition: conditionFns.conditionClimateJustice, unlocked: false },
+            monopolyInsight: { id: 'monopolyInsight', name: '垄断资本认知', condition: conditionFns.conditionMonopolyInsight, unlocked: false },
+            classConsciousness: { id: 'classConsciousness', name: '阶级意识觉醒', condition: conditionFns.conditionClassConsciousness, unlocked: false }
+        };
+        // 尝试从 localStorage 恢复 unlocked 状态
+        const saved = localStorage.getItem(STORAGE_KEYS.fragments);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                for (const key in defaults) {
+                    if (parsed[key]) {
+                        defaults[key].unlocked = parsed[key].unlocked || false;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load fragments:', e);
+            }
+        }
+        return defaults;
     }
 
-    loadFragments() {
+    // 创建默认成就对象（同步）
+    _createDefaultAchievements() {
+        const checks = getAchievementChecks();
+        const defaultDefs = {
+            reformer: { id: 'reformer', name: '🕊️ 改良主义者', check: checks.checkReformer, unlocked: false },
+            hardliner: { id: 'hardliner', name: '⚔️ 铁血资本家', check: checks.checkHardliner, unlocked: false },
+            technocrat: { id: 'technocrat', name: '🤖 技术至上', check: checks.checkTechnocrat, unlocked: false },
+            wellRead: { id: 'wellRead', name: '📖 熟读《资本论》', check: checks.checkWellRead, unlocked: false },
+            historyCycle: { id: 'historyCycle', name: '🔁 历史循环', check: checks.checkHistoryCycle, unlocked: false },
+            trueEnding: { id: 'trueEnding', name: '✨ 破局之人', check: checks.checkTrueEnding, unlocked: false },
+            allRoutesExplorer: { id: 'allRoutesExplorer', name: '🧭 全景观察者', check: checks.checkAllRoutes, unlocked: false },
+            centuryCapitalist: { id: 'centuryCapitalist', name: '💰 世纪大亨', check: checks.checkCenturyCapitalist, unlocked: false },
+            peacefulCapitalist: { id: 'peacefulCapitalist', name: '☮️ 和平资本家', check: checks.checkPeacefulCapitalist, unlocked: false },
+            welfareEnding: { id: 'welfareEnding', name: '🏛️ 福利国家', check: checks.checkWelfareEnding, unlocked: false },
+            techFeudalismEnding: { id: 'techFeudalismEnding', name: '💀 技术封建主义', check: checks.checkTechFeudalismEnding, unlocked: false },
+            survivor: { id: 'survivor', name: '🛡️ 幸存者', check: checks.checkSurvivor, unlocked: false },
+            stockMaster: { id: 'stockMaster', name: '📈 股市大师', check: checks.checkStockMaster, unlocked: false },
+            questionAnswerer: { id: 'questionAnswerer', name: '🤔 理论思考者', check: checks.checkQuestionAnswerer, unlocked: false },
+            fragmentCollector: { id: 'fragmentCollector', name: '📚 碎片收藏家', check: checks.checkFragmentCollector, unlocked: false }
+        };
+        // 尝试从 localStorage 恢复 unlocked 状态
+        const saved = localStorage.getItem(STORAGE_KEYS.achievements);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                for (const key in defaultDefs) {
+                    if (parsed[key]) {
+                        defaultDefs[key].unlocked = parsed[key].unlocked || false;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load achievements:', e);
+            }
+        }
+        return defaultDefs;
+    }
+
+    // 允许外部注入事件图库后重新构建（异步）
+    async setEventImages(eventImages) {
+        this.events = await buildEventLibrary(eventImages);
+        this.eventsLoaded = true;
+        // 异步加载完整数据和配置
+        await this._loadFullData();
+    }
+
+    // 加载完整数据（异步）
+    async _loadFullData() {
+        const [fragments, achievements] = await Promise.all([
+            this.loadFragments(),
+            this.loadAchievements()
+        ]);
+        // 合并已解锁状态
+        for (const key in fragments) {
+            if (this.fragments[key]) {
+                this.fragments[key].unlocked = fragments[key].unlocked || this.fragments[key].unlocked;
+            }
+        }
+        for (const key in achievements) {
+            if (this.achievements[key]) {
+                this.achievements[key].unlocked = achievements[key].unlocked || this.achievements[key].unlocked;
+            }
+        }
+        this.dataLoaded = true;
+    }
+
+    async loadFragments() {
+        const conditionFns = getConditionFns();
+        const fragments = await loadFragmentsConfig();
         const saved = localStorage.getItem(STORAGE_KEYS.fragments);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
                 const merged = {};
-                for (const key in CognitiveFragments) {
-                    merged[key] = { ...CognitiveFragments[key], ...(parsed[key] || {}) };
-                    merged[key].condition = CognitiveFragments[key].condition; // restore function
+                for (const key in fragments) {
+                    merged[key] = { ...fragments[key], ...(parsed[key] || {}) };
+                    merged[key].condition = conditionFns[fragments[key].conditionFn] || (() => false);
                 }
                 return merged;
             } catch (e) {
                 console.error('Failed to load fragments:', e);
             }
         }
-        return Object.fromEntries(Object.entries(CognitiveFragments).map(([k, v]) => [k, { ...v }]));
+        return fragments;
     }
 
     saveFragments() {
         localStorage.setItem(STORAGE_KEYS.fragments, JSON.stringify(this.fragments));
     }
 
-    loadAchievements() {
+    async loadAchievements() {
+        const checks = getAchievementChecks();
+        const achievements = await loadAchievementsConfig();
         const saved = localStorage.getItem(STORAGE_KEYS.achievements);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
                 const merged = {};
-                for (const key in Achievements) {
-                    merged[key] = { ...Achievements[key], ...(parsed[key] || {}) };
-                    merged[key].check = Achievements[key].check; // restore function
+                for (const key in achievements) {
+                    merged[key] = { ...achievements[key], ...(parsed[key] || {}) };
+                    merged[key].check = checks[achievements[key].checkFn] || (() => false);
                 }
                 return merged;
             } catch (e) {
                 console.error('Failed to load achievements:', e);
             }
         }
-        return Object.fromEntries(Object.entries(Achievements).map(([k, v]) => [k, { ...v }]));
+        return achievements;
     }
 
     saveAchievements() {

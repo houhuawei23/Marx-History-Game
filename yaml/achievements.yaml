@@ -1,0 +1,92 @@
+# 成就配置
+# checkFn 引用 js/data/achievementChecks.js 中的函数名
+
+- id: reformer
+  name: 🕊️ 改良主义者
+  desc: 连续3次选择改良选项
+  checkFn: checkReformer
+  unlocked: false
+
+- id: hardliner
+  name: ⚔️ 铁血资本家
+  desc: 连续3次选择保守选项
+  checkFn: checkHardliner
+  unlocked: false
+
+- id: technocrat
+  name: 🤖 技术至上
+  desc: 连续3次选择技术选项
+  checkFn: checkTechnocrat
+  unlocked: false
+
+- id: wellRead
+  name: 📖 熟读《资本论》
+  desc: 解锁全部认知碎片
+  checkFn: checkWellRead
+  unlocked: false
+
+- id: historyCycle
+  name: 🔁 历史循环
+  desc: 连续3局触发革命结局
+  checkFn: checkHistoryCycle
+  unlocked: false
+
+- id: trueEnding
+  name: ✨ 破局之人
+  desc: 达成真结局：自由人联合体
+  checkFn: checkTrueEnding
+  unlocked: false
+
+- id: allRoutesExplorer
+  name: 🧭 全景观察者
+  desc: 三大路线各至少选择一次
+  checkFn: checkAllRoutes
+  unlocked: false
+
+- id: centuryCapitalist
+  name: 💰 世纪大亨
+  desc: 单局财富积累超过300
+  checkFn: checkCenturyCapitalist
+  unlocked: false
+
+- id: peacefulCapitalist
+  name: ☮️ 和平资本家
+  desc: 单局社会矛盾始终低于30
+  checkFn: checkPeacefulCapitalist
+  unlocked: false
+
+- id: welfareEnding
+  name: 🏛️ 福利国家
+  desc: 达成福利国家的乌托邦结局
+  checkFn: checkWelfareEnding
+  unlocked: false
+
+- id: techFeudalismEnding
+  name: 💀 技术封建主义
+  desc: 达成坏结局：技术封建主义
+  checkFn: checkTechFeudalismEnding
+  unlocked: false
+
+- id: survivor
+  name: 🛡️ 幸存者
+  desc: 存活超过10回合
+  checkFn: checkSurvivor
+  unlocked: false
+
+- id: stockMaster
+  name: 📈 股市大师
+  desc: 通过股市获利超过50
+  checkFn: checkStockMaster
+  unlocked: false
+
+- id: questionAnswerer
+  name: 🤔 理论思考者
+  desc: 回答至少5个思考问题
+  checkFn: checkQuestionAnswerer
+  unlocked: false
+
+- id: fragmentCollector
+  name: 📚 碎片收藏家
+  desc: 单局解锁超过4个认知碎片
+  checkFn: checkFragmentCollector
+  unlocked: false

@@ -1,0 +1,503 @@
+# 纪元2事件库 - 工业垄断纪元
+# 共12个事件
+
+- id: economicCrisis
+  name: 经济危机
+  description: 生产的商品堆积如山，但底层工人买不起。库存积压，资金链即将断裂。
+  imageKey: crisis
+  historicalParallel: 1929年大萧条与2008年金融危机：生产社会化与生产资料私有制矛盾的集中爆发。
+  quote:
+    text: '"生产过剩的经济危机是资本主义制度的必然伴侣。"'
+    author: 恩格斯
+  options:
+    - text: 销毁库存，维持价格
+      wealth: -20
+      conflict: 30
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -5
+        media: -10
+        rival: 15
+    - text: 降价倾销，开拓海外市场
+      wealth: -10
+      conflict: 0
+      tech: 5
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 0
+        media: 0
+        rival: -10
+    - text: 提高工人工资，扩大内需
+      wealth: -30
+      conflict: -15
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 10
+        media: 10
+        rival: 0
+  knowledge: 生产社会化与生产资料私有制的基本矛盾。资本主义无法消灭相对过剩人口和消费不足的痼疾。
+
+- id: techRevolution
+  name: 技术革命
+  description: 新的生产技术出现，可以大幅提高生产效率，但需要大量投资。
+  imageKey: tech
+  historicalParallel: 第二次工业革命（电力、内燃机、流水线）：垄断资本主义形成的物质基础。
+  quote:
+    text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"'
+    author: 《共产党宣言》
+  type: slider
+  slider:
+    label: 投资力度
+    min: 0
+    max: 100
+    default: 50
+    preview: 根据投资比例决定收益与风险
+  sliderBase:
+    wealth: -40
+    conflict: 10
+    tech: 25
+    routeTag: technologist
+    social:
+      worker: -5
+      gov: 0
+      media: 0
+      rival: 5
+  options:
+    - text: 保守投资，逐步更新
+      wealth: -20
+      conflict: 5
+      tech: 15
+      routeTag: reformer
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 维持现状，不投资
+      wealth: 0
+      conflict: 0
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: 0
+        gov: 0
+        media: 0
+        rival: 5
+  knowledge: 生产力决定生产关系。技术革命推动生产力发展，但资本主义生产关系可能成为生产力发展的桎梏。
+
+- id: worldWarOrder
+  name: 世界大战订单
+  description: 国家陷入战争，军火订单如雪片般飞来，但工厂工人可能被征召入伍。
+  imageKey: warOrder
+  historicalParallel: 两次世界大战期间，美国、德国等国的军事工业复合体迅速膨胀。
+  quote:
+    text: '"帝国主义就是战争。"'
+    author: 列宁
+  options:
+    - text: 全面转产军工，牟取暴利
+      wealth: 50
+      conflict: 20
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: 15
+        media: -10
+        rival: 10
+    - text: 接受订单但改善工人待遇
+      wealth: 30
+      conflict: 0
+      tech: 5
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 5
+        rival: 0
+    - text: 研发新型武器技术
+      wealth: 20
+      conflict: 10
+      tech: 25
+      routeTag: technologist
+      social:
+        worker: -5
+        gov: 10
+        media: 0
+        rival: -5
+  knowledge: 帝国主义阶段，资本扩张与军事暴力深度绑定。军火资本成为垄断资本的重要组成部分，战争成为资本转嫁危机的手段。
+
+- id: stockCrash
+  name: 股市崩盘
+  description: 股市泡沫破裂，投资者恐慌性抛售，你的企业市值大幅缩水。
+  imageKey: stockCrash
+  historicalParallel: 1929年华尔街黑色星期四：虚拟资本与实体经济的脱节导致了史无前例的经济大萧条。
+  quote:
+    text: '"有价证券的资本化是按利息资本计算的。"'
+    author: 马克思《资本论》第三卷
+  options:
+    - text: 抛售资产，裁员止血
+      wealth: -10
+      conflict: 20
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -5
+        media: -10
+        rival: 15
+    - text: 联合其他资本家救市
+      wealth: -30
+      conflict: -5
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 10
+        rival: -10
+    - text: 趁低收购竞争对手技术专利
+      wealth: -20
+      conflict: 5
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 0
+        media: 5
+        rival: -15
+  knowledge: 虚拟资本的膨胀使经济危机具有了更强的投机性和传染性。金融资本与产业资本的脱节，放大了周期性危机的破坏力。
+
+- id: antitrust
+  name: 反垄断法案
+  description: 政府出台严厉的反垄断法，你的垄断地位受到威胁。
+  imageKey: antitrust
+  historicalParallel: 19世纪末20世纪初美国《谢尔曼反托拉斯法》：国家为缓和阶级矛盾而进行的制度调整。
+  quote:
+    text: '"竞争转变为垄断，而现代社会的全部经济制度都建立在垄断的基础上。"'
+    author: 列宁《帝国主义是资本主义的最高阶段》
+  options:
+    - text: 暗中分化瓦解法案推进
+      wealth: -10
+      conflict: 15
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: -15
+        media: -10
+        rival: 10
+    - text: 主动拆分，换取社会声誉
+      wealth: -20
+      conflict: -15
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 15
+        media: 15
+        rival: 0
+    - text: 以技术专利优势形成新壁垒
+      wealth: 10
+      conflict: 5
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: -5
+        media: 0
+        rival: -10
+  knowledge: 垄断是资本主义发展到一定阶段的必然产物。国家干预表面上限制垄断，实则是为了维护资本主义制度的长期稳定。
+
+- id: assemblyLineAlgorithm
+  name: 流水线与管理算法
+  description: 工程师向你展示一套新的管理体系：把工人的经验拆成标准动作，再交给统计表、监督员和奖惩系统执行。流水线开始像一台会思考的机器，而工人更像机器的一部分。
+  imageKey: tech
+  historicalParallel: 20世纪初福特制与泰罗制的兴起：将复杂的劳动过程分解为简单、可量化的标准动作，极大地提高了生产效率，也加深了工人的异化。
+  quote:
+    text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"'
+    author: 《共产党宣言》
+  options:
+    - text: 把经验写成规训手册，全面推广
+      wealth: 20
+      conflict: 15
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: 0
+        media: -5
+        rival: 5
+    - text: 让工人参与改造流程
+      wealth: 5
+      conflict: -10
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 保留车间自治，放缓标准化
+      wealth: -10
+      conflict: -5
+      tech: 5
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 0
+        media: 5
+        rival: -5
+  knowledge: 从泰罗制到平台算法，资本不断把活劳动中的知识抽离出来，沉淀为对劳动者的外部控制系统。AI 管理并非凭空出现，而是这一过程的高级形态。
+  question: "如果管理本身也被机器化，工人的经验是在消失，还是被夺走?"
+
+- id: telegraphPriceCartel
+  name: 跨洋电报与价格同盟
+  description: 跨洋电报让你第一次可以在一天之内得知远方市场的报价。同行们提议建立价格同盟，一边共享情报，一边联合压低原料与工资成本。
+  imageKey: tech
+  historicalParallel: 19世纪中后期跨大西洋电报的铺设：信息传递速度的革命性提升，首先被用于金融投机和垄断资本的国际协调。
+  quote:
+    text: '"竞争转变为垄断，而现代社会的全部经济制度都建立在垄断的基础上。"'
+    author: 列宁
+  options:
+    - text: 加入同盟，扩大市场控制
+      wealth: 30
+      conflict: 10
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: -5
+        media: -5
+        rival: 15
+    - text: 只共享物流和库存信息
+      wealth: 15
+      conflict: 0
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 公开价格信息，防止垄断
+      wealth: -10
+      conflict: -10
+      tech: 5
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 10
+        media: 10
+        rival: -10
+  knowledge: 通信技术并不会自动带来更公平的市场。它同样可能成为资本协调垄断、转嫁危机和压缩劳动成本的工具。
+  question: "当信息传递越来越快，受益最大的会是社会协作，还是更有能力操纵市场的资本集团?"
+
+- id: unionLegalization
+  name: 工会合法化运动
+  description: 工人们要求结社自由，组织工会。你是反对最激烈的厂商之一，但越来越多的工人开始秘密罢工。
+  imageKey: strike
+  historicalParallel: 1820-1850年代英国工会运动：从《结社法》废除到宪章运动，工人阶级开始以组织形式争取权益。
+  quote:
+    text: '"无产者在这个革命中失去的只是锁链。他们获得的将是整个世界。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 联合其他厂商对抗工会化
+      wealth: 15
+      conflict: 25
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -5
+        media: -10
+        rival: 10
+    - text: 主动谈判，签订集体工资协议
+      wealth: -15
+      conflict: -15
+      tech: 5
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 10
+        media: 10
+        rival: -5
+    - text: 引入半自动设备，削弱工会的关键地位
+      wealth: 10
+      conflict: 10
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: -10
+        gov: 0
+        media: 5
+        rival: 5
+  knowledge: 工会是工人阶级组织起来对抗资本的重要形式。但资本家同样可以通过引入机器、转移生产或雇佣工贼来瓦解工会力量。这是劳资之间持续的制度性博弈。
+
+- id: socialistInternational
+  name: 社会主义国际组织
+  description: 来自欧洲各国的社会主义者正在秘密筹建「国际工人协会」。马克思和恩格斯是主要领袖。他们主张全世界无产者联合起来。
+  imageKey: strike
+  historicalParallel: 1864年第一国际成立：国际工人协会（第一国际）在伦敦成立，马克思是实际领袖，推动工人阶级的国际团结。
+  quote:
+    text: '"全世界无产者，联合起来！"'
+    author: 马克思、恩格斯
+  options:
+    - text: 向政府告发，破坏工人运动
+      wealth: 10
+      conflict: 20
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -10
+        media: -5
+        rival: 5
+    - text: 暗中资助，换取工人好感
+      wealth: -20
+      conflict: -10
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: -5
+        media: 5
+        rival: 0
+    - text: 观望，试图将运动引向技术改良方向
+      wealth: 0
+      conflict: 0
+      tech: 10
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 0
+        media: 0
+        rival: 0
+  knowledge: 第一国际将工人运动从各国的分散行动推向国际联合。马克思主张通过政治斗争夺取国家政权，而巴枯宁等无政府主义者则主张直接推翻一切国家。这一分歧最终导致了第一国际的分裂。
+
+- id: colonialDeindustrialization
+  name: 殖民地去工业化
+  description: 你的纺织厂产品正在大量出口到殖民地。但那里的本地纺织业正在被你的廉价商品摧毁，大量工匠失业。
+  imageKey: colonial
+  historicalParallel: 19世纪英国棉纺织品出口摧毁印度传统手工业：达卡等纺织中心的工匠大批失业，英国商品占领印度市场，英国殖民政府保护这种不平等贸易。
+  quote:
+    text: '"英国在广州设置商馆，以此为据点，在印度种植鸦片，在中国市场销售。"'
+    author: 马克思
+  options:
+    - text: 加大出口，彻底摧毁殖民地本土工业
+      wealth: 40
+      conflict: 15
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -5
+        gov: -5
+        media: -5
+        rival: 5
+    - text: 在殖民地设立工厂，培训当地工人
+      wealth: 20
+      conflict: -5
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 10
+        media: 5
+        rival: -5
+    - text: 转移低利润产能，专注高端技术研发
+      wealth: 25
+      conflict: 0
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+  knowledge: 殖民地去工业化是宗主国积累资本的重要手段。通过摧毁殖民地的本土手工业，资本主义将殖民地纳入全球商品市场，同时将原材料和劳动力廉价地控制在手中。这是另一形式的原始积累。
+
+- id: crisis1907
+  name: 1907年金融危机
+  description: 股市突然崩盘，银行挤兑风潮蔓延。你的几家合作银行面临破产，政府希望你们这些大厂商伸出援手。
+  imageKey: bankCrisis
+  historicalParallel: 1907年美国银行业危机：纽约多家银行因铁路股票投机失败而倒闭，引发全国性的银行挤兑，最终由J.P.摩根牵头组织救市。
+  quote:
+    text: '"在危机中，商品和它的价值形态（货币）之间的对立发展成绝对矛盾。"'
+    author: 马克思《资本论》
+  options:
+    - text: 拒绝救市，趁乱收购倒闭银行的资产
+      wealth: 30
+      conflict: 20
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -10
+        media: -10
+        rival: 15
+    - text: 出资救市，与政府和银行共渡难关
+      wealth: -20
+      conflict: -10
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 15
+        media: 10
+        rival: -5
+    - text: 引入现代信用保险和储备金制度
+      wealth: -10
+      conflict: 0
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 10
+        media: 5
+        rival: -5
+  knowledge: 1907年的危机暴露了金融资本与产业资本之间的脆弱平衡。J.P.摩根的私人救市行动开启了央行介入的最后贷款人机制，但这种机制同样意味着大资本家的损失由全社会承担。
+
+- id: titanicInsurance
+  name: 泰坦尼克号沉没与保险
+  description: 泰坦尼克号沉没，船上大批富豪丧生，保险公司面临巨额赔付。你的公司也承保了部分保险，现在面临资金压力。
+  imageKey: warOrder
+  historicalParallel: 1912年泰坦尼克号海难：当时最大的客运邮轮沉没，造成1517人死亡，保险公司赔付约100万美元（当时巨款）。
+  quote:
+    text: '"保险制度不过是资本家弥补损失的一种方法罢了。"'
+    author: 恩格斯
+  options:
+    - text: 拒绝足额赔付，利用条款漏洞少赔
+      wealth: 20
+      conflict: 15
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -5
+        gov: -5
+        media: -15
+        rival: 5
+    - text: 全额赔付，维护保险业信誉
+      wealth: -30
+      conflict: -10
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 15
+        rival: 0
+    - text: 开发新的精算模型，提升风险管理
+      wealth: -10
+      conflict: 0
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+  knowledge: 保险制度是资本主义将风险社会化的机制之一。个体支付的保费聚集起来，用于补偿少数倒霉者。但在赔付纠纷中，资本方往往拥有信息优势和条款解释权。

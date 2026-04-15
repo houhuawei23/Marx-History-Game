@@ -1,0 +1,510 @@
+# 纪元3事件库 - AI数字纪元
+# 共12个事件
+
+- id: aiReplacesHuman
+  name: 人工智能取代人力
+  description: 你研发出了通用人工智能（AGI），可以取代90%的工人。效率极高，但剩下的10%工人面临绝境。
+  imageKey: ai
+  historicalParallel: 当前生成式AI引发的大规模失业焦虑：新一轮技术革命正在重塑劳动市场。
+  quote:
+    text: '"机器本身缩短劳动时间，但它的资本主义使用却延长工作日。"'
+    author: 马克思《资本论》
+  type: slider
+  slider:
+    label: AI 替代比例
+    min: 0
+    max: 100
+    default: 50
+    preview: 替代比例越高，财富与技术增长越快，但社会矛盾与工人信任越差
+  sliderBase:
+    wealth: 50
+    conflict: 99
+    tech: 30
+    routeTag: technologist
+    social:
+      worker: -20
+      gov: -5
+      media: -5
+      rival: 10
+  options:
+    - text: 推行机器人税，将利润分配给全民
+      wealth: 20
+      conflict: -20
+      tech: 20
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 10
+        media: 10
+        rival: 0
+    - text: 利用AI进行计划经济，弱化市场调节
+      wealth: 0
+      conflict: -30
+      tech: 30
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: AI时代，资本逻辑非但没有失效，反而强化了。当生产资料高度集中时，资本主义的雇佣劳动关系就瓦解了。
+
+- id: climateCrisis
+  name: 全球气候危机
+  description: 气候变化导致极端天气频发，社会要求企业承担更多环保责任。
+  imageKey: climate
+  historicalParallel: 当代气候变暖与生态危机：资本无限增殖逻辑与地球有限资源之间的根本冲突。
+  quote:
+    text: '"资本主义生产破坏着一切财富的源泉——土地和劳动者。"'
+    author: 马克思
+  type: slider
+  slider:
+    label: 环保投入比例
+    min: 0
+    max: 100
+    default: 50
+    preview: 投入越高，财富减少越多，但社会矛盾降低、政府支持与媒体舆论提升
+  sliderBase:
+    wealth: -40
+    conflict: -20
+    tech: 25
+    routeTag: reformer
+    social:
+      worker: 5
+      gov: 10
+      media: 10
+      rival: -5
+  options:
+    - text: 无视环保要求，继续追求利润
+      wealth: 30
+      conflict: 40
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: -15
+        media: -15
+        rival: 10
+    - text: 投资绿色技术，逐步转型
+      wealth: -20
+      conflict: -10
+      tech: 15
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 10
+        rival: 0
+  knowledge: 资本主义的生产方式与生态环境之间存在根本矛盾。无限扩张的资本逻辑与有限的自然资源之间存在不可调和的冲突。
+
+- id: dataPrivacyLeak
+  name: 数据隐私泄露
+  description: 你掌握的大量用户数据被黑客窃取并公开，引发全民对数字寡头的愤怒。
+  imageKey: dataPrivacy
+  historicalParallel: 近年来Facebook-Cambridge Analytica等数据丑闻：数字资本对用户行为的全面监控。
+  quote:
+    text: '"在资产阶级社会里，资本具有独立性和个性，而活动着的个人却没有独立性和个性。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 压制舆论，起诉 whistleblower
+      wealth: -10
+      conflict: 30
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -10
+        media: -20
+        rival: 5
+    - text: 公开道歉，加强数据保护立法
+      wealth: -30
+      conflict: -15
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 10
+        media: 15
+        rival: 0
+    - text: 用AI追踪泄露源并升级防火墙
+      wealth: -20
+      conflict: 5
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 数字资本时代，数据成为新的生产资料。对用户隐私的剥夺是数字剥削的新形式，它加剧了资本对日常生活的渗透与控制。
+
+- id: spaceColonyPlan
+  name: 太空殖民计划
+  description: 太空采矿与火星殖民成为可能，需要天文数字般的投资，但回报同样惊人。
+  imageKey: spaceColony
+  historicalParallel: 当代SpaceX、Blue Origin等太空私企：资本逻辑从地球向宇宙空间的扩张。
+  quote:
+    text: '"资产阶级除非对生产工具，从而对生产关系，从而对全部社会关系不断地进行革命，否则就不能生存下去。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 独占太空资源开采权
+      wealth: 60
+      conflict: 25
+      tech: 20
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: -5
+        media: -5
+        rival: 15
+    - text: 与国际机构合作开发
+      wealth: 30
+      conflict: -5
+      tech: 15
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 15
+        media: 10
+        rival: -5
+    - text: 研发可控核聚变推进技术
+      wealth: 10
+      conflict: 0
+      tech: 35
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 10
+        media: 5
+        rival: -10
+  knowledge: 当地球市场趋于饱和，资本必然向新的空间扩张。太空殖民是资本增殖逻辑在宇宙尺度的延伸，但它无法解决资本主义的基本矛盾。
+
+- id: geneEditingEthics
+  name: 基因编辑伦理
+  description: 基因编辑技术可以制造'完美劳动者'，但伦理争议巨大，社会哗然。
+  imageKey: geneEdit
+  historicalParallel: 2018年基因编辑婴儿事件：生物技术在资本驱动下对人类伦理底线的挑战。
+  quote:
+    text: '"人本身——劳动力——也成为商品，而且是最廉价的商品。"'
+    author: 恩格斯
+  options:
+    - text: 秘密资助人体实验
+      wealth: 40
+      conflict: 35
+      tech: 25
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -15
+        media: -20
+        rival: 10
+    - text: 呼吁全球伦理监管框架
+      wealth: -10
+      conflict: -15
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 15
+        media: 15
+        rival: 0
+    - text: 将技术用于疾病治疗以转移焦点
+      wealth: 10
+      conflict: -5
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 5
+        media: 10
+        rival: -5
+  knowledge: 生物技术在资本逻辑下可能导致对人的生命本身进行商品化。当劳动力可以被'设计'时，人的主体性将面临前所未有的危机。
+
+- id: modelTrainingData
+  name: 模型训练数据围猎
+  description: 平台企业开始扫荡图书、影像、论坛与公共数据集。每一段文字、每一次点击、每一张图像都被重新命名为训练燃料。你忽然意识到，新的原始积累正在网络上重演。
+  imageKey: dataPrivacy
+  historicalParallel: 21世纪互联网平台对用户数据的广泛采集：从社交媒体到搜索引擎，个人行为数据被大规模商品化，成为数字资本的核心生产资料。
+  quote:
+    text: '"在资产阶级社会里，资本具有独立性和个性，而活动着的个人却没有独立性和个性。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 尽可能吞并数据源，建立壁垒
+      wealth: 35
+      conflict: 20
+      tech: 15
+      routeTag: conservative
+      social:
+        worker: -5
+        gov: -10
+        media: -10
+        rival: 15
+    - text: 签署授权协议，按比例分成
+      wealth: 10
+      conflict: -5
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 推动开放数据合作社
+      wealth: -15
+      conflict: -15
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 10
+        gov: 5
+        media: 10
+        rival: -10
+  knowledge: 数据积累不是中性的'素材收集'，而是新的圈地运动。资本借助 AI 再次把共同生产的社会知识改写为私人资产。
+  question: "如果知识来自无数人的共同创造，训练 AI 的基础资料为什么要被少数平台据为己有?"
+
+- id: aiPlatformGig
+  name: AI 平台零工化
+  description: 你的平台决定把越来越多的工作拆成瞬时任务，由算法派单、评分、淘汰。名义上人人都更自由了，实际上每个人都在为一套看不见的模型证明自己仍有被使用的价值。
+  imageKey: ai
+  historicalParallel: 21世纪平台经济中的零工劳动：外卖骑手、网约车司机等在算法调度下工作，劳动关系趋于碎片化，劳动者权益保障面临巨大挑战。
+  quote:
+    text: '"工人阶级的儿女从一出生就注定要成为资本的牺牲品。"'
+    author: 恩格斯
+  options:
+    - text: 全面推进平台化用工
+      wealth: 25
+      conflict: 20
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -5
+        media: -10
+        rival: 10
+    - text: 设置最低保障和透明评分
+      wealth: 10
+      conflict: -5
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 10
+        media: 5
+        rival: 0
+    - text: 把平台转为劳动者合作社
+      wealth: -10
+      conflict: -15
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 15
+        gov: 5
+        media: 10
+        rival: -10
+  knowledge: AI 不只替代岗位，也会重写劳动关系。所谓灵活用工，往往意味着风险社会化、收益平台化，以及算法对劳动过程的持续统治。
+  question: "如果平台宣称每个人都可以自由接单，但定价、分配和淘汰都由算法决定，这种自由究竟属于谁?"
+
+- id: platformGigEconomy
+  name: 平台经济零工崛起
+  description: 你的外卖和网约车平台正在大规模扩张。骑手和司机们不知道的是，你的后台算法正在实时计算如何将他们的收入压到最低。
+  imageKey: ai
+  historicalParallel: 2010年代共享经济兴起：Uber、Lyft、DoorDash等平台以「零工经济」模式颠覆传统就业，劳动者失去雇员身份保障，仅获得按件计酬。
+  quote:
+    text: '"在资产阶级社会里，资本具有独立性和个性，而活动着的个人却没有独立性和个性。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 压低单均价，提高平台抽成比例
+      wealth: 30
+      conflict: 20
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -5
+        media: -10
+        rival: 10
+    - text: 建立最低收入保障和透明算法
+      wealth: -10
+      conflict: -15
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 10
+        media: 10
+        rival: 0
+    - text: 用AI优化调度算法，减少空转时间
+      wealth: 15
+      conflict: 5
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: -5
+        gov: 5
+        media: 5
+        rival: 5
+  knowledge: 平台经济将劳动者的「独立性」变成了新的控制形式。名义上，骑手和司机是自己的老板，实际上他们被算法牢牢控制：算法决定价格、路线、评分，甚至奖惩。劳动过程中的主体性被彻底剥夺。
+
+- id: digitalCurrency
+  name: 数字货币与监控资本
+  description: 各国央行正在试点数字货币，你的科技公司也被邀请参与技术合作。这意味着每一笔交易都将留痕，政府和平台将同时拥有你的财务数据。
+  imageKey: ai
+  historicalParallel: 2020年代各国央行数字货币（CBDC）探索：中国数字人民币试点、美国FedNow项目等，探索数字时代货币主权的实现形式。
+  quote:
+    text: '"消费不再是一种行为，而是一种被引导的选择。"'
+    author: 当代学者对数字监控资本的批判
+  options:
+    - text: 深度参与央行数字货币技术，获取数据红利
+      wealth: 25
+      conflict: 15
+      tech: 15
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: 10
+        media: -5
+        rival: 5
+    - text: 推动隐私保护立法，限制数据使用范围
+      wealth: -5
+      conflict: -10
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: -5
+        media: 15
+        rival: 0
+    - text: 研发抗审查的加密货币与之对抗
+      wealth: 10
+      conflict: 5
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: -10
+        media: 5
+        rival: -5
+  knowledge: 数字货币表面上是技术进步，但实际上关乎货币主权、数据所有权和社会控制。当交易数据被国家或平台掌握，个人的经济行为将被彻底透明化。这既是监控资本的终极形态，也可能成为社会信用体系的基础。
+
+- id: metaverseRealEstate
+  name: 元宇宙地产投机
+  description: 虚拟世界的土地正在被热炒。你的公司已经开始在元宇宙中购买「地块」，声称这里是下一片投资热土。
+  imageKey: spaceColony
+  historicalParallel: 2021-2022年NFT和虚拟地产热潮：Decentraland、The Sandbox等虚拟世界中地块价格飙升，众多明星和品牌入驻，后泡沫破裂。
+  quote:
+    text: '"资本害怕没有利润或利润过少的情况……为了100%的利润，它就敢践踏一切人间法律。"'
+    author: 马克思
+  options:
+    - text: 大举进军元宇宙，收购核心地块
+      wealth: 40
+      conflict: 15
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: -5
+        media: -5
+        rival: 10
+    - text: 谨慎参与，保留随时退出的选项
+      wealth: 15
+      conflict: 0
+      tech: 5
+      routeTag: reformer
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 自建底层基础设施，制定元宇宙规则
+      wealth: -20
+      conflict: -5
+      tech: 25
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 10
+        media: 5
+        rival: -10
+  knowledge: 元宇宙地产投机是资本寻找新增殖空间的最新尝试。当实体经济和金融市场趋于饱和，资本必然向虚拟世界扩张——这是一种「价值转移」，但并不创造实际的使用价值，泡沫破裂只是时间问题。
+
+- id: brainComputerInterface
+  name: 脑机接口与人类增强
+  description: 你的实验室研发出了首款民用脑机接口设备。健康人可以通过它增强认知能力，但批评者认为这是对人类自然状态的最后一击。
+  imageKey: geneEdit
+  historicalParallel: 21世纪神经技术商业化：Neuralink等公司探索脑机接口，DARPA资助神经增强研究，引发关于人类异化和不平等的激烈争论。
+  quote:
+    text: '"人本身——劳动力——也成为商品，而且是最廉价的商品。"'
+    author: 恩格斯
+  options:
+    - text: 高价推出民用版，只卖给富裕阶层
+      wealth: 50
+      conflict: 25
+      tech: 15
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -5
+        media: -10
+        rival: 5
+    - text: 推动全民免费接入，缩小认知鸿沟
+      wealth: -30
+      conflict: -20
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 15
+        media: 10
+        rival: -5
+    - text: 开源核心接口，让研究者自由改进
+      wealth: -15
+      conflict: -10
+      tech: 25
+      routeTag: technologist
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 脑机接口是人类增强技术的最前沿。当技术可以改变人的认知能力时，如果只有少数人能负担得起，「生而平等」这一现代社会的基石将彻底崩塌。技术精英主义可能比任何时候都更危险。
+
+- id: algorithmicLayoff
+  name: 算法裁员
+  description: 你的HR系统引入了AI绩效评估。这套系统可以在1秒内分析数千名员工的工作数据，并给出裁员建议名单。管理层发现效率提高了，但员工士气降到了谷底。
+  imageKey: ai
+  historicalParallel: 2010年代各大企业引入AI人力资源管理系统：亚马逊、IBM等公司使用AI监控员工表现并辅助裁员决定，引发员工隐私和算法歧视的争议。
+  quote:
+    text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"'
+    author: 《共产党宣言》
+  options:
+    - text: 全面推行AI裁员，替换管理层的主观判断
+      wealth: 30
+      conflict: 25
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -25
+        gov: -5
+        media: -10
+        rival: 5
+    - text: 保留人工复核环节，保留员工申诉渠道
+      wealth: -10
+      conflict: -15
+      tech: 5
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 10
+        media: 10
+        rival: 0
+    - text: 将AI用于岗位匹配而非裁员，帮助员工转型
+      wealth: -15
+      conflict: -10
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 当AI介入劳动关系，资本对工人的控制从外部转向了内部。算法可以去人性化，但裁员的后果仍然由活生生的人来承担。问题是：我们能否设计出既不损害效率，又尊重人的尊严的劳动关系？
