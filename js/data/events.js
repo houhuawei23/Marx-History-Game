@@ -97,6 +97,67 @@ export function buildEventLibrary(EventImages) {
                 ],
                 knowledge: "技术一旦进入资本主义生产，就会被纳入竞争、垄断与控制劳动的逻辑。问题不只是机器更先进，而是谁占有机器及其收益。",
                 question: "当机器让熟练劳动被重新定价，技术是在扩大生产的可能，还是在压低劳动者讨价还价的能力?"
+            },
+            {
+                name: "东印度公司贸易",
+                description: "东印度公司的商船满载着茶叶、香料和鸦片驶向远方。公司允许私人商馆挂靠名下的武装船只，共享航线保护，但要上缴一笔可观的「保护费」。",
+                imageSvg: EventImages.colonial,
+                historicalParallel: "1600-1873年英国东印度公司：从商业企业演变为殖民统治机构，掌握印度乃至东南亚的经济命脉。",
+                quote: { text: '"资产阶级在它的不到一百年的阶级统治中所创造的生产力，比过去一切世代创造的全部生产力还要多，还要大。"', author: '马克思、恩格斯' },
+                options: [
+                    {text: "入股东印度公司，参与东方贸易", wealth: 35, conflict: 15, tech: 5, routeTag: 'conservative', social: {worker: -5, gov: -5, media: -10, rival: 5}},
+                    {text: "自己组建商船队，独立开拓航线", wealth: 25, conflict: 5, tech: 10, routeTag: 'technologist', social: {worker: 0, gov: 0, media: 5, rival: -5}},
+                    {text: "用贸易利润投资本土棉纺织业", wealth: 20, conflict: -5, tech: 15, routeTag: 'reformer', social: {worker: 10, gov: 5, media: 10, rival: 0}}
+                ],
+                knowledge: "东印度公司是资本原始积累时期最具代表性的组织形态。它将国家权力与商业资本结合，是殖民掠夺的急先锋。资本主义的全球扩张从一开始就不是单纯的贸易。"
+            },
+            {
+                name: "运河开凿与土地征收",
+                description: "运河能够大幅降低运输成本，但沿途的农民和手工业者将失去生计。地方士绅联名请愿，要求停止这一「毁灭家园」的工程。",
+                historicalParallel: "18-19世纪英国运河热：从布里奇沃特运河到遍布全英国的内陆水运网络，运河建设伴随着大规模的土地征收和农民流离失所。",
+                quote: { text: '"由于资本的利益强迫人们去进行这种竞赛。"', author: '恩格斯' },
+                options: [
+                    {text: "低价强制征收，限期完成运河", wealth: 40, conflict: 20, tech: 10, routeTag: 'conservative', social: {worker: -15, gov: -5, media: -10, rival: 10}},
+                    {text: "提高补偿标准，换取农民自愿搬迁", wealth: 20, conflict: 5, tech: 10, routeTag: 'reformer', social: {worker: 5, gov: 10, media: 5, rival: 0}},
+                    {text: "改为技术方案，开凿隧道绕开村落", wealth: 10, conflict: -5, tech: 20, routeTag: 'technologist', social: {worker: 10, gov: 5, media: 5, rival: -5}}
+                ],
+                knowledge: "基础设施建设的代价往往由社会最底层承担。运输革命（运河、铁路）降低了商品成本，却摧毁了大量农民和手工业者的生计，这是资本积累的又一种「血腥」形式。"
+            },
+            {
+                name: "蒸汽机与工匠失业",
+                description: "新型蒸汽动力纺织机问世，效率是旧式手工织机的数倍。作坊里的老工匠们群情激愤，他们的技术经验一夜之间变得一文不值。",
+                historicalParallel: "19世纪初英国卢德运动：工人捣毁机器以示抗议，认为机器是让他们失业的罪魁祸首。马克思和恩格斯视之为早期工人阶级对资本主义工业化的本能反抗。",
+                quote: { text: '"机器是生产剩余价值的手段。"', author: '马克思' },
+                options: [
+                    {text: "全面换装蒸汽机，淘汰手工织坊", wealth: 35, conflict: 20, tech: 15, routeTag: 'conservative', social: {worker: -20, gov: 0, media: -5, rival: 10}},
+                    {text: "给老工匠提供转岗培训机会", wealth: 15, conflict: -10, tech: 10, routeTag: 'reformer', social: {worker: 10, gov: 5, media: 5, rival: 0}},
+                    {text: "让工匠参与改进蒸汽机的调试工作", wealth: 10, conflict: -5, tech: 20, routeTag: 'technologist', social: {worker: 15, gov: 0, media: 5, rival: -5}}
+                ],
+                knowledge: "技术进步并不自动惠及所有人。在资本主义制度下，机器替代手工劳动往往意味着工人的去技能化和结构性失业。问题不在于技术本身，而在于技术进步的收益如何分配。"
+            },
+            {
+                name: "济贫法与工作院",
+                description: "流离失所的贫民越来越多，地方官员要求你资助新建「工作院」，以工代赈。但工作院里的条件极其恶劣，社会舆论开始关注。",
+                historicalParallel: "1834年英国《济贫法修正案》：建立「工作院」，实行劣等待遇原则，旨在压制贫民、迫使他们接受低薪劳动。",
+                quote: { text: '"资产阶级以维持等价交换为名，实行着对工人阶级的剥削。"', author: '恩格斯' },
+                options: [
+                    {text: "资助工作院建设，换取廉价劳动力来源", wealth: 25, conflict: 15, tech: 5, routeTag: 'conservative', social: {worker: -15, gov: 10, media: -10, rival: 5}},
+                    {text: "推动改善工作院条件，提升人道标准", wealth: -10, conflict: -15, tech: 0, routeTag: 'reformer', social: {worker: 15, gov: 5, media: 10, rival: 0}},
+                    {text: "投资建立技术培训学校取代工作院", wealth: -15, conflict: -10, tech: 15, routeTag: 'technologist', social: {worker: 10, gov: 5, media: 5, rival: -5}}
+                ],
+                knowledge: "《济贫法》实质上是将贫困问题归咎于个人，并通过制度化的贫困来迫使劳动力接受资本的条件。这不是慈善，而是维持劳动力商品供应的政治经济学。"
+            },
+            {
+                name: "金本位制度确立",
+                description: "各国正在讨论是否采用金本位。你的银行若能率先获得政府授权经营金本位业务，将极大提升信誉，但也需要储备大量黄金。",
+                historicalParallel: "1816年英国正式确立金本位制：政府承诺以固定比率兑换纸币与黄金，这一制度后来成为19世纪国际贸易的基石，直到一战后才被放弃。",
+                quote: { text: '"货币是商品在交换过程中的一般等价物。"', author: '马克思' },
+                options: [
+                    {text: "率先申请金本位业务，囤积黄金储备", wealth: 30, conflict: 10, tech: 5, routeTag: 'conservative', social: {worker: -5, gov: 10, media: 5, rival: 5}},
+                    {text: "支持建立央行统一管理黄金储备", wealth: 15, conflict: -5, tech: 10, routeTag: 'reformer', social: {worker: 5, gov: 15, media: 10, rival: -5}},
+                    {text: "探索发行银行券的信用货币体系", wealth: 10, conflict: 0, tech: 15, routeTag: 'technologist', social: {worker: 0, gov: 5, media: 5, rival: 0}}
+                ],
+                knowledge: "金本位制表面上是稳健的货币制度，实际上是英国等强国向全球转嫁危机成本的工具。通过固定汇率，核心国的通胀会传导到外围国，而危机来临时，外围国首先遭殃。"
             }
         ],
         2: [
@@ -199,6 +260,66 @@ export function buildEventLibrary(EventImages) {
                 ],
                 knowledge: "通信技术并不会自动带来更公平的市场。它同样可能成为资本协调垄断、转嫁危机和压缩劳动成本的工具。",
                 question: "当信息传递越来越快，受益最大的会是社会协作，还是更有能力操纵市场的资本集团?"
+            },
+            {
+                name: "工会合法化运动",
+                description: "工人们要求结社自由，组织工会。你是反对最激烈的厂商之一，但越来越多的工人开始秘密罢工。",
+                historicalParallel: "1820-1850年代英国工会运动：从《结社法》废除到宪章运动，工人阶级开始以组织形式争取权益。",
+                quote: { text: '"无产者在这个革命中失去的只是锁链。他们获得的将是整个世界。"', author: '马克思、恩格斯' },
+                options: [
+                    {text: "联合其他厂商对抗工会化", wealth: 15, conflict: 25, tech: 0, routeTag: 'conservative', social: {worker: -20, gov: -5, media: -10, rival: 10}},
+                    {text: "主动谈判，签订集体工资协议", wealth: -15, conflict: -15, tech: 5, routeTag: 'reformer', social: {worker: 15, gov: 10, media: 10, rival: -5}},
+                    {text: "引入半自动设备，削弱工会的关键地位", wealth: 10, conflict: 10, tech: 15, routeTag: 'technologist', social: {worker: -10, gov: 0, media: 5, rival: 5}}
+                ],
+                knowledge: "工会是工人阶级组织起来对抗资本的重要形式。但资本家同样可以通过引入机器、转移生产或雇佣工贼来瓦解工会力量。这是劳资之间持续的制度性博弈。"
+            },
+            {
+                name: "社会主义国际组织",
+                description: "来自欧洲各国的社会主义者正在秘密筹建「国际工人协会」。马克思和恩格斯是主要领袖。他们主张全世界无产者联合起来。",
+                historicalParallel: "1864年第一国际成立：国际工人协会（第一国际）在伦敦成立，马克思是实际领袖，推动工人阶级的国际团结。",
+                quote: { text: '"全世界无产者，联合起来！"', author: '马克思、恩格斯' },
+                options: [
+                    {text: "向政府告发，破坏工人运动", wealth: 10, conflict: 20, tech: 0, routeTag: 'conservative', social: {worker: -15, gov: -10, media: -5, rival: 5}},
+                    {text: "暗中资助，换取工人好感", wealth: -20, conflict: -10, tech: 0, routeTag: 'reformer', social: {worker: 10, gov: -5, media: 5, rival: 0}},
+                    {text: "观望，试图将运动引向技术改良方向", wealth: 0, conflict: 0, tech: 10, routeTag: 'technologist', social: {worker: 5, gov: 0, media: 0, rival: 0}}
+                ],
+                knowledge: "第一国际将工人运动从各国的分散行动推向国际联合。马克思主张通过政治斗争夺取国家政权，而巴枯宁等无政府主义者则主张直接推翻一切国家。这一分歧最终导致了第一国际的分裂。"
+            },
+            {
+                name: "殖民地去工业化",
+                description: "你的纺织厂产品正在大量出口到殖民地。但那里的本地纺织业正在被你的廉价商品摧毁，大量工匠失业。",
+                historicalParallel: "19世纪英国棉纺织品出口摧毁印度传统手工业：达卡等纺织中心的工匠大批失业，英国商品占领印度市场，英国殖民政府保护这种不平等贸易。",
+                quote: { text: '"英国在广州设置商馆，以此为据点，在印度种植鸦片，在中国市场销售。"', author: '马克思' },
+                options: [
+                    {text: "加大出口，彻底摧毁殖民地本土工业", wealth: 40, conflict: 15, tech: 5, routeTag: 'conservative', social: {worker: -5, gov: -5, media: -5, rival: 5}},
+                    {text: "在殖民地设立工厂，培训当地工人", wealth: 20, conflict: -5, tech: 10, routeTag: 'reformer', social: {worker: 10, gov: 10, media: 5, rival: -5}},
+                    {text: "转移低利润产能，专注高端技术研发", wealth: 25, conflict: 0, tech: 15, routeTag: 'technologist', social: {worker: 0, gov: 5, media: 5, rival: 0}}
+                ],
+                knowledge: "殖民地去工业化是宗主国积累资本的重要手段。通过摧毁殖民地的本土手工业，资本主义将殖民地纳入全球商品市场，同时将原材料和劳动力廉价地控制在手中。这是另一形式的原始积累。"
+            },
+            {
+                name: "1907年金融危机",
+                description: "股市突然崩盘，银行挤兑风潮蔓延。你的几家合作银行面临破产，政府希望你们这些大厂商伸出援手。",
+                historicalParallel: "1907年美国银行业危机：纽约多家银行因铁路股票投机失败而倒闭，引发全国性的银行挤兑，最终由J.P.摩根牵头组织救市。",
+                quote: { text: '"在危机中，商品和它的价值形态（货币）之间的对立发展成绝对矛盾。"', author: '马克思《资本论》' },
+                options: [
+                    {text: "拒绝救市，趁乱收购倒闭银行的资产", wealth: 30, conflict: 20, tech: 0, routeTag: 'conservative', social: {worker: -15, gov: -10, media: -10, rival: 15}},
+                    {text: "出资救市，与政府和银行共渡难关", wealth: -20, conflict: -10, tech: 0, routeTag: 'reformer', social: {worker: 10, gov: 15, media: 10, rival: -5}},
+                    {text: "引入现代信用保险和储备金制度", wealth: -10, conflict: 0, tech: 20, routeTag: 'technologist', social: {worker: 0, gov: 10, media: 5, rival: -5}}
+                ],
+                knowledge: "1907年的危机暴露了金融资本与产业资本之间的脆弱平衡。J.P.摩根的私人救市行动开启了央行介入的最后贷款人机制，但这种机制同样意味着大资本家的损失由全社会承担。"
+            },
+            {
+                name: "泰坦尼克号沉没与保险",
+                description: "泰坦尼克号沉没，船上大批富豪丧生，保险公司面临巨额赔付。你的公司也承保了部分保险，现在面临资金压力。",
+                historicalParallel: "1912年泰坦尼克号海难：当时最大的客运邮轮沉没，造成1517人死亡，保险公司赔付约100万美元（当时巨款）。",
+                quote: { text: '"保险制度不过是资本家弥补损失的一种方法罢了。"', author: '恩格斯' },
+                options: [
+                    {text: "拒绝足额赔付，利用条款漏洞少赔", wealth: 20, conflict: 15, tech: 0, routeTag: 'conservative', social: {worker: -5, gov: -5, media: -15, rival: 5}},
+                    {text: "全额赔付，维护保险业信誉", wealth: -30, conflict: -10, tech: 0, routeTag: 'reformer', social: {worker: 5, gov: 10, media: 15, rival: 0}},
+                    {text: "开发新的精算模型，提升风险管理", wealth: -10, conflict: 0, tech: 15, routeTag: 'technologist', social: {worker: 0, gov: 5, media: 5, rival: 0}}
+                ],
+                knowledge: "保险制度是资本主义将风险社会化的机制之一。个体支付的保费聚集起来，用于补偿少数倒霉者。但在赔付纠纷中，资本方往往拥有信息优势和条款解释权。"
             }
         ],
         3: [
@@ -308,6 +429,66 @@ export function buildEventLibrary(EventImages) {
                 ],
                 knowledge: "AI 不只替代岗位，也会重写劳动关系。所谓灵活用工，往往意味着风险社会化、收益平台化，以及算法对劳动过程的持续统治。",
                 question: "如果平台宣称每个人都可以自由接单，但定价、分配和淘汰都由算法决定，这种自由究竟属于谁?"
+            },
+            {
+                name: "平台经济零工崛起",
+                description: "你的外卖和网约车平台正在大规模扩张。骑手和司机们不知道的是，你的后台算法正在实时计算如何将他们的收入压到最低。",
+                historicalParallel: "2010年代共享经济兴起：Uber、Lyft、DoorDash等平台以「零工经济」模式颠覆传统就业，劳动者失去雇员身份保障，仅获得按件计酬。",
+                quote: { text: '"在资产阶级社会里，资本具有独立性和个性，而活动着的个人却没有独立性和个性。"', author: '马克思、恩格斯' },
+                options: [
+                    {text: "压低单均价，提高平台抽成比例", wealth: 30, conflict: 20, tech: 5, routeTag: 'conservative', social: {worker: -20, gov: -5, media: -10, rival: 10}},
+                    {text: "建立最低收入保障和透明算法", wealth: -10, conflict: -15, tech: 10, routeTag: 'reformer', social: {worker: 15, gov: 10, media: 10, rival: 0}},
+                    {text: "用AI优化调度算法，减少空转时间", wealth: 15, conflict: 5, tech: 15, routeTag: 'technologist', social: {worker: -5, gov: 5, media: 5, rival: 5}}
+                ],
+                knowledge: "平台经济将劳动者的「独立性」变成了新的控制形式。名义上，骑手和司机是自己的老板，实际上他们被算法牢牢控制：算法决定价格、路线、评分，甚至奖惩。劳动过程中的主体性被彻底剥夺。"
+            },
+            {
+                name: "数字货币与监控资本",
+                description: "各国央行正在试点数字货币，你的科技公司也被邀请参与技术合作。这意味着每一笔交易都将留痕，政府和平台将同时拥有你的财务数据。",
+                historicalParallel: "2020年代各国央行数字货币（CBDC）探索：中国数字人民币试点、美国FedNow项目等，探索数字时代货币主权的实现形式。",
+                quote: { text: '"消费不再是一种行为，而是一种被引导的选择。"', author: '当代学者对数字监控资本的批判' },
+                options: [
+                    {text: "深度参与央行数字货币技术，获取数据红利", wealth: 25, conflict: 15, tech: 15, routeTag: 'conservative', social: {worker: -10, gov: 10, media: -5, rival: 5}},
+                    {text: "推动隐私保护立法，限制数据使用范围", wealth: -5, conflict: -10, tech: 10, routeTag: 'reformer', social: {worker: 10, gov: -5, media: 15, rival: 0}},
+                    {text: "研发抗审查的加密货币与之对抗", wealth: 10, conflict: 5, tech: 20, routeTag: 'technologist', social: {worker: 5, gov: -10, media: 5, rival: -5}}
+                ],
+                knowledge: "数字货币表面上是技术进步，但实际上关乎货币主权、数据所有权和社会控制。当交易数据被国家或平台掌握，个人的经济行为将被彻底透明化。这既是监控资本的终极形态，也可能成为社会信用体系的基础。"
+            },
+            {
+                name: "元宇宙地产投机",
+                description: "虚拟世界的土地正在被热炒。你的公司已经开始在元宇宙中购买「地块」，声称这里是下一片投资热土。",
+                historicalParallel: "2021-2022年NFT和虚拟地产热潮：Decentraland、The Sandbox等虚拟世界中地块价格飙升，众多明星和品牌入驻，后泡沫破裂。",
+                quote: { text: '"资本害怕没有利润或利润过少的情况……为了100%的利润，它就敢践踏一切人间法律。"', author: '马克思' },
+                options: [
+                    {text: "大举进军元宇宙，收购核心地块", wealth: 40, conflict: 15, tech: 10, routeTag: 'conservative', social: {worker: -10, gov: -5, media: -5, rival: 10}},
+                    {text: "谨慎参与，保留随时退出的选项", wealth: 15, conflict: 0, tech: 5, routeTag: 'reformer', social: {worker: 0, gov: 5, media: 5, rival: 0}},
+                    {text: "自建底层基础设施，制定元宇宙规则", wealth: -20, conflict: -5, tech: 25, routeTag: 'technologist', social: {worker: 5, gov: 10, media: 5, rival: -10}}
+                ],
+                knowledge: "元宇宙地产投机是资本寻找新增殖空间的最新尝试。当实体经济和金融市场趋于饱和，资本必然向虚拟世界扩张——这是一种「价值转移」，但并不创造实际的使用价值，泡沫破裂只是时间问题。"
+            },
+            {
+                name: "脑机接口与人类增强",
+                description: "你的实验室研发出了首款民用脑机接口设备。健康人可以通过它增强认知能力，但批评者认为这是对人类自然状态的最后一击。",
+                historicalParallel: "21世纪神经技术商业化：Neuralink等公司探索脑机接口，DARPA资助神经增强研究，引发关于人类异化和不平等的激烈争论。",
+                quote: { text: '"人本身——劳动力——也成为商品，而且是最廉价的商品。"', author: '恩格斯' },
+                options: [
+                    {text: "高价推出民用版，只卖给富裕阶层", wealth: 50, conflict: 25, tech: 15, routeTag: 'conservative', social: {worker: -15, gov: -5, media: -10, rival: 5}},
+                    {text: "推动全民免费接入，缩小认知鸿沟", wealth: -30, conflict: -20, tech: 10, routeTag: 'reformer', social: {worker: 15, gov: 15, media: 10, rival: -5}},
+                    {text: "开源核心接口，让研究者自由改进", wealth: -15, conflict: -10, tech: 25, routeTag: 'technologist', social: {worker: 10, gov: 5, media: 5, rival: -5}}
+                ],
+                knowledge: "脑机接口是人类增强技术的最前沿。当技术可以改变人的认知能力时，如果只有少数人能负担得起，「生而平等」这一现代社会的基石将彻底崩塌。技术精英主义可能比任何时候都更危险。"
+            },
+            {
+                name: "算法裁员",
+                description: "你的HR系统引入了AI绩效评估。这套系统可以在1秒内分析数千名员工的工作数据，并给出裁员建议名单。管理层发现效率提高了，但员工士气降到了谷底。",
+                historicalParallel: "2010年代各大企业引入AI人力资源管理系统：亚马逊、IBM等公司使用AI监控员工表现并辅助裁员决定，引发员工隐私和算法歧视的争议。",
+                quote: { text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"', author: '《共产党宣言》' },
+                options: [
+                    {text: "全面推行AI裁员，替换管理层的主观判断", wealth: 30, conflict: 25, tech: 10, routeTag: 'conservative', social: {worker: -25, gov: -5, media: -10, rival: 5}},
+                    {text: "保留人工复核环节，保留员工申诉渠道", wealth: -10, conflict: -15, tech: 5, routeTag: 'reformer', social: {worker: 15, gov: 10, media: 10, rival: 0}},
+                    {text: "将AI用于岗位匹配而非裁员，帮助员工转型", wealth: -15, conflict: -10, tech: 15, routeTag: 'technologist', social: {worker: 10, gov: 5, media: 5, rival: -5}}
+                ],
+                knowledge: "当AI介入劳动关系，资本对工人的控制从外部转向了内部。算法可以去人性化，但裁员的后果仍然由活生生的人来承担。问题是：我们能否设计出既不损害效率，又尊重人的尊严的劳动关系？"
             }
         ],
         // 路线专属事件池（由系统按条件注入）

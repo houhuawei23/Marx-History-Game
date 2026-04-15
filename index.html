@@ -23,11 +23,14 @@
         <!-- 理论档案室按钮 -->
         <button class="gallery-btn" id="fragment-gallery-btn" title="理论档案室">📚</button>
 
+        <!-- 帮助按钮 -->
+        <button class="help-btn" id="help-btn" title="游戏帮助">❓</button>
+
         <!-- 游戏标题 -->
         <header class="game-header">
             <h1>🎮 资本：轮回与破局</h1>
             <p class="subtitle">作为一名资本家，你的目标是积累财富，但要注意社会矛盾的激化！</p>
-            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.2.0</p>
+            <p class="game-version" style="font-size: 12px; color: #888; margin-top: 4px;">v1.3.0</p>
         </header>
 
         <!-- 主内容：双栏布局 -->
@@ -159,6 +162,7 @@
                             <span class="stock-stat-value" id="stock-cash">100</span>
                         </div>
                     </div>
+                    <div class="stock-chart-container" id="stock-chart-container"></div>
                     <div class="stock-panel-actions" id="stock-panel-actions">
                         <button class="stock-btn buy" id="stock-buy">📈 买入 1 股</button>
                         <button class="stock-btn sell" id="stock-sell">📉 卖出 1 股</button>
@@ -262,6 +266,10 @@
                 <p id="modal-knowledge-text"></p>
                 <span class="typewriter-cursor" id="typewriter-cursor">|</span>
                 <p id="modal-quote-text" class="modal-quote"></p>
+                <div id="modal-question-container" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <p id="modal-question-text" style="font-size: 14px; margin-bottom: 12px;"></p>
+                    <div id="modal-question-options"></div>
+                </div>
             </div>
             <div class="knowledge-portrait">
                 <!-- 马克思/恩格斯 SVG 肖像 -->
@@ -305,6 +313,64 @@
         <div class="dice-box">
             <div class="dice-container" id="dice-container"></div>
             <p class="dice-result-text" id="dice-result-text"></p>
+        </div>
+    </div>
+
+    <!-- 帮助弹窗 -->
+    <div class="help-modal" id="help-modal" style="display: none;">
+        <div class="help-modal-content">
+            <h3>📖 游戏帮助</h3>
+            <div class="help-section">
+                <h4>🎯 游戏目标</h4>
+                <p>你扮演一名资本家，在三个历史纪元中做出关键决策。目标是积累财富，但要注意社会矛盾的激化——当矛盾达到100时，无产阶级革命爆发，游戏结束！</p>
+            </div>
+            <div class="help-section">
+                <h4>📊 核心指标</h4>
+                <ul>
+                    <li><strong>财富</strong>：你的资本，初始100。破产（≤0）则游戏结束。</li>
+                    <li><strong>社会矛盾</strong>：社会不满程度，初始30。达到100则革命爆发。</li>
+                    <li><strong>技术力</strong>：科技水平，影响生产效率和某些事件的选项。</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>🌐 社会关系</h4>
+                <ul>
+                    <li><strong>工人信任</strong>：过低（≤10）会触发「总罢工」紧急事件。</li>
+                    <li><strong>政府支持</strong>：过高（≥90）会获得「政策红利」。</li>
+                    <li><strong>媒体舆论</strong>：影响公众形象和股市情绪。</li>
+                    <li><strong>竞争压力</strong>：来自竞争对手的压力。</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>🛤️ 路线倾向</h4>
+                <ul>
+                    <li><strong>保守路线</strong>（⚔️）：追求短期利润，可能激化矛盾。</li>
+                    <li><strong>技术路线</strong>（🤖）：通过技术进步解决问题。</li>
+                    <li><strong>改良路线</strong>（🕊️）：调和劳资关系，缓和矛盾。</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>🎲 运气系统</h4>
+                <p>每次选择后投掷D20骰子：出1-5点会有额外惩罚，16-20点会有额外奖励。这为游戏增加了Roguelike的随机性。</p>
+            </div>
+            <div class="help-section">
+                <h4>📈 股市系统</h4>
+                <p>每回合可以在底部股市面板买卖股票。股价会根据当前事件和你的选择波动。低买高卖可以加速财富积累。</p>
+            </div>
+            <div class="help-section">
+                <h4>📚 认知碎片</h4>
+                <p>达成特定条件可解锁认知碎片，多周目时可以携带碎片入场，获得额外加成。收集全部碎片可解锁成就「熟读《资本论》」。</p>
+            </div>
+            <div class="help-section">
+                <h4>🏆 结局</h4>
+                <ul>
+                    <li><strong>真结局</strong>：技术极度发达 + 矛盾极低 → 自由人联合体</li>
+                    <li><strong>普通结局</strong>：改良路线 + 矛盾低 + 财富高 → 福利国家的乌托邦</li>
+                    <li><strong>坏结局</strong>：高矛盾 + 高财富 → 技术封建主义</li>
+                    <li><strong>革命结局</strong>：矛盾达到100 → 无产阶级革命爆发</li>
+                </ul>
+            </div>
+            <button class="close-help-btn" id="close-help-btn">关闭</button>
         </div>
     </div>
 

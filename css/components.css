@@ -1,5 +1,5 @@
 /* ========== 顶部按钮 ========== */
-.music-toggle, .gallery-btn {
+.music-toggle, .gallery-btn, .help-btn {
     position: fixed;
     width: 48px;
     height: 48px;
@@ -26,7 +26,13 @@
     font-size: 1.2em;
 }
 
-.music-toggle:hover, .gallery-btn:hover {
+.help-btn {
+    top: 20px;
+    right: 132px;
+    font-size: 1.1em;
+}
+
+.music-toggle:hover, .gallery-btn:hover, .help-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
 }
