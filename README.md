@@ -1,6 +1,6 @@
 # 资本：轮回与破局
 
-[![Version](https://img.shields.io/badge/version-1.5.0-blue)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue)](./CHANGELOG.md)
 
 一款基于马克思主义理论的 Roguelike 教育游戏，通过模拟资本主义发展历程，展示唯物史观、剩余价值理论等核心原理。
 
@@ -41,6 +41,17 @@ python -m http.server 8080
 ```
 
 然后浏览器访问 `http://localhost:8080` 即可游玩。
+
+### 桌面应用下载
+
+游戏已打包为可执行文件，无需浏览器即可运行：
+
+| 平台 | 文件 | 大小 | 使用方式 |
+|------|------|------|----------|
+| Windows | `资本轮回与破局-1.5.0-win-portable.zip` | 143MB | 解压后运行 `资本轮回与破局.exe` |
+| Linux | `资本轮回与破局-1.5.0-linux-x86_64.AppImage` | 121MB | `chmod +x` 后直接运行 |
+
+> 下载地址：https://github.com/houhuawei23/Marx-History-Game/releases
 
 ---
 
@@ -96,6 +107,12 @@ python -m http.server 8080
 │   └── run_game_simple.bat
 ├── tests/                  # 测试截图与用例
 │   └── screenshots/
+├── electron/               # Electron 桌面应用配置
+│   └── main.js             # Electron 主进程入口
+├── src-tauri/              # Tauri 桌面应用配置
+│   ├── tauri.conf.json     # Tauri 配置
+│   └── Cargo.toml          # Rust 依赖配置
+├── dist-electron/          # Electron 打包输出目录
 └── legacy/                 # 历史文件
     └── capital_game_enhanced.py
 ```

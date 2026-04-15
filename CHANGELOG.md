@@ -1,5 +1,18 @@
 # 更新日志
 
+## [1.6.0] - 2026-04-15
+
+### 新增
+- **桌面应用打包**：支持将游戏打包为可执行文件，Windows / Linux 双平台可用
+  - Electron 方案：生成 AppImage（Linux）和便携式 zip（Windows）
+  - Tauri 方案：配置完成（需系统安装 GTK3 开发库才能编译）
+  - 新增 `electron/main.js` - Electron 主进程入口
+  - 新增 `src-tauri/` - Tauri 项目配置
+
+### 变更
+- `package.json` 新增 electron-builder 和 tauri-cli 配置
+- 项目结构新增 `electron/` 和 `src-tauri/` 目录
+
 ## [1.5.0] - 2026-04-15
 
 ### 新增
