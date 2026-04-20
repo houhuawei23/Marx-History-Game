@@ -1,0 +1,34 @@
+# 隐藏连锁事件
+# 在满足特定条件时触发
+
+computeDictator:
+  id: computeDictator
+  name: 算力独裁
+  description: 由于你此前的技术垄断与全面AI化，社会已经形成了由算法控制的极端不平等结构。
+  imageKey: computeDictator
+  historicalParallel: 科幻作品中的'技术封建主义'想象：当资本逻辑与技术权力结合到极致的社会图景。
+  quote:
+    text: '"资本无法自行增殖，陷入死寂。"'
+    author: 马克思主义学者对未来的预言
+  options:
+    - text: 维持算法统治
+      wealth: 30
+      conflict: 50
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: -30
+        gov: -10
+        media: -15
+        rival: 20
+    - text: 将算力公有化
+      wealth: -50
+      conflict: -50
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 30
+        gov: 20
+        media: 20
+        rival: -10
+  knowledge: 当生产资料（AI算力）高度集中到不再需要人类劳动者时，资本主义的雇佣劳动关系就彻底瓦解了。这要么通向'自由王国'，要么通向技术封建主义的深渊。

@@ -1,0 +1,496 @@
+# 纪元1事件库 - 原始积累纪元
+# 共12个事件
+
+- id: enclosure
+  name: 圈地运动
+  description: 你发现了一片公共土地，如果将其私有化建立工厂，能获得巨大财富，但流离失所的农民会涌入城市。
+  imageKey: enclosure
+  historicalParallel: 英国16-18世纪圈地运动：用暴力将农民从土地上赶走，为工业革命提供廉价劳动力。
+  quote:
+    text: '"资本来到世间，从头到脚，每个毛孔都滴着血和肮脏的东西。"'
+    author: 马克思
+  options:
+    - text: 暴力强占
+      wealth: 50
+      conflict: 20
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -5
+        media: -10
+        rival: 0
+    - text: 支付补偿金缓慢收购
+      wealth: 20
+      conflict: 5
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 保持公地，投资手工业
+      wealth: 10
+      conflict: 0
+      tech: 5
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 0
+        media: 5
+        rival: -5
+  knowledge: 唯物史观：生产力的发展（机器工业）必然要求变革生产关系（私有制取代公有制）。资本原始积累的过程伴随着血腥与暴力。
+
+- id: workerStrike
+  name: 工人罢工
+  description: 工人们要求提高工资和改善工作条件，否则将举行大规模罢工。
+  imageKey: strike
+  historicalParallel: 19世纪英国宪章运动与法国里昂工人起义：早期工人阶级争取权利的斗争。
+  quote:
+    text: '"资本是死劳动，它像吸血鬼一样，只有吮吸活劳动才有生命。"'
+    author: 马克思
+  options:
+    - text: 镇压罢工，雇佣新工人
+      wealth: -10
+      conflict: 25
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -5
+        media: -10
+        rival: 5
+    - text: 妥协，小幅提高工资
+      wealth: -20
+      conflict: -10
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 投资自动化设备替代工人
+      wealth: -30
+      conflict: 15
+      tech: 10
+      routeTag: technologist
+      social:
+        worker: -10
+        gov: 0
+        media: 0
+        rival: 5
+  knowledge: 剩余价值理论：资本家通过延长劳动时间或提高劳动强度来获取更多剩余价值，这必然导致劳资矛盾的激化。
+
+- id: slaveTrade
+  name: 黑奴贸易
+  description: plantations 的棉花需求激增，参与跨大西洋奴隶贸易可获得巨额利润。
+  imageKey: slavery
+  historicalParallel: 16-19世纪大西洋奴隶贸易：资本主义原始积累最血腥的篇章之一。
+  quote:
+    text: '"美洲金银产地的发现，土著居民的被剿灭、被奴役和被埋葬于矿井，对东印度开始进行的征服和掠夺……"'
+    author: 马克思、恩格斯
+  options:
+    - text: 投资奴隶贸易船队
+      wealth: 60
+      conflict: 25
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: -10
+        media: -15
+        rival: 0
+    - text: 拒绝参与，投资本土纺织
+      wealth: 10
+      conflict: -5
+      tech: 5
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 5
+        media: 10
+        rival: 0
+    - text: 引进新式轧棉机减少人力依赖
+      wealth: 5
+      conflict: 5
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 0
+        media: 5
+        rival: -5
+  knowledge: 原始积累不仅是土地的掠夺，更是对人身自由的剥夺。资本主义的全球扩张从一开始就建立在殖民与奴役之上。
+
+- id: childLabor
+  name: 童工问题
+  description: 工厂里大量使用童工以压低工资，社会舆论开始出现谴责之声。
+  imageKey: childLabor
+  historicalParallel: 19世纪英国工厂大量使用童工，每天劳动16小时以上，直到《工厂法》颁布才逐步改善。
+  quote:
+    text: '"工人阶级的儿女从一出生就注定要成为资本的牺牲品。"'
+    author: 恩格斯《英国工人阶级状况》
+  options:
+    - text: 继续使用童工，利润优先
+      wealth: 30
+      conflict: 20
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -10
+        media: -15
+        rival: 0
+    - text: 逐步遣散童工，雇佣成年技工
+      wealth: -10
+      conflict: -10
+      tech: 5
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 10
+        media: 10
+        rival: 0
+    - text: 发明半自动器械降低对童工依赖
+      wealth: -20
+      conflict: 0
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 5
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 过度剥削劳动力（尤其是妇女儿童）是资本原始积累阶段的典型特征，它透支了社会再生产的基础。
+
+- id: bankCrisis
+  name: 银行危机
+  description: 过度放贷导致银行出现挤兑潮，你的企业也面临资金链断裂。
+  imageKey: bankCrisis
+  historicalParallel: 19世纪频繁的银行恐慌（如1857年、1873年），暴露了早期金融资本的脆弱性。
+  quote:
+    text: '"在危机中，商品和它的价值形态（货币）之间的对立发展成绝对矛盾。"'
+    author: 马克思《资本论》
+  options:
+    - text: 裁员减薪，收缩规模自保
+      wealth: -10
+      conflict: 15
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: 0
+        media: -5
+        rival: 10
+    - text: 向政府申请救济，承诺不裁员
+      wealth: 10
+      conflict: -5
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 10
+        media: 5
+        rival: 0
+    - text: 引入复式记账与信用保险
+      wealth: -20
+      conflict: 0
+      tech: 10
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 信用制度加速了资本集中，但也放大了经济危机的传染性。生产过剩与支付手段不足之间的矛盾是危机的直接导火索。
+
+- id: factoryClock
+  name: 工厂钟表与童工账簿
+  description: 你的管事建议把工人的每一分钟都记进账簿：谁慢了半拍，谁多耗了煤，谁在深夜还可以继续加班。你发现，真正值钱的不只是蒸汽机，还有把人变成可计算对象的管理术。
+  imageKey: childLabor
+  historicalParallel: 18-19世纪英国工厂制度：通过精细的劳动分工和计件工资，将工人的每一分钟都纳入资本增殖的轨道。
+  quote:
+    text: '"资本是死劳动，它像吸血鬼一样，只有吮吸活劳动才有生命。"'
+    author: 马克思
+  options:
+    - text: 把每分钟都换算成成本
+      wealth: 25
+      conflict: 15
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: 0
+        media: -5
+        rival: 5
+    - text: 缩短童工工时，保留熟练工训练
+      wealth: 5
+      conflict: -5
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 让工人共同商议工序安排
+      wealth: 0
+      conflict: -10
+      tech: 10
+      routeTag: technologist
+      social:
+        worker: 15
+        gov: 0
+        media: 5
+        rival: -5
+  knowledge: 资本最早的算法并不在硅片上，而在钟表、账簿和工厂纪律里。AI 不是资本计算的起点，而是这种计算冲动的极端延伸。
+  question: "当劳动被切成可计量的碎片，技术是在解放人，还是在把人变成流程的附件?"
+
+- id: spinningMachine
+  name: 纺机专利之争
+  description: 一位工程师带着改良纺机来找你。他声称这台机器能让女工和学徒更快上手，但也要求你支付专利费，并在工坊里重新分配熟练工的地位。
+  imageKey: tech
+  historicalParallel: 18世纪英国珍妮纺纱机与走锭精纺机的发明与专利争夺：技术进步加剧了资本集中和工人阶层的分化。
+  quote:
+    text: '"机器是生产剩余价值的手段。"'
+    author: 马克思
+  options:
+    - text: 买断专利，迅速扩厂
+      wealth: 30
+      conflict: 10
+      tech: 15
+      routeTag: conservative
+      social:
+        worker: -5
+        gov: 0
+        media: 0
+        rival: 10
+    - text: 与工程师分成，逐步推广
+      wealth: 15
+      conflict: 0
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 让工匠合作社共同持有技术
+      wealth: 0
+      conflict: -10
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 10
+        gov: 0
+        media: 5
+        rival: -5
+  knowledge: 技术一旦进入资本主义生产，就会被纳入竞争、垄断与控制劳动的逻辑。问题不只是机器更先进，而是谁占有机器及其收益。
+  question: "当机器让熟练劳动被重新定价，技术是在扩大生产的可能，还是在压低劳动者讨价还价的能力?"
+
+- id: eastIndiaCompany
+  name: 东印度公司贸易
+  description: 东印度公司的商船满载着茶叶、香料和鸦片驶向远方。公司允许私人商馆挂靠名下的武装船只，共享航线保护，但要上缴一笔可观的「保护费」。
+  imageKey: colonial
+  historicalParallel: 1600-1873年英国东印度公司：从商业企业演变为殖民统治机构，掌握印度乃至东南亚的经济命脉。
+  quote:
+    text: '"资产阶级在它的不到一百年的阶级统治中所创造的生产力，比过去一切世代创造的全部生产力还要多，还要大。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 入股东印度公司，参与东方贸易
+      wealth: 35
+      conflict: 15
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -5
+        gov: -5
+        media: -10
+        rival: 5
+    - text: 自己组建商船队，独立开拓航线
+      wealth: 25
+      conflict: 5
+      tech: 10
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 0
+        media: 5
+        rival: -5
+    - text: 用贸易利润投资本土棉纺织业
+      wealth: 20
+      conflict: -5
+      tech: 15
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 5
+        media: 10
+        rival: 0
+  knowledge: 东印度公司是资本原始积累时期最具代表性的组织形态。它将国家权力与商业资本结合，是殖民掠夺的急先锋。资本主义的全球扩张从一开始就不是单纯的贸易。
+
+- id: canalBuilding
+  name: 运河开凿与土地征收
+  description: 运河能够大幅降低运输成本，但沿途的农民和手工业者将失去生计。地方士绅联名请愿，要求停止这一「毁灭家园」的工程。
+  imageKey: enclosure
+  historicalParallel: 18-19世纪英国运河热：从布里奇沃特运河到遍布全英国的内陆水运网络，运河建设伴随着大规模的土地征收和农民流离失所。
+  quote:
+    text: '"由于资本的利益强迫人们去进行这种竞赛。"'
+    author: 恩格斯
+  options:
+    - text: 低价强制征收，限期完成运河
+      wealth: 40
+      conflict: 20
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: -5
+        media: -10
+        rival: 10
+    - text: 提高补偿标准，换取农民自愿搬迁
+      wealth: 20
+      conflict: 5
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 5
+        rival: 0
+    - text: 改为技术方案，开凿隧道绕开村落
+      wealth: 10
+      conflict: -5
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 基础设施建设的代价往往由社会最底层承担。运输革命（运河、铁路）降低了商品成本，却摧毁了大量农民和手工业者的生计，这是资本积累的又一种「血腥」形式。
+
+- id: steamEngineUnemployment
+  name: 蒸汽机与工匠失业
+  description: 新型蒸汽动力纺织机问世，效率是旧式手工织机的数倍。作坊里的老工匠们群情激愤，他们的技术经验一夜之间变得一文不值。
+  imageKey: tech
+  historicalParallel: 19世纪初英国卢德运动：工人捣毁机器以示抗议，认为机器是让他们失业的罪魁祸首。马克思和恩格斯视之为早期工人阶级对资本主义工业化的本能反抗。
+  quote:
+    text: '"机器是生产剩余价值的手段。"'
+    author: 马克思
+  options:
+    - text: 全面换装蒸汽机，淘汰手工织坊
+      wealth: 35
+      conflict: 20
+      tech: 15
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: 0
+        media: -5
+        rival: 10
+    - text: 给老工匠提供转岗培训机会
+      wealth: 15
+      conflict: -10
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: 0
+    - text: 让工匠参与改进蒸汽机的调试工作
+      wealth: 10
+      conflict: -5
+      tech: 20
+      routeTag: technologist
+      social:
+        worker: 15
+        gov: 0
+        media: 5
+        rival: -5
+  knowledge: 技术进步并不自动惠及所有人。在资本主义制度下，机器替代手工劳动往往意味着工人的去技能化和结构性失业。问题不在于技术本身，而在于技术进步的收益如何分配。
+
+- id: poorLaw
+  name: 济贫法与工作院
+  description: 流离失所的贫民越来越多，地方官员要求你资助新建「工作院」，以工代赈。但工作院里的条件极其恶劣，社会舆论开始关注。
+  imageKey: childLabor
+  historicalParallel: 1834年英国《济贫法修正案》：建立「工作院」，实行劣等待遇原则，旨在压制贫民、迫使他们接受低薪劳动。
+  quote:
+    text: '"资产阶级以维持等价交换为名，实行着对工人阶级的剥削。"'
+    author: 恩格斯
+  options:
+    - text: 资助工作院建设，换取廉价劳动力来源
+      wealth: 25
+      conflict: 15
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: 10
+        media: -10
+        rival: 5
+    - text: 推动改善工作院条件，提升人道标准
+      wealth: -10
+      conflict: -15
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 15
+        gov: 5
+        media: 10
+        rival: 0
+    - text: 投资建立技术培训学校取代工作院
+      wealth: -15
+      conflict: -10
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 10
+        gov: 5
+        media: 5
+        rival: -5
+  knowledge: 《济贫法》实质上是将贫困问题归咎于个人，并通过制度化的贫困来迫使劳动力接受资本的条件。这不是慈善，而是维持劳动力商品供应的政治经济学。
+
+- id: goldStandard
+  name: 金本位制度确立
+  description: 各国正在讨论是否采用金本位。你的银行若能率先获得政府授权经营金本位业务，将极大提升信誉，但也需要储备大量黄金。
+  imageKey: bankCrisis
+  historicalParallel: 1816年英国正式确立金本位制：政府承诺以固定比率兑换纸币与黄金，这一制度后来成为19世纪国际贸易的基石，直到一战后才被放弃。
+  quote:
+    text: '"货币是商品在交换过程中的一般等价物。"'
+    author: 马克思
+  options:
+    - text: 率先申请金本位业务，囤积黄金储备
+      wealth: 30
+      conflict: 10
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -5
+        gov: 10
+        media: 5
+        rival: 5
+    - text: 支持建立央行统一管理黄金储备
+      wealth: 15
+      conflict: -5
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 15
+        media: 10
+        rival: -5
+    - text: 探索发行银行券的信用货币体系
+      wealth: 10
+      conflict: 0
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: 0
+        gov: 5
+        media: 5
+        rival: 0
+  knowledge: 金本位制表面上是稳健的货币制度，实际上是英国等强国向全球转嫁危机成本的工具。通过固定汇率，核心国的通胀会传导到外围国，而危机来临时，外围国首先遭殃。

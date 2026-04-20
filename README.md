@@ -1,6 +1,6 @@
 # 资本：轮回与破局
 
-[![Version](https://img.shields.io/badge/version-1.2.0-blue)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue)](./CHANGELOG.md)
 
 一款基于马克思主义理论的 Roguelike 教育游戏，通过模拟资本主义发展历程，展示唯物史观、剩余价值理论等核心原理。
 
@@ -42,6 +42,17 @@ python -m http.server 8080
 
 然后浏览器访问 `http://localhost:8080` 即可游玩。
 
+### 桌面应用下载
+
+游戏已打包为可执行文件，无需浏览器即可运行：
+
+| 平台 | 文件 | 大小 | 使用方式 |
+|------|------|------|----------|
+| Windows | `资本轮回与破局-1.5.0-win-portable.zip` | 143MB | 解压后运行 `资本轮回与破局.exe` |
+| Linux | `资本轮回与破局-1.5.0-linux-x86_64.AppImage` | 121MB | `chmod +x` 后直接运行 |
+
+> 下载地址：https://github.com/houhuawei23/Marx-History-Game/releases
+
 ---
 
 ## 📁 项目结构
@@ -60,14 +71,28 @@ python -m http.server 8080
 │   ├── config.js           # 常量与游戏配置
 │   ├── data/               # 数据层
 │   │   ├── assets.js       # 事件 SVG 图库
-│   │   ├── events.js       # 事件库
-│   │   ├── fragments.js    # 认知碎片
-│   │   └── achievements.js # 成就
+│   │   ├── events.js       # 事件库（YAML 加载器）
+│   │   ├── fragments.js    # 认知碎片（YAML 加载器）
+│   │   ├── achievements.js # 成就（YAML 加载器）
+│   │   ├── loader.js       # YAML 配置加载器
+│   │   ├── achievementChecks.js # 成就检查函数库
+│   │   └── conditionFns.js  # 碎片条件函数库
 │   ├── core/               # 核心引擎
 │   │   ├── AudioManager.js # 背景音乐与音效管理
 │   │   └── GameEngine.js   # 主游戏类
 │   └── utils/
 │       └── helpers.js      # SVG 生成器、工具函数
+├── yaml/                   # YAML 配置文件（数据与逻辑分离）
+│   ├── images.yaml         # SVG 图库配置
+│   ├── achievements.yaml   # 成就配置
+│   ├── fragments.yaml      # 认知碎片配置
+│   └── events/             # 事件配置
+│       ├── epoch1.yaml     # 纪元1事件（12个）
+│       ├── epoch2.yaml     # 纪元2事件（12个）
+│       ├── epoch3.yaml     # 纪元3事件（12个）
+│       ├── route.yaml      # 路线专属事件
+│       ├── hidden.yaml     # 隐藏连锁事件
+│       └── special.yaml    # 特殊事件
 ├── assets/
 │   ├── screenshots/        # 游戏截图
 │   └── audio/              # 纪元背景音乐 MP3
@@ -82,6 +107,12 @@ python -m http.server 8080
 │   └── run_game_simple.bat
 ├── tests/                  # 测试截图与用例
 │   └── screenshots/
+├── electron/               # Electron 桌面应用配置
+│   └── main.js             # Electron 主进程入口
+├── src-tauri/              # Tauri 桌面应用配置
+│   ├── tauri.conf.json     # Tauri 配置
+│   └── Cargo.toml          # Rust 依赖配置
+├── dist-electron/          # Electron 打包输出目录
 └── legacy/                 # 历史文件
     └── capital_game_enhanced.py
 ```
@@ -99,6 +130,7 @@ python -m http.server 8080
 - **Tab 式结局面板**：结局诊断 / 数据报告 / 历史回顾 / 成就与碎片，四个标签分类展示
 - **D20 骰子修正**：每次选择后掷骰，为决策结果增添 Roguelike 随机性
 - **跨局继承**：认知碎片与成就会保存在 `localStorage` 中，多周目持续解锁
+- **YAML 配置化**：游戏数据（事件、成就、认知碎片）存储在 YAML 配置文件中，便于维护和扩展
 
 ---
 

@@ -1,8 +1,8 @@
-import { buildEventLibrary } from '../data/events.js';
-import { CognitiveFragments } from '../data/fragments.js';
-import { Achievements } from '../data/achievements.js';
+import { buildEventLibrary, buildEventLibrarySync } from '../data/events.js';
+import { loadFragmentsConfig, getConditionFns } from '../data/fragments.js';
+import { loadAchievementsConfig, getAchievementChecks } from '../data/achievements.js';
 import { AudioManager } from './AudioManager.js';
-import { getDiceSVG, generateRadarSVG, generateTrendChartSVG, generateSocialRadarSVG, getEpochTransitionAnimation, createParticleBurst } from '../utils/helpers.js';
+import { getDiceSVG, generateRadarSVG, generateTrendChartSVG, generateSocialRadarSVG, getEpochTransitionAnimation, createParticleBurst, generateStockChartSVG } from '../utils/helpers.js';
 import { EPOCH_NAMES, ROUTE_LABELS, STORAGE_KEYS, GAME_SETTINGS } from '../config.js';
 
 /**
@@ -25,15 +25,16 @@ export class CapitalGame {
         this.stockHoldings = 0;
         this.stockPrice = 100;
         this.stockHistory = [];
+        this.stockPriceHistory = [100]; // 价格历史用于绘图
 
         // 路线倾向
         this.route = { conservative: 0, technologist: 0, reformer: 0 };
         // 社会关系
         this.social = { ...GAME_SETTINGS.social };
-        // 认知碎片（从 localStorage 读取持久化）
-        this.fragments = this.loadFragments();
-        // 成就
-        this.achievements = this.loadAchievements();
+        // 认知碎片 - 初始化为同步默认值，异步加载在后
+        this.fragments = this._createDefaultFragments();
+        // 成就 - 初始化为同步默认值，异步加载在后
+        this.achievements = this._createDefaultAchievements();
         // 结局记录（用于成就检测）
         this.endingsRecord = JSON.parse(localStorage.getItem(STORAGE_KEYS.endings) || '[]');
         // 纪元特殊事件触发记录
@@ -43,53 +44,150 @@ export class CapitalGame {
         // 骰子结果
         this.lastDiceRoll = null;
 
-        this.events = buildEventLibrary({});
+        this.events = buildEventLibrarySync({});
+        this.eventsLoaded = false;
+        this.dataLoaded = false;
         this.initializeGame();
     }
 
-    // 允许外部注入事件图库后重新构建
-    setEventImages(eventImages) {
-        this.events = buildEventLibrary(eventImages);
+    // 创建默认碎片对象（同步）
+    _createDefaultFragments() {
+        const conditionFns = getConditionFns();
+        // 返回带函数的默认碎片，用于首次初始化
+        const defaults = {
+            surplusValue: { id: 'surplusValue', name: '剩余价值觉醒', condition: conditionFns.conditionSurplusValue, unlocked: false },
+            historicalMaterialism: { id: 'historicalMaterialism', name: '唯物史观萌芽', condition: conditionFns.conditionHistoricalMaterialism, unlocked: false },
+            keynesCritique: { id: 'keynesCritique', name: '凯恩斯主义批判', condition: conditionFns.conditionKeynesCritique, unlocked: false },
+            techAlienation: { id: 'techAlienation', name: '技术异化洞察', condition: conditionFns.conditionTechAlienation, unlocked: false },
+            freeKingdom: { id: 'freeKingdom', name: '自由王国钥匙', condition: conditionFns.conditionFreeKingdom, unlocked: false },
+            climateJustice: { id: 'climateJustice', name: '生态马克思主义', condition: conditionFns.conditionClimateJustice, unlocked: false },
+            monopolyInsight: { id: 'monopolyInsight', name: '垄断资本认知', condition: conditionFns.conditionMonopolyInsight, unlocked: false },
+            classConsciousness: { id: 'classConsciousness', name: '阶级意识觉醒', condition: conditionFns.conditionClassConsciousness, unlocked: false }
+        };
+        // 尝试从 localStorage 恢复 unlocked 状态
+        const saved = localStorage.getItem(STORAGE_KEYS.fragments);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                for (const key in defaults) {
+                    if (parsed[key]) {
+                        defaults[key].unlocked = parsed[key].unlocked || false;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load fragments:', e);
+            }
+        }
+        return defaults;
     }
 
-    loadFragments() {
+    // 创建默认成就对象（同步）
+    _createDefaultAchievements() {
+        const checks = getAchievementChecks();
+        const defaultDefs = {
+            reformer: { id: 'reformer', name: '🕊️ 改良主义者', check: checks.checkReformer, unlocked: false },
+            hardliner: { id: 'hardliner', name: '⚔️ 铁血资本家', check: checks.checkHardliner, unlocked: false },
+            technocrat: { id: 'technocrat', name: '🤖 技术至上', check: checks.checkTechnocrat, unlocked: false },
+            wellRead: { id: 'wellRead', name: '📖 熟读《资本论》', check: checks.checkWellRead, unlocked: false },
+            historyCycle: { id: 'historyCycle', name: '🔁 历史循环', check: checks.checkHistoryCycle, unlocked: false },
+            trueEnding: { id: 'trueEnding', name: '✨ 破局之人', check: checks.checkTrueEnding, unlocked: false },
+            allRoutesExplorer: { id: 'allRoutesExplorer', name: '🧭 全景观察者', check: checks.checkAllRoutes, unlocked: false },
+            centuryCapitalist: { id: 'centuryCapitalist', name: '💰 世纪大亨', check: checks.checkCenturyCapitalist, unlocked: false },
+            peacefulCapitalist: { id: 'peacefulCapitalist', name: '☮️ 和平资本家', check: checks.checkPeacefulCapitalist, unlocked: false },
+            welfareEnding: { id: 'welfareEnding', name: '🏛️ 福利国家', check: checks.checkWelfareEnding, unlocked: false },
+            techFeudalismEnding: { id: 'techFeudalismEnding', name: '💀 技术封建主义', check: checks.checkTechFeudalismEnding, unlocked: false },
+            survivor: { id: 'survivor', name: '🛡️ 幸存者', check: checks.checkSurvivor, unlocked: false },
+            stockMaster: { id: 'stockMaster', name: '📈 股市大师', check: checks.checkStockMaster, unlocked: false },
+            questionAnswerer: { id: 'questionAnswerer', name: '🤔 理论思考者', check: checks.checkQuestionAnswerer, unlocked: false },
+            fragmentCollector: { id: 'fragmentCollector', name: '📚 碎片收藏家', check: checks.checkFragmentCollector, unlocked: false }
+        };
+        // 尝试从 localStorage 恢复 unlocked 状态
+        const saved = localStorage.getItem(STORAGE_KEYS.achievements);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                for (const key in defaultDefs) {
+                    if (parsed[key]) {
+                        defaultDefs[key].unlocked = parsed[key].unlocked || false;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load achievements:', e);
+            }
+        }
+        return defaultDefs;
+    }
+
+    // 允许外部注入事件图库后重新构建（异步）
+    async setEventImages(eventImages) {
+        this.events = await buildEventLibrary(eventImages);
+        this.eventsLoaded = true;
+        // 异步加载完整数据和配置
+        await this._loadFullData();
+    }
+
+    // 加载完整数据（异步）
+    async _loadFullData() {
+        const [fragments, achievements] = await Promise.all([
+            this.loadFragments(),
+            this.loadAchievements()
+        ]);
+        // 合并已解锁状态
+        for (const key in fragments) {
+            if (this.fragments[key]) {
+                this.fragments[key].unlocked = fragments[key].unlocked || this.fragments[key].unlocked;
+            }
+        }
+        for (const key in achievements) {
+            if (this.achievements[key]) {
+                this.achievements[key].unlocked = achievements[key].unlocked || this.achievements[key].unlocked;
+            }
+        }
+        this.dataLoaded = true;
+    }
+
+    async loadFragments() {
+        const conditionFns = getConditionFns();
+        const fragments = await loadFragmentsConfig();
         const saved = localStorage.getItem(STORAGE_KEYS.fragments);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
                 const merged = {};
-                for (const key in CognitiveFragments) {
-                    merged[key] = { ...CognitiveFragments[key], ...(parsed[key] || {}) };
-                    merged[key].condition = CognitiveFragments[key].condition; // restore function
+                for (const key in fragments) {
+                    merged[key] = { ...fragments[key], ...(parsed[key] || {}) };
+                    merged[key].condition = conditionFns[fragments[key].conditionFn] || (() => false);
                 }
                 return merged;
             } catch (e) {
                 console.error('Failed to load fragments:', e);
             }
         }
-        return Object.fromEntries(Object.entries(CognitiveFragments).map(([k, v]) => [k, { ...v }]));
+        return fragments;
     }
 
     saveFragments() {
         localStorage.setItem(STORAGE_KEYS.fragments, JSON.stringify(this.fragments));
     }
 
-    loadAchievements() {
+    async loadAchievements() {
+        const checks = getAchievementChecks();
+        const achievements = await loadAchievementsConfig();
         const saved = localStorage.getItem(STORAGE_KEYS.achievements);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
                 const merged = {};
-                for (const key in Achievements) {
-                    merged[key] = { ...Achievements[key], ...(parsed[key] || {}) };
-                    merged[key].check = Achievements[key].check; // restore function
+                for (const key in achievements) {
+                    merged[key] = { ...achievements[key], ...(parsed[key] || {}) };
+                    merged[key].check = checks[achievements[key].checkFn] || (() => false);
                 }
                 return merged;
             } catch (e) {
                 console.error('Failed to load achievements:', e);
             }
         }
-        return Object.fromEntries(Object.entries(Achievements).map(([k, v]) => [k, { ...v }]));
+        return achievements;
     }
 
     saveAchievements() {
@@ -132,23 +230,25 @@ export class CapitalGame {
     }
 
     bindEvents() {
-        document.getElementById('start-btn').addEventListener('click', () => this.startGame());
-        document.getElementById('restart-btn').addEventListener('click', () => this.restartGame());
-        document.getElementById('continue-btn').addEventListener('click', () => this.closeKnowledgeModal());
-        document.getElementById('music-toggle').addEventListener('click', () => this.toggleMusic());
-        document.getElementById('fragment-gallery-btn').addEventListener('click', () => this.openFragmentGallery());
-        document.getElementById('close-gallery-btn').addEventListener('click', () => this.closeFragmentGallery());
+        document.getElementById('start-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.startGame(); });
+        document.getElementById('restart-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.restartGame(); });
+        document.getElementById('continue-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.closeKnowledgeModal(); });
+        document.getElementById('music-toggle').addEventListener('click', () => { this.audio.playSfx('click'); this.toggleMusic(); });
+        document.getElementById('fragment-gallery-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.openFragmentGallery(); });
+        document.getElementById('close-gallery-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.closeFragmentGallery(); });
+        document.getElementById('help-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.openHelp(); });
+        document.getElementById('close-help-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.closeHelp(); });
 
         // Tab 切换
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+            btn.addEventListener('click', (e) => { this.audio.playSfx('click'); this.switchTab(e.target.dataset.tab); });
         });
 
         // 股市交易按钮
         document.getElementById('stock-buy').addEventListener('click', () => this.tradeStock('buy'));
-        document.getElementById('stock-skip').addEventListener('click', () => this.tradeStock('skip'));
+        document.getElementById('stock-skip').addEventListener('click', () => { this.audio.playSfx('click'); this.tradeStock('skip'); });
         document.getElementById('stock-sell').addEventListener('click', () => this.tradeStock('sell'));
-        document.getElementById('intro-start-btn').addEventListener('click', () => this.hideIntro());
+        document.getElementById('intro-start-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.hideIntro(); });
     }
 
     switchTab(tabName) {
@@ -217,6 +317,7 @@ export class CapitalGame {
 
         container.querySelectorAll('.fragment-card').forEach(card => {
             card.addEventListener('click', () => {
+                this.audio.playSfx('click');
                 const id = card.dataset.id;
                 this.equippedFragment = id ? this.fragments[id] : null;
                 if (this.equippedFragment) {
@@ -278,8 +379,114 @@ export class CapitalGame {
         setTimeout(() => m.style.display = 'none', 300);
     }
 
+    openHelp() {
+        const modal = document.getElementById('help-modal');
+        modal.style.display = 'flex';
+        modal.classList.remove('fade-out');
+    }
+
+    closeHelp() {
+        const modal = document.getElementById('help-modal');
+        modal.classList.add('fade-out');
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+
+    /**
+     * 显示上下文提示
+     * 在关键游戏节点给予玩家指导
+     */
+    showContextualTip() {
+        // 只在前3回合显示提示
+        if (this.rounds > 3) return;
+
+        let tip = null;
+        const tips = {
+            firstRound: {
+                icon: '🎯',
+                title: '游戏提示',
+                text: '每个事件都有3种选择方向：保守（短期利益但激化矛盾）、技术（长期发展）、改良（调和矛盾）。你的选择将决定最终结局。'
+            },
+            highConflict: {
+                icon: '⚠️',
+                title: '矛盾警告',
+                text: '社会矛盾较高！当矛盾达到100时，无产阶级革命爆发，游戏结束。建议关注改良路线或提高工人待遇。'
+            },
+            lowWealth: {
+                icon: '💰',
+                title: '财富警告',
+                text: '现金较低！注意股市逢低买入机会，或选择能带来稳定收益的选项。'
+            },
+            socialCrisis: {
+                icon: '🌐',
+                title: '社会关系提示',
+                text: '某个社会群体关系紧张可能触发紧急事件！注意维护工人信任度。'
+            },
+            routeHint: {
+                icon: '🛤️',
+                title: '路线提示',
+                text: '你的路线倾向正在形成。改良路线达到一定程度会触发专属事件。'
+            }
+        };
+
+        // 根据当前状态选择提示
+        if (this.rounds === 0) {
+            tip = tips.firstRound;
+        } else if (this.socialConflict >= 60) {
+            tip = tips.highConflict;
+        } else if (this.cash <= 30) {
+            tip = tips.lowWealth;
+        } else if (this.social.worker <= 30 || this.social.gov <= 30 || this.social.media <= 30) {
+            tip = tips.socialCrisis;
+        } else if (this.rounds >= 2 && (this.route.conservative > 0 || this.route.technologist > 0 || this.route.reformer > 0)) {
+            tip = tips.routeHint;
+        }
+
+        if (tip) {
+            this.showToast(tip.icon + ' ' + tip.title + ': ' + tip.text);
+        }
+    }
+
+    /**
+     * 显示临时提示Toast
+     */
+    showToast(message, duration = 4000) {
+        const existing = document.getElementById('contextual-tip-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'contextual-tip-toast';
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 15, 22, 0.95);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: #f0f0f0;
+            font-size: 0.9em;
+            max-width: 500px;
+            text-align: center;
+            z-index: 300;
+            opacity: 0;
+            animation: fadeInModal 0.4s forwards;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        `;
+        toast.innerHTML = `<p style="margin:0;line-height:1.5;">${message}</p>`;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'fadeOutModal 0.3s forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+
     nextEvent() {
         if (this.isGameOver) return;
+
+        // 显示上下文提示
+        this.showContextualTip();
 
         // 应用每回合碎片效果
         if (this.equippedFragment && this.equippedFragment.effect && this.equippedFragment.effect.wealthPerRound) {
@@ -453,7 +660,7 @@ export class CapitalGame {
             </div>
         `;
 
-        card.addEventListener('click', () => this.handleChoice(option, event, card));
+        card.addEventListener('click', () => { this.audio.playSfx('click'); this.handleChoice(option, event, card); });
         return card;
     }
 
@@ -499,6 +706,7 @@ export class CapitalGame {
         updatePreview();
 
         div.querySelector('#slider-confirm').addEventListener('click', () => {
+            this.audio.playSfx('click');
             const pct = parseInt(sliderInput.value, 10) / 100;
             const option = {
                 text: `${slider.label} ${sliderInput.value}%`,
@@ -547,6 +755,8 @@ export class CapitalGame {
                 // 股价波动（与事件和选择相关）
                 const stockChange = this.calculateStockChange(event, option, diceRoll);
                 this.stockPrice = Math.max(10, this.stockPrice + stockChange);
+                this.stockPriceHistory.push(this.stockPrice);
+                if (this.stockPriceHistory.length > 20) this.stockPriceHistory.shift(); // 最多保留20个数据点
                 this.updateWealth();
 
                 // 路线倾向
@@ -608,7 +818,7 @@ export class CapitalGame {
                     // 延迟显示知识弹窗，让玩家看清数值变化
                     setTimeout(() => {
                         this.hideRoundSummaryToast();
-                        this.showKnowledgeModal(event.knowledge, event.quote);
+                        this.showKnowledgeModal(event.knowledge, event.quote, event.question);
                     }, 1400);
                 }
             } catch (err) {
@@ -695,34 +905,99 @@ export class CapitalGame {
         setTimeout(() => el.remove(), 1200);
     }
 
-    showKnowledgeModal(text, quote) {
+    showKnowledgeModal(text, quote, question) {
         this.audio.playSfx('modal');
         const modal = document.getElementById('knowledge-modal');
         const textEl = document.getElementById('modal-knowledge-text');
         const quoteEl = document.getElementById('modal-quote-text');
         const cursor = document.getElementById('typewriter-cursor');
         const continueBtn = document.getElementById('continue-btn');
+        const questionContainer = document.getElementById('modal-question-container');
+        const questionText = document.getElementById('modal-question-text');
+        const questionOptions = document.getElementById('modal-question-options');
 
         textEl.textContent = '';
-        if (quoteEl) quoteEl.textContent = quote ? `${quote.text} —— ${quote.author}` : '';
+        if (quoteEl) quoteEl.textContent = '';
         cursor.style.display = 'inline';
         continueBtn.style.opacity = '0';
         continueBtn.style.pointerEvents = 'none';
+        if (questionContainer) questionContainer.style.display = 'none';
 
         modal.classList.remove('fade-out');
         modal.style.display = 'flex';
 
+        let phase = 0; // 0: knowledge text, 1: quote, 2: question, 3: done
         let index = 0;
         const speed = 28;
+        const fullText = text;
+        const hasQuote = quote && quote.text;
+        const hasQuestion = question && question.text;
+
+        const showQuote = () => {
+            phase = 1;
+            if (hasQuote) {
+                quoteEl.textContent = `${quote.text} —— ${quote.author}`;
+                setTimeout(() => {
+                    if (hasQuestion) {
+                        showQuestion();
+                    } else {
+                        phase = 3;
+                        continueBtn.style.opacity = '1';
+                        continueBtn.style.pointerEvents = 'auto';
+                    }
+                }, hasQuestion ? 500 : 2000);
+            } else {
+                if (hasQuestion) {
+                    showQuestion();
+                } else {
+                    phase = 3;
+                    continueBtn.style.opacity = '1';
+                    continueBtn.style.pointerEvents = 'auto';
+                }
+            }
+        };
+
+        const showQuestion = () => {
+            phase = 2;
+            questionText.textContent = question.text;
+            questionOptions.innerHTML = '';
+            question.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'question-option-btn';
+                btn.textContent = opt.text;
+                btn.style.cssText = 'display: block; width: 100%; margin: 8px 0; padding: 10px 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.3); border-radius: 6px; color: #f0f0f0; cursor: pointer; text-align: left; font-size: 13px; transition: all 0.2s;';
+                btn.addEventListener('mouseenter', () => { btn.style.background = 'rgba(255,215,0,0.2)'; });
+                btn.addEventListener('mouseleave', () => { btn.style.background = 'rgba(255,255,255,0.1)'; });
+                btn.addEventListener('click', () => {
+                    this.audio.playSfx('click');
+                    // 应用答题效果
+                    if (opt.effect) {
+                        if (opt.effect.wealth) { this.cash += opt.effect.wealth; this.showFloatingNumber('cash-bar', opt.effect.wealth); }
+                        if (opt.effect.conflict) { this.socialConflict += opt.effect.conflict; this.showFloatingNumber('conflict-bar', opt.effect.conflict); }
+                        if (opt.effect.tech) { this.techPower += opt.effect.tech; this.showFloatingNumber('tech-bar', opt.effect.tech); }
+                        this.updateWealth();
+                        this.updateStatusDisplay();
+                    }
+                    questionContainer.style.display = 'none';
+                    phase = 3;
+                    continueBtn.style.opacity = '1';
+                    continueBtn.style.pointerEvents = 'auto';
+                });
+                questionOptions.appendChild(btn);
+            });
+            questionContainer.style.display = 'block';
+        };
+
         this.typewriterTimer = setInterval(() => {
-            textEl.textContent += text.charAt(index);
-            index++;
-            if (index >= text.length) {
-                clearInterval(this.typewriterTimer);
-                this.typewriterTimer = null;
-                cursor.style.display = 'none';
-                continueBtn.style.opacity = '1';
-                continueBtn.style.pointerEvents = 'auto';
+            if (phase === 0) {
+                textEl.textContent += fullText.charAt(index);
+                index++;
+                if (index >= fullText.length) {
+                    clearInterval(this.typewriterTimer);
+                    this.typewriterTimer = null;
+                    cursor.style.display = 'none';
+                    showQuote();
+                }
             }
         }, speed);
     }
@@ -875,10 +1150,22 @@ export class CapitalGame {
     }
 
     checkAchievements(finalCheck = false) {
+        const gameState = {
+            wealth: this.wealth,
+            cash: this.cash,
+            socialConflict: this.socialConflict,
+            techPower: this.techPower,
+            social: { ...this.social },
+            stockHistory: this.stockHistory ? [...this.stockHistory] : [],
+            stockPrice: this.stockPrice,
+            stockHoldings: this.stockHoldings,
+            rounds: this.rounds,
+            route: { ...this.route }
+        };
         let newly = [];
         for (const key in this.achievements) {
             const a = this.achievements[key];
-            if (!a.unlocked && typeof a.check === 'function' && a.check(this.history, this.fragments, this.endingsRecord)) {
+            if (!a.unlocked && typeof a.check === 'function' && a.check(this.history, this.fragments, this.endingsRecord, gameState)) {
                 a.unlocked = true;
                 newly.push(a);
             }
@@ -1094,6 +1381,7 @@ export class CapitalGame {
         const buyBtn = document.getElementById('stock-buy');
         const sellBtn = document.getElementById('stock-sell');
         const historyEl = document.getElementById('stock-history-compact');
+        const chartContainer = document.getElementById('stock-chart-container');
 
         priceEl.textContent = this.stockPrice;
         holdingsEl.textContent = this.stockHoldings;
@@ -1101,6 +1389,11 @@ export class CapitalGame {
         const cash = this.getCash();
         cashEl.textContent = cash;
         expectationEl.textContent = this.getMarketExpectation(event);
+
+        // 渲染股价走势图
+        if (chartContainer) {
+            chartContainer.innerHTML = generateStockChartSVG(this.stockPriceHistory, 200, 60);
+        }
 
         if (buyBtn) buyBtn.disabled = cash < this.stockPrice;
         if (sellBtn) sellBtn.disabled = this.stockHoldings <= 0;
@@ -1197,6 +1490,7 @@ export class CapitalGame {
             this.stockHoldings = 0;
             this.stockPrice = 100;
             this.stockHistory = [];
+            this.stockPriceHistory = [100];
             if (this.typewriterTimer) { clearInterval(this.typewriterTimer); this.typewriterTimer = null; }
             this.applyEpochTheme();
 
@@ -1220,7 +1514,7 @@ export class CapitalGame {
             eventImage.innerHTML = '';
 
             optionsContainer.innerHTML = '<button class="start-btn" id="start-btn">开始游戏</button>';
-            document.getElementById('start-btn').addEventListener('click', () => this.startGame());
+            document.getElementById('start-btn').addEventListener('click', () => { this.audio.playSfx('click'); this.startGame(); });
 
             const stockPanel = document.getElementById('stock-panel');
             if (stockPanel) stockPanel.style.display = 'none';

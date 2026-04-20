@@ -1,0 +1,128 @@
+# 路线专属事件池
+# 由系统按路线条件注入
+
+conservative:
+  id: colonialExpansion
+  name: 殖民扩张
+  description: 你的资本积累需要新的原料产地和倾销市场，军方愿意为你保驾护航。
+  imageKey: colonial
+  historicalParallel: 19世纪末帝国主义瓜分非洲与亚洲：资本输出与军事侵略相伴而生。
+  quote:
+    text: '"资产阶级在它的不到一百年的阶级统治中所创造的生产力，比过去一切世代创造的全部生产力还要多，还要大。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 武力征服殖民地
+      wealth: 70
+      conflict: 30
+      tech: 5
+      routeTag: conservative
+      social:
+        worker: -15
+        gov: 5
+        media: -15
+        rival: 10
+    - text: 签订不平等贸易条约
+      wealth: 50
+      conflict: 20
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: 0
+        media: -10
+        rival: 5
+    - text: 投资当地基础设施换取特权
+      wealth: 30
+      conflict: 10
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 5
+        rival: -5
+  knowledge: 帝国主义阶段，资本输出取代商品输出成为主导。军事暴力与经济掠夺的结合，是垄断资本全球扩张的典型特征。
+
+technologist:
+  id: digitalMonopoly
+  name: 数字垄断
+  description: 你的算法平台已经占据市场80%份额，监管机构正在调查你。
+  imageKey: digitalMonopoly
+  historicalParallel: 21世纪谷歌、亚马逊、腾讯等科技巨头的反垄断调查：数字资本的高度集中。
+  quote:
+    text: '"垄断是从自由竞争中成长起来的。"'
+    author: 列宁
+  options:
+    - text: 收购所有潜在竞争对手
+      wealth: 40
+      conflict: 20
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: -10
+        gov: -15
+        media: -10
+        rival: 20
+    - text: 开放部分API接口以避嫌
+      wealth: 20
+      conflict: -5
+      tech: 10
+      routeTag: reformer
+      social:
+        worker: 5
+        gov: 10
+        media: 10
+        rival: -5
+    - text: 利用大数据构筑更高壁垒
+      wealth: 30
+      conflict: 10
+      tech: 25
+      routeTag: technologist
+      social:
+        worker: -5
+        gov: -5
+        media: 0
+        rival: 15
+  knowledge: 数字资本通过平台垄断和数据壁垒形成'赢者通吃'的市场格局。技术本身成为垄断工具，加剧了资本集中和社会不平等。
+
+reformer:
+  id: unionNegotiation
+  name: 工会谈判
+  description: 工人联合会力量壮大，他们要求签订集体合同，否则将发动总罢工。
+  imageKey: unionNegotiation
+  historicalParallel: 20世纪欧美工会运动的兴起：工人阶级通过组织化斗争争取权益的重要历程。
+  quote:
+    text: '"无产者在这个革命中失去的只是锁链。他们获得的将是整个世界。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 拒绝谈判，分化工会
+      wealth: -10
+      conflict: 25
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -20
+        gov: -5
+        media: -10
+        rival: 5
+    - text: 签订集体合同，提高福利
+      wealth: -30
+      conflict: -20
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 20
+        gov: 10
+        media: 10
+        rival: -5
+    - text: 引入自动化以削弱工会筹码
+      wealth: -20
+      conflict: 10
+      tech: 15
+      routeTag: technologist
+      social:
+        worker: -10
+        gov: 0
+        media: 0
+        rival: 5
+  knowledge: 工会运动是工人阶级争取自身权益的重要手段。但在资本主义框架内，集体谈判只能缓和矛盾，无法根除剥削制度本身。

@@ -215,6 +215,63 @@ export function getEpochTransitionAnimation(fromEpoch, toEpoch) {
 }
 
 /**
+ * 生成股市价格走势图 SVG
+ * @param {number[]} prices - 价格历史数组
+ * @param {number} width - 图表宽度
+ * @param {number} height - 图表高度
+ * @returns {string} SVG 字符串
+ */
+export function generateStockChartSVG(prices, width = 200, height = 60) {
+    if (!prices || prices.length < 2) {
+        return `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" class="stock-chart"><text x="${width/2}" y="${height/2}" fill="rgba(255,255,255,0.3)" text-anchor="middle" font-size="10">暂无数据</text></svg>`;
+    }
+
+    const padding = { top: 5, right: 5, bottom: 5, left: 5 };
+    const chartW = width - padding.left - padding.right;
+    const chartH = height - padding.top - padding.bottom;
+
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const priceRange = maxPrice - minPrice || 1;
+
+    const xStep = chartW / (prices.length - 1);
+
+    // 生成价格路径
+    let pathPoints = '';
+    let fillPath = '';
+    prices.forEach((p, i) => {
+        const x = padding.left + i * xStep;
+        const y = padding.top + chartH - ((p - minPrice) / priceRange) * chartH;
+        if (i === 0) {
+            pathPoints = `M ${x} ${y}`;
+            fillPath = `M ${x} ${padding.top + chartH} L ${x} ${y}`;
+        } else {
+            pathPoints += ` L ${x} ${y}`;
+            fillPath += ` L ${x} ${y}`;
+        }
+    });
+    fillPath += ` L ${padding.left + (prices.length - 1) * xStep} ${padding.top + chartH} Z`;
+
+    // 判断颜色（最近价格相比初始价格）
+    const isUp = prices[prices.length - 1] >= prices[0];
+    const lineColor = isUp ? '#1dd1a1' : '#ff6b6b';
+    const fillColor = isUp ? 'rgba(29, 209, 161, 0.1)' : 'rgba(255, 107, 107, 0.1)';
+
+    // 网格线
+    let grid = '';
+    for (let i = 0; i <= 2; i++) {
+        const y = padding.top + (chartH / 2) * i;
+        grid += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    }
+
+    return `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" class="stock-chart">
+        ${grid}
+        <path d="${fillPath}" fill="${fillColor}"/>
+        <path d="${pathPoints}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+}
+
+/**
  * 创建粒子爆发效果并插入到目标元素中
  * @param {HTMLElement} target - 目标元素
  * @param {string} color - 粒子颜色

@@ -1,0 +1,239 @@
+# 特殊事件
+# 包括社会关系触发的紧急事件和纪元特殊事件
+
+workerStrikeEmergency:
+  id: workerStrikeEmergency
+  name: 总罢工
+  description: 由于你长期漠视工人权益，全国工会联合发动了总罢工，生产完全停滞。
+  imageKey: strike
+  historicalParallel: 19世纪末20世纪初欧美多次大罢工：工人阶级在极端压迫下的集体反抗。
+  quote:
+    text: '"全世界无产者，联合起来！"'
+    author: 马克思、恩格斯
+  options:
+    - text: 武力清场，雇佣工贼
+      wealth: -20
+      conflict: 40
+      tech: 0
+      routeTag: conservative
+      social:
+        worker: -25
+        gov: -15
+        media: -15
+        rival: 10
+    - text: 全面妥协，签订最高福利合同
+      wealth: -40
+      conflict: -25
+      tech: 0
+      routeTag: reformer
+      social:
+        worker: 25
+        gov: 10
+        media: 15
+        rival: -5
+  knowledge: 当劳资矛盾激化到顶点，和平的改良手段便失效了。总罢工是工人阶级展示其作为生产力主体的决定性力量的时刻。
+
+policyDividend:
+  id: policyDividend
+  name: 政策红利
+  description: 由于你与政府关系良好，当局推出了一系列有利于你企业的减税与补贴政策。
+  imageKey: bankCrisis
+  historicalParallel: 20世纪以来资本主义国家与企业之间的旋转门：政商关系对资本积累的重大影响。
+  quote:
+    text: '"现代的国家政权不过是管理整个资产阶级的共同事务的委员会罢了。"'
+    author: 马克思、恩格斯
+  options:
+    - text: 扩大投资，垄断关键行业
+      wealth: 40
+      conflict: 15
+      tech: 10
+      routeTag: conservative
+      social:
+        worker: -10
+        gov: 10
+        media: -5
+        rival: 15
+    - text: 与政府合作建设公共工程
+      wealth: 20
+      conflict: -10
+      tech: 15
+      routeTag: reformer
+      social:
+        worker: 10
+        gov: 15
+        media: 10
+        rival: -5
+  knowledge: 国家是阶级统治的工具。资产阶级国家通过政策手段维护资本利益，这在帝国主义阶段表现得尤为明显。
+
+epochSpecial:
+  assemblyLineAlgorithm:
+    id: assemblyLineAlgorithm
+    name: 流水线算法实验
+    description: 你的顾问提议把工头的经验写进一套自动排班和绩效系统。它还不能称作 AI，却已经能预测谁会迟到、谁能被替换、谁最该被扣薪。工厂第一次开始像一个冷冰冰的判断装置。
+    imageKey: tech
+    historicalParallel: 20世纪初科学管理运动的兴起：将管理者的经验转化为可量化的规则和指标，为后来的算法管理奠定了基础。
+    quote:
+      text: '"劳动用机器代替了手工劳动，但是，工人却变成了机器的单纯的附属品。"'
+      author: 《共产党宣言》
+    options:
+      - text: 把系统推广到每个车间
+        wealth: 20
+        conflict: 15
+        tech: 10
+        routeTag: conservative
+        social:
+          worker: -10
+          gov: 0
+          media: -5
+          rival: 5
+      - text: 允许工人委员会参与监督算法
+        wealth: 5
+        conflict: -10
+        tech: 10
+        routeTag: reformer
+        social:
+          worker: 10
+          gov: 5
+          media: 5
+          rival: 0
+      - text: 终止实验，保留人工协商
+        wealth: -10
+        conflict: -5
+        tech: 5
+        routeTag: technologist
+        social:
+          worker: 5
+          gov: 0
+          media: 5
+          rival: -5
+    knowledge: 算法管理并不始于大模型，而是始于资本把劳动过程拆解、量化、预测和替换的长期冲动。AI 只是让这种冲动获得了前所未有的速度和规模。
+    question: "当工头被系统替代，工人的处境会更自由，还是更难与权力对话?"
+
+  computeFence:
+    id: computeFence
+    name: 算力围栏
+    description: 你手中拥有最多的芯片、最快的模型和最厚的数据护城河。投资人催促你把基础模型封闭成收费关卡，让所有后来者都为接近智能而缴纳租金。
+    imageKey: digitalMonopoly
+    historicalParallel: 21世纪科技巨头的平台垄断：通过控制基础设施和数据入口，形成数字时代的'圈地运动'。
+    quote:
+      text: '"垄断是从自由竞争中成长起来的。"'
+      author: 列宁
+    options:
+      - text: 封闭模型，按层收费
+        wealth: 35
+        conflict: 20
+        tech: 10
+        routeTag: conservative
+        social:
+          worker: -5
+          gov: -10
+          media: -10
+          rival: 20
+      - text: 保留商用接口，但公开基础能力
+        wealth: 10
+        conflict: -5
+        tech: 10
+        routeTag: reformer
+        social:
+          worker: 5
+          gov: 5
+          media: 5
+          rival: 0
+      - text: 把算力纳入公共基础设施试点
+        wealth: -15
+        conflict: -15
+        tech: 15
+        routeTag: technologist
+        social:
+          worker: 10
+          gov: 10
+          media: 10
+          rival: -10
+    knowledge: 当 AI 的关键条件被垄断，资本逻辑不会失效，只会转化为对算力、模型和数据入口的租佃控制。所谓'智能普惠'，可能退化为数字地租。
+    question: "如果每个人都离不开 AI，但 AI 的入口掌握在少数企业手里，这和旧时代的土地围栏有什么本质区别?"
+
+  publicComputeTrial:
+    id: publicComputeTrial
+    name: 公共算力试验
+    description: 城市议会邀请你参与一项激进实验：把基础模型、算力中心与关键数据平台改造成公共设施，优先服务医疗、教育、交通与社区生产。利润不再是唯一评价标准。
+    imageKey: ai
+    historicalParallel: 20世纪中后期部分国家的公共事业国有化运动：试图将关键生产资料从私人垄断中解放出来，服务于社会整体利益。
+    quote:
+      text: '"在必然王国的彼岸，作为目的本身的人类能力的发展，真正的自由王国，就开始了。"'
+      author: 马克思
+    options:
+      - text: 接受试验，推动社会化调度
+        wealth: -10
+        conflict: -15
+        tech: 20
+        routeTag: technologist
+        social:
+          worker: 10
+          gov: 15
+          media: 10
+          rival: -10
+      - text: 保留混合模式，公共与商业并存
+        wealth: 10
+        conflict: -5
+        tech: 10
+        routeTag: reformer
+        social:
+          worker: 5
+          gov: 5
+          media: 5
+          rival: 0
+      - text: 拒绝试验，坚持私有化运营
+        wealth: 20
+        conflict: 15
+        tech: 5
+        routeTag: conservative
+        social:
+          worker: -10
+          gov: -10
+          media: -5
+          rival: 15
+    knowledge: AI 能否加速通向自由王国，不取决于它是否先进，而取决于它是否被纳入社会化占有和民主调度。只有在这种条件下，技术才可能真正缩短必要劳动时间。
+    question: "如果 AI 能让社会少工作而多满足需求，谁应该决定它优先服务什么、节省下来的时间归谁?"
+
+  uselessClassNight:
+    id: uselessClassNight
+    name: 无用阶级夜行
+    description: 大批被替代者在城市边缘聚集。外卖骑手、客服、文员、程序员都发现自己正在被模型和自动流程挤出原来的位置。街头流传一句话：不是我们不会工作，而是资本不再需要我们。
+    imageKey: ai
+    historicalParallel: 工业革命时期卢德运动与手工业者的衰落：技术进步在创造新财富的同时，也将大量劳动者抛入结构性失业的深渊。
+    quote:
+      text: '"工人阶级的儿女从一出生就注定要成为资本的牺牲品。"'
+      author: 恩格斯
+    options:
+      - text: 加大监控和治安投入
+        wealth: 10
+        conflict: 25
+        tech: 5
+        routeTag: conservative
+        social:
+          worker: -20
+          gov: -5
+          media: -15
+          rival: 5
+      - text: 建立全民保障与再分配机制
+        wealth: -20
+        conflict: -20
+        tech: 10
+        routeTag: reformer
+        social:
+          worker: 20
+          gov: 15
+          media: 10
+          rival: -5
+      - text: 开放社区工坊与公共训练资源
+        wealth: -10
+        conflict: -15
+        tech: 15
+        routeTag: technologist
+        social:
+          worker: 15
+          gov: 10
+          media: 10
+          rival: -5
+    knowledge: AI 可能制造一种新的剩余人口形态。当资本对活劳动的需求下降，并不意味着人自动获得自由，反而可能意味着大规模排斥、失业与失去社会位置。
+    question: "如果社会财富越来越依靠自动系统生产，那些被市场宣布'无用'的人，究竟是历史的负担，还是被错误制度排除在外的多数?"

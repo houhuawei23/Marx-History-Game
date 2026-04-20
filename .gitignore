@@ -1,3 +1,5 @@
+
+.env
 # OS
 .DS_Store
 Thumbs.db
@@ -12,9 +14,18 @@ Thumbs.db
 # Logs
 *.log
 
+# Dependencies
+node_modules/
+
+# Build outputs
+dist-electron/
+dist-web/
+src-tauri/target/
+
 # Test artifacts
 .playwright-mcp/
 tests/screenshots/
+test-results/
 
 # Legacy backups
 *.bak

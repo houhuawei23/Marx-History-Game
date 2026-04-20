@@ -2,7 +2,7 @@
  * 全局配置与常量
  */
 
-export const GAME_VERSION = '1.2.0';
+export const GAME_VERSION = '1.6.0';
 
 export const EPOCH_NAMES = {
     1: "原始积累纪元",
